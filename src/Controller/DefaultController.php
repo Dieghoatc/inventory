@@ -6,10 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/default", name="default")
+ */
 class DefaultController extends AbstractController
 {
+
     /**
-     * @Route("/default", name="default")
+     * @Route("/", name="default_index")
      */
     public function index(): Response
     {
