@@ -23,6 +23,16 @@ class Warehouse
      */
     private $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="warehouse", orphanRemoval=true)
+     */
+    private $Products;
+
+    public function __construct()
+    {
+        $this->Products = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -36,6 +46,37 @@ class Warehouse
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->Products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->Products->contains($product)) {
+            $this->Products[] = $product;
+            $product->setWarehouse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->Products->contains($product)) {
+            $this->Products->removeElement($product);
+            // set the owning side to null (unless already changed)
+            if ($product->getWarehouse() === $this) {
+                $product->setWarehouse(null);
+            }
+        }
 
         return $this;
     }
