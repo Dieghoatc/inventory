@@ -1,0 +1,15 @@
+edit: "Edit"
+upload: "Upload"
+product:
+  index:
+    title: "View products"
+  upload:
+    title: "Upload products"
+    description: "This form allows you upload a excel file with products to add or update them on the database."
+    upload: "Upload"
+    label_input: "Select a xls file from your computer, then click on upload to load the products."
+warehouse:
+  index:
+    title: "View warehouses"
+  edit:
+    title: "Edit warehouse"

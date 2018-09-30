@@ -2,9 +2,11 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Invetory 1.0{% endblock %}</title>
+        <title>Invetory 1.0 | {% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
         {% block stylesheets %}{% endblock %}
+
+        {% set form_theme = 'form/form_errors.html.twig' %}
     </head>
     <body id="page-top">
         <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
@@ -101,7 +103,21 @@
             </ul>
 
             <div id="content-wrapper">
-                {% block body %}{% endblock %}
+                <div class="container-fluid">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }}" role="alert">
+                                {{ message }}
+
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% block body %}{% endblock %}
+                </div>
             </div>
         </div>
 

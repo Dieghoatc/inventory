@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'warehouse.index.title'|trans }}{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            {{ 'warehouse.index.title'|trans }}
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th>Name</th>
+                        <th>Options</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for warehouse in warehouses %}
+                        <tr>
+                            <td>{{ warehouse.id }}</td>
+                            <td>{{ warehouse.name }}</td>
+                            <td>
+                                <a href="{{ path('warehousewarehouse_edit', {'warehouse': warehouse.id}) }}" class="btn btn-success"><i class="fas fa-edit"></i> {{ 'edit'|trans }}</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
