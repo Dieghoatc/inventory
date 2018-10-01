@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Product
 {
@@ -22,11 +25,16 @@ class Product
     private $uuid;
 
     /**
+     * @Assert\NotEqualTo("·")
+     * @Assert\NotEqualTo("CODE")
+     * @Assert\NotNull()
      * @ORM\Column(type="string", length=255)
      */
     private $code;
 
     /**
+     * @Assert\NotEqualTo("PRODUCT")
+     * @Assert\NotNull()
      * @ORM\Column(type="string", length=255)
      */
     private $title;
@@ -57,10 +65,13 @@ class Product
         return $this->uuid;
     }
 
-    public function setUuid(string $uuid): self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setUuid(): self
     {
-        $this->uuid = $uuid;
-
+        $uuid1 = Uuid::uuid1();
+        $this->uuid = $uuid1->toString();
         return $this;
     }
 

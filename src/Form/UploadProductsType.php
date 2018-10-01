@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Entity\Warehouse;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,9 +25,20 @@ class UploadProductsType extends AbstractType
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
                 ]])
             ],
-            'attr' => ['class' => 'form-control-file']
-        ])
-        ->add('upload', SubmitType::class, [
+            'attr' => [
+                'class' => 'form-control-file',
+                'label' => 'product.upload.label_input'
+            ]
+        ])->add('warehouse', EntityType::class, [
+            'class' => Warehouse::class,
+            'choice_label' => 'name',
+            'constraints' => [
+                new Required()
+            ],
+            'attr' => [
+                'class' => 'form-control'
+            ]
+        ])->add('upload', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary'],
         ]);
     }

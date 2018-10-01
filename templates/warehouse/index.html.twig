@@ -3,7 +3,6 @@
 {% block title %}{{ 'warehouse.index.title'|trans }}{% endblock %}
 
 {% block body %}
-
     <div class="card">
         <div class="card-header">
             {{ 'warehouse.index.title'|trans }}
@@ -24,7 +23,7 @@
                             <td>{{ warehouse.id }}</td>
                             <td>{{ warehouse.name }}</td>
                             <td>
-                                <a href="{{ path('warehousewarehouse_edit', {'warehouse': warehouse.id}) }}" class="btn btn-success"><i class="fas fa-edit"></i> {{ 'edit'|trans }}</a>
+                                <a href="{{ path('warehouse_warehouse_edit', {'warehouse': warehouse.id}) }}" class="btn btn-success"><i class="fas fa-edit"></i> {{ 'edit'|trans }}</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -33,5 +32,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

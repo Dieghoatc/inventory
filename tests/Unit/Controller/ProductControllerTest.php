@@ -9,7 +9,6 @@ class ProductControllerTest extends DataFixtureTestCase
 
     public function testIndex(): void
     {
-        //$productRepo = $this->createMock(ProductRepository::class);
         $this->client->request('GET', '/product/');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }

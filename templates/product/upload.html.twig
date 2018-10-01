@@ -1,28 +1,32 @@
 {% extends 'base.html.twig' %}
+{% form_theme form 'form/form_errors.html.twig' %}
 
 {% block title %} {{ 'product.upload.title'|trans }} {% endblock %}
 
 {% block body %}
-
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">{{ 'product.upload.title'|trans }}</li>
-        </ol>
-    </nav>
-
-    <div class="mb-3">
-        <p>
-            {{ 'product.upload.description'|trans }}
-        </p>
-        <hr>
+    <div class="card">
         {{ form_start(form, {attr: {class: 'was-validated'} }) }}
-        <div class="form-group">
-            <label for="{{ form.products.vars.id }}" >{{ 'product.upload.label_input'|trans }}</label>
-            {{ form_widget(form.products) }}
-            {{ form_errors(form.products) }}
+        <div class="card-header">
+            {{ 'product.upload.title'|trans }}
         </div>
-        {{ form_widget(form.upload) }}
+        <div class="card-body">
+            <p>
+                {{ 'product.upload.description'|trans }}
+            </p>
+            <div class="form-group">
+                {{ form_label(form.products) }}
+                {{ form_widget(form.products) }}
+                {{ form_errors(form.products) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.warehouse) }}
+                {{ form_widget(form.warehouse) }}
+                {{ form_errors(form.warehouse) }}
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.upload) }}
+            </div>
+        </div>
         {{ form_end(form) }}
     </div>
-
 {% endblock %}

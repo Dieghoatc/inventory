@@ -1,15 +1,40 @@
+welcome: "Welcome"
 edit: "Edit"
+options: "Options"
 upload: "Upload"
+products: "Products"
+products_upload: "Upload products"
+product_list: "Product List"
+updated_successfully: "Warehouse updated successfully"
 product:
   index:
     title: "View products"
+    quantity: "Quantity"
+    description: "Description"
+    sku: "SKU"
+    warehouse: "Warehouse"
   upload:
     title: "Upload products"
     description: "This form allows you upload a excel file with products to add or update them on the database."
     upload: "Upload"
     label_input: "Select a xls file from your computer, then click on upload to load the products."
+  uploaded_successfully: "Uploaded successfully"
+warehouses: "Warehouses"
 warehouse:
   index:
     title: "View warehouses"
   edit:
     title: "Edit warehouse"
+  form:
+    name: "Name"
+user:
+  index:
+    title: "View Users"
+    name: "Name"
+    email: "Email"
+    rol: "Rol"
+  new:
+    title: "Add User"
+    name: "Name"
+    email: "Email"
+    rol: "Rol"

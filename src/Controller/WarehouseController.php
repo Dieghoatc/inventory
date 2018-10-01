@@ -6,11 +6,12 @@ use App\Entity\Warehouse;
 use App\Form\WarehouseType;
 use App\Repository\WarehouseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/warehouse", name="warehouse")
+ * @Route("/warehouse", name="warehouse_")
  */
 class WarehouseController extends AbstractController
 {
@@ -26,11 +27,18 @@ class WarehouseController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{warehouse}", name="warehouse_edit")
+     * @Route("/edit/{warehouse}", name="warehouse_edit", methods={"post", "get"})
      */
-    public function edit(Warehouse $warehouse): Response
+    public function edit(Request $request, Warehouse $warehouse): Response
     {
-        $form =  $this->createForm(WarehouseType::class, $warehouse);
+        $form = $this->createForm(WarehouseType::class, $warehouse);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'updated_successfully');
+            return $this->redirectToRoute('warehouse_warehouse_index');
+        }
+
         return $this->render('warehouse/edit.html.twig', [
             'form' => $form->createView()
         ]);
