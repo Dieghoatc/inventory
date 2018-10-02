@@ -21,7 +21,7 @@ class UserControllerTest extends DataFixtureTestCase
 
     public function testCreate(): void
     {
-        $this->client->request('POST', '/user/create');
+        $this->client->request('POST', '/user/new');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 }

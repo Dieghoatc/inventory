@@ -2,6 +2,7 @@ welcome: "Welcome"
 edit: "Edit"
 options: "Options"
 upload: "Upload"
+log_in: "Log In"
 products: "Products"
 products_upload: "Upload products"
 product_list: "Product List"
@@ -38,3 +39,9 @@ user:
     name: "Name"
     email: "Email"
     rol: "Rol"
+security:
+  login:
+    title: "Log in"
+    form:
+      username: "Username"
+      password: "Password"
