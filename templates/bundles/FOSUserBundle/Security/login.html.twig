@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'security.login.title'|trans }}{% endblock %}
+
+{% block body %}
+    <body class="bg-dark">
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">{{ 'log_in'|trans }}</div>
+            <div class="card-body">
+                {% block fos_user_content %}
+                    {{ include('@FOSUser/Security/login_content.html.twig') }}
+                {% endblock fos_user_content %}
+            </div>
+        </div>
+    </div>
+    <script src="{{ asset('build/app.js') }}"></script>
+    {% block javascripts %}{% endblock %}
+    </body>
+{% endblock %}

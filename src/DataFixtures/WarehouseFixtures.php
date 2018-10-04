@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 9/30/2018
- * Time: 9:11 AM
- */
 
-namespace App\Fixtures;
+namespace App\DataFixtures;
 
 use App\Entity\Warehouse;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -14,8 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class WarehouseFixtures extends Fixture
 {
-
-
     /**
      * Load data fixtures with the passed EntityManager
      * @param ObjectManager $manager
@@ -28,8 +20,8 @@ class WarehouseFixtures extends Fixture
     protected function createWarehouses(ObjectManager $manager): void
     {
         $items = [
-          ['name' => 'Colombia'],
-          ['name' => 'Usa']
+            ['name' => 'Colombia'],
+            ['name' => 'Usa']
         ];
 
         foreach ($items as $item) {

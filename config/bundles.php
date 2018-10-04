@@ -16,4 +16,5 @@ return [
     Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
     Yectep\PhpSpreadsheetBundle\PhpSpreadsheetBundle::class => ['all' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
+    FOS\UserBundle\FOSUserBundle::class => ['all' => true],
 ];
