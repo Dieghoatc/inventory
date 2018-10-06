@@ -19,7 +19,13 @@ product:
     description: "This form allows you upload a excel file with products to add or update them on the database."
     upload: "Upload"
     label_input: "Select a xls file from your computer, then click on upload to load the products."
+    donwload_template: "Download template"
   uploaded_successfully: "Uploaded successfully"
+  template:
+    code: "Code"
+    quantity: "Quantity"
+    title: "Title"
+    products: "Products"
 warehouses: "Warehouses"
 warehouse:
   index:

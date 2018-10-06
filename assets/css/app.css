@@ -6,3 +6,6 @@
 
 /** startbootstrap-sb-admin **/
 @import "~startbootstrap-sb-admin/css/sb-admin.min.css";
+
+/** Custom CSS **/
+@import "custom.css";

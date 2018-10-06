@@ -8,6 +8,7 @@ use App\Entity\Warehouse;
 use App\Repository\ProductRepository;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Persistence\ObjectManager;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use Symfony\Component\Debug\Exception\ClassNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -49,7 +50,7 @@ class ProductService
         if(!$warehouse instanceof Warehouse) {
             throw new ClassNotFoundException('The Warehouse class does not exits.');
         }
-        $spreadsheet = $reader->load($data['products']->getPathname());
+        $spreadsheet = IOFactory::load($data['products']->getPathname());
         $items = $spreadsheet->getActiveSheet()->toArray();
         $this->storeProducts($items, $warehouse);
     }
@@ -57,11 +58,14 @@ class ProductService
     public function storeProducts(array $items, Warehouse $warehouse): void
     {
         $validations = [];
-        foreach ($items as $item) {
+        foreach ($items as $key => $item) {
+            if($key === 0){
+                continue;
+            }
             $product = new Product();
             $product->setCode($item[0]);
             $product->setTitle($item[1]);
-            $product->setQuantity(0);
+            $product->setQuantity((int) $item[2]);
             $product->setWarehouse($warehouse);
             $errors = $this->validator->validate($product);
             if(\count($errors) > 0){

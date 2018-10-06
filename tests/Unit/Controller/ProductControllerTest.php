@@ -18,4 +18,5 @@ class ProductControllerTest extends DataFixtureTestCase
         $this->client->request('GET', '/product/upload');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
+
 }
