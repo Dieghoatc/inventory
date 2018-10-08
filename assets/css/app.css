@@ -9,3 +9,6 @@
 
 /** Custom CSS **/
 @import "custom.css";
+
+/** React Table CSS **/
+@import "~react-table/react-table.css";

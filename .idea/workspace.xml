@@ -2,27 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5201f090-bb8f-42c5-bb3b-d18e9f25a222" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/css/custom.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/js/Products/Products.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/js/Products/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inventory.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inventory.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/Products/Products.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/Products/Products.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/Products/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/Products/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ProductController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Services/ProductService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ProductService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Product.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ProductRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ProductRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/product/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/product/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/product/upload.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/product/upload.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Unit/Controller/ProductControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Controller/ProductControllerTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Unit/DataFixtures/DataFixtureTestCase.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/DataFixtures/DataFixtureTestCase.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translations/messages.en.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/translations/messages.en.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
@@ -102,16 +97,17 @@
       <usages-collector id="statistics.php.composer.command.options" />
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="css" value="141" />
+          <entry key="css" value="188" />
           <entry key="dist" value="44" />
           <entry key="env" value="40" />
           <entry key="gitignore" value="13" />
-          <entry key="js" value="330" />
-          <entry key="php" value="5947" />
+          <entry key="js" value="1647" />
+          <entry key="json" value="6" />
+          <entry key="php" value="6777" />
           <entry key="php_cs" value="5" />
           <entry key="sqlite" value="1" />
-          <entry key="twig" value="1702" />
-          <entry key="txt" value="686" />
+          <entry key="twig" value="1742" />
+          <entry key="txt" value="740" />
           <entry key="yaml" value="1462" />
         </counts>
       </usages-collector>
@@ -124,27 +120,28 @@
       <usages-collector id="statistics.php.new.test" />
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="CSS" value="141" />
+          <entry key="CSS" value="188" />
           <entry key="Git file" value="13" />
-          <entry key="JavaScript" value="330" />
-          <entry key="PHP" value="5947" />
-          <entry key="PLAIN_TEXT" value="732" />
-          <entry key="Twig" value="1702" />
+          <entry key="JSON" value="6" />
+          <entry key="JavaScript" value="1647" />
+          <entry key="PHP" value="6777" />
+          <entry key="PLAIN_TEXT" value="786" />
+          <entry key="Twig" value="1742" />
           <entry key="XML" value="44" />
           <entry key="YAML" value="1462" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CSS" value="4" />
-          <entry key="Database Element" value="1" />
+          <entry key="CSS" value="5" />
+          <entry key="Database Element" value="2" />
           <entry key="Git file" value="7" />
-          <entry key="JSON" value="19" />
-          <entry key="JavaScript" value="11" />
-          <entry key="PHP" value="117" />
+          <entry key="JSON" value="21" />
+          <entry key="JavaScript" value="16" />
+          <entry key="PHP" value="125" />
           <entry key="PLAIN_TEXT" value="9" />
           <entry key="Scratch" value="1" />
-          <entry key="Twig" value="51" />
+          <entry key="Twig" value="52" />
           <entry key="UML" value="1" />
           <entry key="XML" value="2" />
           <entry key="YAML" value="29" />
@@ -155,19 +152,20 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="PHP/C:/Users/User/Dev/inventory/bin" value="1" />
-          <entry key="css" value="4" />
+          <entry key="css" value="5" />
           <entry key="dist" value="1" />
           <entry key="env" value="2" />
           <entry key="gitignore" value="7" />
-          <entry key="js" value="11" />
-          <entry key="json" value="18" />
+          <entry key="js" value="16" />
+          <entry key="json" value="20" />
           <entry key="lock" value="5" />
           <entry key="log" value="1" />
-          <entry key="php" value="117" />
+          <entry key="php" value="125" />
           <entry key="product" value="1" />
           <entry key="sql" value="1" />
           <entry key="sqlite" value="4" />
-          <entry key="twig" value="51" />
+          <entry key="twig" value="52" />
+          <entry key="warehouse" value="1" />
           <entry key="xml" value="1" />
           <entry key="yaml" value="27" />
           <entry key="yml" value="2" />
@@ -178,44 +176,78 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/product/index.html.twig">
+        <entry file="file://$PROJECT_DIR$/src/Controller/ProductController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="494">
-              <caret line="43" column="40" selection-start-line="43" selection-start-column="40" selection-end-line="43" selection-end-column="40" />
+            <state relative-caret-position="293">
+              <caret line="75" column="41" selection-start-line="75" selection-start-column="41" selection-end-line="75" selection-end-column="41" />
+              <folding>
+                <element signature="e#34#59#0#PHP" expanded="true" />
+                <element signature="e#868#893#0#PHP" expanded="true" />
+                <element signature="e#1585#1611#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/assets/js/app.js">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/assets/js/Products/Products.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="425">
+              <caret line="25" column="35" lean-forward="true" selection-start-line="25" selection-start-column="35" selection-end-line="25" selection-end-column="35" />
               <folding>
-                <element signature="n#!!doc" expanded="true" />
+                <element signature="e#0#37#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webpack.config.js">
+        <entry file="file://$PROJECT_DIR$/src/Repository/ProductRepository.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="24" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
+            <state relative-caret-position="493">
+              <caret line="29" column="45" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
+              <folding>
+                <element signature="e#34#57#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/assets/js/Products/index.js">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/src/Entity/Product.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="426">
+              <caret line="139" selection-start-line="139" selection-end-line="139" />
+              <folding>
+                <element signature="e#30#62#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/assets/js/Products/Products.js">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/product/index.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="26" selection-start-column="26" selection-end-column="26" />
+            <state relative-caret-position="170">
+              <caret line="10" column="47" selection-start-line="10" selection-start-column="47" selection-end-line="10" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Entity/Warehouse.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-187">
+              <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vendor/symfony/serializer/SerializerInterface.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-26">
+              <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -223,35 +255,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/assets/css/app.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="24" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="19" column="9" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="38" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.eslintrc.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="36" selection-start-line="36" selection-end-line="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Services/ProductService.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="494">
-              <caret line="78" column="1" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
+            <state relative-caret-position="204">
+              <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -284,7 +289,15 @@
       <find>doctrine/</find>
       <find>doctrine</find>
       <find>product.uploaded_successfully</find>
+      <find>.enableReactPreset()</find>
       <find>react</find>
+      <find>props</find>
+      <find>product</find>
+      <find>checkboxTable</find>
+      <find>original</find>
+      <find>ref</find>
+      <find>selectAll</find>
+      <find>id</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -293,7 +306,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/phpunit.xml.dist" />
         <option value="$PROJECT_DIR$/tests/Unit/DataFixtures/DataFixtureTest.php" />
         <option value="$PROJECT_DIR$/src/Model/UploadProducts.php" />
         <option value="$PROJECT_DIR$/templates/form/form_errors.html.twig" />
@@ -303,7 +315,6 @@
         <option value="$PROJECT_DIR$/src/Entity/Warehouse.php" />
         <option value="$PROJECT_DIR$/src/Form/WarehouseType.php" />
         <option value="$PROJECT_DIR$/src/Controller/WarehouseController.php" />
-        <option value="$PROJECT_DIR$/src/Entity/Product.php" />
         <option value="$PROJECT_DIR$/templates/warehouse/edit.html.twig" />
         <option value="$PROJECT_DIR$/src/Form/UploadProductsType.php" />
         <option value="$PROJECT_DIR$/src/Controller/UserController.php" />
@@ -336,13 +347,15 @@
         <option value="$PROJECT_DIR$/tests/Unit/DataFixtures/DataFixtureTestCase.php" />
         <option value="$PROJECT_DIR$/composer.json" />
         <option value="$PROJECT_DIR$/translations/messages.en.yaml" />
-        <option value="$PROJECT_DIR$/src/Controller/ProductController.php" />
         <option value="$PROJECT_DIR$/src/Services/ProductService.php" />
-        <option value="$PROJECT_DIR$/templates/product/index.html.twig" />
+        <option value="$PROJECT_DIR$/.eslintrc.json" />
         <option value="$PROJECT_DIR$/webpack.config.js" />
         <option value="$PROJECT_DIR$/assets/js/Products/index.js" />
-        <option value="$PROJECT_DIR$/.eslintrc.json" />
         <option value="$PROJECT_DIR$/assets/css/app.css" />
+        <option value="$PROJECT_DIR$/src/Entity/Product.php" />
+        <option value="$PROJECT_DIR$/templates/product/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Controller/ProductController.php" />
+        <option value="$PROJECT_DIR$/src/Repository/ProductRepository.php" />
         <option value="$PROJECT_DIR$/assets/js/Products/Products.js" />
       </list>
     </option>
@@ -359,6 +372,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths>
       <path value="$PROJECT_DIR$/package.json" />
+      <path value="$PROJECT_DIR$/vendor/friendsofsymfony/jsrouting-bundle/Resources/package.json" />
     </packageJsonPaths>
   </component>
   <component name="PhpServers">
@@ -474,6 +488,8 @@
       <path value="$PROJECT_DIR$/vendor/ocramius/proxy-manager" />
       <path value="$PROJECT_DIR$/vendor/symfony/panther" />
       <path value="$PROJECT_DIR$/vendor/facebook/webdriver" />
+      <path value="$PROJECT_DIR$/vendor/willdurand/jsonp-callback-validator" />
+      <path value="$PROJECT_DIR$/vendor/friendsofsymfony/jsrouting-bundle" />
     </include_path>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
@@ -534,7 +550,7 @@
             <path>
               <item name="inventory" type="b2602c69:ProjectViewProjectNode" />
               <item name="inventory" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="inventory" type="b2602c69:ProjectViewProjectNode" />
@@ -615,7 +631,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql" />
-    <property name="SearchEverywhereHistoryKey" value="ProducC&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;templates/user/index.html.twig&#9;FILE&#9;file://C:/Users/User/Dev/inventory/templates/user/index.html.twig&#10;Kernel.&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Kernel.php&#10;Fix&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/DataFixtures/UserFixures.php&#10;User&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Entity/User.php&#10;security&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;package.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;config.yml&#9;FILE&#9;file://C:/Users/User/Dev/inventory/vendor/symfony/framework-bundle/Tests/Functional/app/ContainerDebug/config.yml" />
+    <property name="SearchEverywhereHistoryKey" value="Product&#9;null&#9;null&#10;ProducC&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;templates/user/index.html.twig&#9;FILE&#9;file://C:/Users/User/Dev/inventory/templates/user/index.html.twig&#10;Kernel.&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Kernel.php&#10;Fix&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/DataFixtures/UserFixures.php&#10;User&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Entity/User.php&#10;security&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;package.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;config.yml&#9;FILE&#9;file://C:/Users/User/Dev/inventory/vendor/symfony/framework-bundle/Tests/Functional/app/ContainerDebug/config.yml" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="database.console.LAST_STATE" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -680,7 +696,7 @@
       <workItem from="1538617063331" duration="6349000" />
       <workItem from="1538664729816" duration="54000" />
       <workItem from="1538831122640" duration="17593000" />
-      <workItem from="1538859881904" duration="1487000" />
+      <workItem from="1538859881904" duration="23287000" />
     </task>
     <task id="LOCAL-00001" summary="Added startbootstrap-sb-admin as template.&#10;Configured template.&#10;Configured Encore.">
       <created>1538065049965</created>
@@ -759,11 +775,18 @@
       <option name="project" value="LOCAL" />
       <updated>1538623389925</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="First implementation react Table to product view.">
+      <created>1538861417921</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1538861417921</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84543000" />
+    <option name="totallyTimeSpent" value="106343000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -782,7 +805,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50292826" side_tool="true" weight="0.3286334" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.37527114" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.37527114" />
       <window_info anchor="bottom" id="Docker" order="10" weight="0.3286334" />
       <window_info anchor="bottom" id="Database Changes" order="11" />
       <window_info anchor="bottom" id="DB Execution Console" order="12" />
@@ -791,7 +814,7 @@
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" weight="0.32995737" />
+      <window_info anchor="right" id="Database" order="3" weight="0.22441365" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -810,56 +833,10 @@
     <MESSAGE value="Added new UserController.&#10;Added new form Types." />
     <MESSAGE value="Login controller and view implemented.&#10;Solved issue with responsive design." />
     <MESSAGE value="Security implemented." />
-    <option name="LAST_COMMIT_MESSAGE" value="Security implemented." />
+    <MESSAGE value="First implementation react Table to product view." />
+    <option name="LAST_COMMIT_MESSAGE" value="First implementation react Table to product view." />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/vendor/friendsofsymfony/user-bundle/Model/User.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="436" column="40" selection-start-line="436" selection-start-column="31" selection-end-line="436" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/friendsofsymfony/user-bundle/Resources/config/routing/security.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="66" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/friendsofsymfony/user-bundle/Controller/SecurityController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="97" column="63" selection-start-line="97" selection-start-column="39" selection-end-line="97" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/security/login.html.twig" />
-    <entry file="file://$PROJECT_DIR$/vendor/friendsofsymfony/user-bundle/Resources/views/Security/login_content.html.twig">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/SecurityController.php" />
-    <entry file="file://$PROJECT_DIR$/templates/bundles/FOSUserBundle/Security/login_content.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="19" column="51" selection-start-line="19" selection-start-column="51" selection-end-line="19" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/bundles/FOSUserBundle/Security/login.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="41" selection-start-line="17" selection-start-column="41" selection-end-line="17" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/Warehouse.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/WarehouseController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="595">
@@ -984,6 +961,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="26" column="18" selection-start-line="26" selection-start-column="18" selection-end-line="26" selection-end-column="18" />
+          <folding>
+            <element signature="e#47#67#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -991,13 +971,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="341">
           <caret line="34" column="38" selection-start-line="34" selection-start-column="38" selection-end-line="34" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/DefaultController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -1025,16 +998,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/ProductController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="45" column="51" selection-start-line="45" selection-start-column="51" selection-end-line="45" selection-end-column="51" />
-          <folding>
-            <element signature="e#34#66#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/product/upload.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1049,53 +1012,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.eslintrc.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="36" selection-start-line="36" selection-end-line="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Services/ProductService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="78" column="1" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/product/index.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="43" column="40" selection-start-line="43" selection-start-column="40" selection-end-line="43" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webpack.config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="24" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/Products/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="19" column="9" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/async/dist/async.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
@@ -1103,17 +1019,162 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-table/es/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.eslintrc.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-table/react-table.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-column="8546" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="26" column="20" selection-start-line="25" selection-start-column="9" selection-end-line="26" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Services/ProductService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="49" column="44" selection-start-line="49" selection-start-column="44" selection-end-line="49" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/Products/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#1#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webpack.config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="20" column="55" selection-start-line="20" selection-start-column="55" selection-end-line="20" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/assets/css/app.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="24" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+        <state relative-caret-position="204">
+          <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/Warehouse.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-187">
+          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/Product.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="426">
+          <caret line="139" selection-start-line="139" selection-end-line="139" />
+          <folding>
+            <element signature="e#30#62#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/DefaultController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/symfony/serializer/SerializerInterface.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-26">
+          <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/symfony/http-foundation/JsonResponse.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="41" column="35" selection-start-line="41" selection-start-column="35" selection-end-line="41" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/symfony/serializer/Serializer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-173">
+          <caret line="133" column="41" selection-start-line="133" selection-start-column="41" selection-end-line="133" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/product/index.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="47" selection-start-line="10" selection-start-column="47" selection-end-line="10" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/ProductController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="75" column="41" selection-start-line="75" selection-start-column="41" selection-end-line="75" selection-end-column="41" />
+          <folding>
+            <element signature="e#34#59#0#PHP" expanded="true" />
+            <element signature="e#868#893#0#PHP" expanded="true" />
+            <element signature="e#1585#1611#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://7bfafe39-3d18-4254-b964-712c38bc680d/schema/inventory/table/warehouse">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Repository/ProductRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="45" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
+          <folding>
+            <element signature="e#34#57#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/assets/js/Products/Products.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="26" selection-start-column="26" selection-end-column="26" />
+        <state relative-caret-position="425">
+          <caret line="25" column="35" lean-forward="true" selection-start-line="25" selection-start-column="35" selection-end-line="25" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

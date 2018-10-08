@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Warehouse;
 use App\Form\UploadProductsType;
 use App\Repository\ProductRepository;
 use App\Services\ProductService;
@@ -12,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
-use PhpOffice\PhpSpreadsheet\Writer as Writer;
 
 /**
  * @Route("/product", name="product_")
@@ -25,10 +25,7 @@ class ProductController extends AbstractController
      */
     public function index(ProductRepository $productRepo): Response
     {
-        $products = $productRepo->findAll();
-        return $this->render('product/index.html.twig', [
-            'products' => $products,
-        ]);
+        return $this->render('product/index.html.twig');
     }
 
     /**
@@ -71,4 +68,14 @@ class ProductController extends AbstractController
         return $response;
     }
 
+    /**
+     * @Route("/all/{warehouse}", name="product_all", methods={"get"})
+     */
+    public function all(ProductRepository $productRepo, Warehouse $warehouse): Response
+    {
+        $products = $productRepo->findAllAsArray($warehouse);
+        $response = new Response(json_encode($products));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 }

@@ -12,10 +12,10 @@ require('../css/app.css');
 window.$ = window.jQuery = require('jquery');
 
 // Popper JS
-require('popper.js')
+require('popper.js');
 
 // Bootstrap Scripts
-require('bootstrap')
+require('bootstrap');
 
 // Template Scripts
 require('startbootstrap-sb-admin/js/sb-admin.min');

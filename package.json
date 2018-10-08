@@ -18,11 +18,13 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.3.1",
+        "axios": "^0.18.0",
         "chart.js": "^2.7.2",
         "datatables.net-bs4": "^1.10.19",
         "jquery": "^3.3.1",
         "popper.js": "^1.14.4",
         "react": "^16.5.2",
+        "react-dom": "^16.5.2",
         "react-table": "^6.8.6",
         "startbootstrap-sb-admin": "^5.0.2"
     }
