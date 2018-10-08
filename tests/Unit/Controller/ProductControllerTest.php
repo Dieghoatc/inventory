@@ -19,4 +19,12 @@ class ProductControllerTest extends DataFixtureTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
+    public function testAll(): void
+    {
+        $this->client->request('GET', '/product/all/1');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertJson(200, $this->client->getResponse()->getContent());
+
+    }
+
 }

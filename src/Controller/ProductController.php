@@ -69,7 +69,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/all/{warehouse}", name="product_all", methods={"get"})
+     * @Route("/all/{warehouse}", name="all", options={"expose"=true}, methods={"get"})
      */
     public function all(ProductRepository $productRepo, Warehouse $warehouse): Response
     {

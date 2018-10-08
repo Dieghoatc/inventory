@@ -23,7 +23,7 @@ class Products extends Component {
   }
 
   componentDidMount() {
-    axios.get('/product/all/9').then(res => res.data).then(
+    axios.get(Routing.generate('product_all', { warehouse: 9 })).then(res => res.data).then(
       (result) => {
         this.setState({
           loading: false,
@@ -112,6 +112,13 @@ class Products extends Component {
           </div>
         </div>
         <hr />
+        <div className="row">
+          <div className="col-md-6">
+            <a href="/" className="btn btn-sm btn-success">{Translator.trans('product.index.move_between_warehouses')}</a>
+          </div>
+        </div>
+        <hr />
+
         <CheckboxTable
           ref={r => (this.checkboxTable = r)}
           data={data}

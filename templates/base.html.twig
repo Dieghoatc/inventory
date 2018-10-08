@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale|split('_')[0] }}">
     <head>
         <meta charset="UTF-8">
         <title>Invetory 1.0 | {% block title %}{% endblock %}</title>
@@ -76,6 +76,7 @@
             </div>
 
             <script src="{{ asset('build/app.js') }}"></script>
+            <script src="{{ url('bazinga_jstranslation_js') }}"></script>
             {% block javascripts %}{% endblock %}
         </body>
     {% endblock %}

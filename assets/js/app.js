@@ -11,6 +11,12 @@ require('../css/app.css');
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 window.$ = window.jQuery = require('jquery');
 
+window.Translator = require('bazinga-translator');
+window.Routing = require('../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js');
+const routes = require('./../../public/js/fos_js_routes.json');
+
+Routing.setRoutingData(routes);
+
 // Popper JS
 require('popper.js');
 

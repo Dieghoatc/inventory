@@ -19,6 +19,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.3.1",
         "axios": "^0.18.0",
+        "bazinga-translator": "^2.6.6",
         "chart.js": "^2.7.2",
         "datatables.net-bs4": "^1.10.19",
         "jquery": "^3.3.1",

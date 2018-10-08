@@ -10,6 +10,7 @@ updated_successfully: "Warehouse updated successfully"
 product:
   index:
     title: "View products"
+    move_between_warehouses: "Move to Warehouse"
     quantity: "Quantity"
     description: "Description"
     sku: "SKU"
