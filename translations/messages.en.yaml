@@ -1,5 +1,7 @@
 welcome: "Welcome"
 edit: "Edit"
+move: "Move"
+close: "Close"
 options: "Options"
 upload: "Upload"
 log_in: "Log In"

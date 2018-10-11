@@ -3,6 +3,7 @@ import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import axios from 'axios';
+import ConfirmSelectedProducts from './ConfirmSelectedProducts';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 
@@ -15,11 +16,13 @@ class Products extends Component {
       loading: true,
       selection: [],
       selectAll: false,
+      confirm: [],
     };
     this.toggleAll = this.toggleAll.bind(this);
     this.toggleSelection = this.toggleSelection.bind(this);
     this.isSelected = this.isSelected.bind(this);
     this.warehouseChange = this.warehouseChange.bind(this);
+    this.selected = this.selected.bind(this);
   }
 
   componentDidMount() {
@@ -35,6 +38,23 @@ class Products extends Component {
 
   warehouseChange() {
     console.log('Change Warehouse');
+  }
+
+  selected(e) {
+    e.preventDefault();
+    const { selection, data } = this.state;
+    const confirm = [];
+    selection.forEach((item) => {
+      data.forEach((item2) => {
+        if (item === item2.uuid) {
+          confirm.push(item2);
+        }
+      });
+    });
+
+    this.setState({
+      confirm,
+    });
   }
 
   toggleAll() {
@@ -75,7 +95,9 @@ class Products extends Component {
   }
 
   render() {
-    const { loading, data, selectAll } = this.state;
+    const {
+      loading, data, selectAll, confirm, selection,
+    } = this.state;
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
       Header: 'Code',
@@ -90,7 +112,6 @@ class Products extends Component {
       Header: 'Warehouse',
       accessor: 'warehouse.name',
     }];
-
     const checkboxProps = {
       selectAll,
       isSelected,
@@ -98,27 +119,41 @@ class Products extends Component {
       toggleAll,
       selectType: 'checkbox',
     };
-
+    const warehouses = [];
+    const warehousesRender = [];
+    data.forEach((item) => {
+      const found = warehouses.filter(item2 => (
+        item.warehouse.id === item2.id
+      ));
+      if (found.length === 0) {
+        warehouses.push(item.warehouse);
+        warehousesRender.push(
+          <option value={item.warehouse.id} key={item.warehouse.id}>{item.warehouse.name}</option>,
+        );
+      }
+    });
     return (
       <div>
         <div className="row">
           <div className="col-md-6">
             <select className="form-control" onChange={this.warehouseChange}>
-              <option value="volvo">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option>
+              {warehousesRender}
             </select>
           </div>
         </div>
         <hr />
         <div className="row">
           <div className="col-md-6">
-            <a href="/" className="btn btn-sm btn-success">{Translator.trans('product.index.move_between_warehouses')}</a>
+            <button
+              className={selection.length > 0 ? 'btn btn-sm btn-success' : 'btn btn-sm btn-success disabled'}
+              onClick={e => this.selected(e)}
+              type="button"
+            >
+              {Translator.trans('product.index.move_between_warehouses')}
+            </button>
           </div>
         </div>
         <hr />
-
         <CheckboxTable
           ref={r => (this.checkboxTable = r)}
           data={data}
@@ -130,6 +165,7 @@ class Products extends Component {
           {...checkboxProps}
           keyField="uuid"
         />
+        {confirm.length > 0 && <ConfirmSelectedProducts data={confirm} visible />}
       </div>
     );
   }
