@@ -17,6 +17,7 @@ product:
     description: "Description"
     sku: "SKU"
     warehouse: "Warehouse"
+    destination_warehouse: "Destination Warehouse"
   upload:
     title: "Upload products"
     description: "This form allows you upload a excel file with products to add or update them on the database."

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Warehouse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -17,6 +18,17 @@ class WarehouseRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Warehouse::class);
+    }
+
+    /**
+     * @return Warehouse[]
+     */
+    public function findAllAsArray(): array
+    {
+        return $this->createQueryBuilder('w')
+            ->select('w')
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
     }
 
 //    /**

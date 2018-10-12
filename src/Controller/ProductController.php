@@ -7,10 +7,12 @@ use App\Form\UploadProductsType;
 use App\Repository\ProductRepository;
 use App\Services\ProductService;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -55,7 +57,7 @@ class ProductController extends AbstractController
         $template->getActiveSheet()->setCellValue('B1', $translator->trans('product.template.title'));
         $template->getActiveSheet()->setCellValue('C1', $translator->trans('product.template.quantity'));
 
-        $writer = new Writer\Xls($template);
+        $writer = new Xls($template);
         $response =  new StreamedResponse(
             function () use ($writer) {
                 $writer->save('php://output');
@@ -77,5 +79,18 @@ class ProductController extends AbstractController
         $response = new Response(json_encode($products));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+
+    /**
+     * @Route("/move/{warehouse}", name="move", options={"expose"=true}, methods={"post"})
+     */
+    public function move(ProductRepository $productRepo, Request $request, Warehouse $warehouse): Response
+    {
+        $products = json_decode($request->getContent(), true);
+        if(!\is_array($products)){
+            throw new BadRequestHttpException('Malformed JSON request');
+        }
+
+        dd($products);
     }
 }

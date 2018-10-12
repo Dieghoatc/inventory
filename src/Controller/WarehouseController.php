@@ -6,6 +6,7 @@ use App\Entity\Warehouse;
 use App\Form\WarehouseType;
 use App\Repository\WarehouseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,5 +43,13 @@ class WarehouseController extends AbstractController
         return $this->render('warehouse/edit.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/all", name="all", methods={"get"}, options={"expose"=true})
+     */
+    public function all(WarehouseRepository $warehouseRepo) {
+        $warehouses = $warehouseRepo->findAllAsArray();
+        return new JsonResponse($warehouses);
     }
 }

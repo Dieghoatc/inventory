@@ -17,6 +17,7 @@ class Products extends Component {
       selection: [],
       selectAll: false,
       confirm: [],
+      warehouse: 9
     };
     this.toggleAll = this.toggleAll.bind(this);
     this.toggleSelection = this.toggleSelection.bind(this);
@@ -26,7 +27,8 @@ class Products extends Component {
   }
 
   componentDidMount() {
-    axios.get(Routing.generate('product_all', { warehouse: 9 })).then(res => res.data).then(
+    const { warehouse } = this.state;
+    axios.get(Routing.generate('product_all', { warehouse: warehouse })).then(res => res.data).then(
       (result) => {
         this.setState({
           loading: false,
@@ -96,7 +98,7 @@ class Products extends Component {
 
   render() {
     const {
-      loading, data, selectAll, confirm, selection,
+      loading, data, selectAll, confirm, selection, warehouse,
     } = this.state;
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
@@ -165,7 +167,12 @@ class Products extends Component {
           {...checkboxProps}
           keyField="uuid"
         />
-        {confirm.length > 0 && <ConfirmSelectedProducts data={confirm} visible />}
+        {confirm.length > 0 && (
+        <ConfirmSelectedProducts
+          data={confirm}
+          visible
+          currentWarehouse={warehouse}
+        />)}
       </div>
     );
   }

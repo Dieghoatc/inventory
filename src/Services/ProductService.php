@@ -76,4 +76,15 @@ class ProductService
         }
         $this->manager->flush();
     }
+
+    public function moveProduct(array $items, Warehouse $warehouse){
+        foreach ($items as $item) {
+            $product = $this->productRepo->findOneBy(['warehouse' => $warehouse, 'uuid' => $item['uuid']]);
+            if($product){
+                $product->setQuantity($product->getQuantity() + $item['quantity']);
+            }
+
+
+        }
+    }
 }
