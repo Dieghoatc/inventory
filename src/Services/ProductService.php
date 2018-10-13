@@ -42,7 +42,6 @@ class ProductService
 
     public function processXls(array $data): void
     {
-        $reader = new Xlsx();
         if(!$data['products'] instanceof UploadedFile){
             throw new ClassNotFoundException('The uploaded file class does not exits.');
         }
@@ -68,7 +67,7 @@ class ProductService
             $product->setQuantity((int) $item[2]);
             $product->setWarehouse($warehouse);
             $errors = $this->validator->validate($product);
-            if(\count($errors) > 0){
+            if(\count($errors) !== 0){
                 $validations[] = $validations;
             } else {
                 $this->manager->persist($product);
@@ -80,11 +79,15 @@ class ProductService
     public function moveProduct(array $items, Warehouse $warehouse){
         foreach ($items as $item) {
             $product = $this->productRepo->findOneBy(['warehouse' => $warehouse, 'uuid' => $item['uuid']]);
-            if($product){
-                $product->setQuantity($product->getQuantity() + $item['quantity']);
+            if(!$product){
+                $product = new Product();
+                $product->setCode($item['code']);
+                $product->setQuantity($item['quantity']);
+                $product->setWarehouse($warehouse);
             }
-
-
+            $product->setQuantity($product->getQuantity() + $item['quantity']);
+            $this->manager->persist($product);
         }
+        $this->manager->flush();
     }
 }

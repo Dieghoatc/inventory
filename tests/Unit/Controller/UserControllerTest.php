@@ -2,26 +2,24 @@
 
 namespace App\Tests\Unit\Controller;
 
-use App\Tests\Unit\DataFixtures\DataFixtureTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
-class UserControllerTest extends DataFixtureTestCase
+class UserControllerTest extends WebTestCase
 {
-
-    public function testIndex(): void
+    /**
+     * @dataProvider getUrlsForRegularUsers
+     */
+    public function testOkByAllRoutes(string $httpMethod, string $url): void
     {
-        $this->client->request('GET', '/user/');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $client = static::createClient();
+        $client->request($httpMethod, $url);
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+    }
+    public function getUrlsForRegularUsers():?\Generator
+    {
+        yield ['GET', '/user/'];
+        yield ['GET', '/user/new'];
     }
 
-    public function testNew(): void
-    {
-        $this->client->request('GET', '/user/new');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testCreate(): void
-    {
-        $this->client->request('POST', '/user/new');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
 }

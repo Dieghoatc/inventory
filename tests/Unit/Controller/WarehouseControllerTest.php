@@ -2,24 +2,25 @@
 
 namespace App\Tests\Unit\Controller;
 
-use App\Tests\Unit\DataFixtures\DataFixtureTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
-class WarehouseControllerTest extends DataFixtureTestCase
+class WarehouseControllerTest extends WebTestCase
 {
-
-    protected $client;
-
-    public function testIndex(): void
+    /**
+     * @dataProvider getUrlsForRegularUsers
+     */
+    public function testOkByAllRoutes(string $httpMethod, string $url): void
     {
-        $this->client->request('GET', '/warehouse/');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $client = static::createClient();
+        $client->request($httpMethod, $url);
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+    }
+    public function getUrlsForRegularUsers():?\Generator
+    {
+        yield ['GET', '/warehouse/'];
+        yield ['GET', '/warehouse/edit/1'];
+        yield ['GET', '/warehouse/all'];
     }
 
-    public function testEdit(): void
-    {
-        $this->client->request('GET', '/warehouse/edit/1');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->client->request('POST', '/warehouse/edit/1');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
 }

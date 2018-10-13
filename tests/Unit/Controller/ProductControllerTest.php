@@ -2,29 +2,26 @@
 
 namespace App\Tests\Unit\Controller;
 
-use App\Tests\Unit\DataFixtures\DataFixtureTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
-class ProductControllerTest extends DataFixtureTestCase
+class ProductControllerTest extends WebTestCase
 {
-
-    public function testIndex(): void
+    /**
+     * @dataProvider getUrlsForRegularUsers
+     */
+    public function testOkByAllRoutes(string $httpMethod, string $url): void
     {
-        $this->client->request('GET', '/product/');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $client = static::createClient();
+        $client->request($httpMethod, $url);
+        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
-
-    public function testUpload(): void
+    public function getUrlsForRegularUsers():?\Generator
     {
-        $this->client->request('GET', '/product/upload');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testAll(): void
-    {
-        $this->client->request('GET', '/product/all/1');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertJson(200, $this->client->getResponse()->getContent());
-
+        yield ['GET', '/product/'];
+        yield ['GET', '/product/upload'];
+        //yield ['GET', '/product/template'];
+        yield ['GET', '/product/all/1'];
     }
 
 }

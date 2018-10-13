@@ -15,7 +15,7 @@
         <env name="APP_SECRET" value="s$cretf0rt3st" />
         <env name="SHELL_VERBOSITY" value="-1" />
         <!-- define your env variables for the test env here -->
-
+        <env name="SYMFONY_DEPRECATIONS_HELPER_DISABLED" value="weak" />
         <env name="DATABASE_URL" value="sqlite:///var/data/inventory.sqlite"/>
     </php>
 
