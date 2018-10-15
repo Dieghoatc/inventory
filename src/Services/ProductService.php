@@ -9,7 +9,6 @@ use App\Repository\ProductRepository;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use Symfony\Component\Debug\Exception\ClassNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -57,10 +56,17 @@ class ProductService
     public function storeProducts(array $items, Warehouse $warehouse): void
     {
         $validations = [];
+        $productsAdded = [];
         foreach ($items as $key => $item) {
             if($key === 0){
                 continue;
             }
+
+            if(\in_array($item[0], $productsAdded, true)){
+                continue;
+            }
+
+            $productsAdded[] = $item[0];
             $product = new Product();
             $product->setCode($item[0]);
             $product->setTitle($item[1]);
@@ -76,17 +82,37 @@ class ProductService
         $this->manager->flush();
     }
 
-    public function moveProduct(array $items, Warehouse $warehouse){
+    public function moveProducts(array $items, Warehouse $warehouse): void
+    {
         foreach ($items as $item) {
-            $product = $this->productRepo->findOneBy(['warehouse' => $warehouse, 'uuid' => $item['uuid']]);
-            if(!$product){
-                $product = new Product();
-                $product->setCode($item['code']);
-                $product->setQuantity($item['quantity']);
-                $product->setWarehouse($warehouse);
+            $productSource = $this->productRepo->findOneBy(['uuid' => $item['uuid']]);
+            if(!$productSource){
+                throw new \InvalidArgumentException ('Product was not found');
             }
-            $product->setQuantity($product->getQuantity() + $item['quantity']);
-            $this->manager->persist($product);
+
+            if($productSource->getQuantity() < $item['quantity']){
+                throw new \InvalidArgumentException ('The quantity given is greater that product quantity.');
+            }
+
+            $productDestination =  $this->productRepo->findOneBy(['warehouse' => $warehouse, 'code' => $productSource->getCode()]);
+            $quantitySource = $productSource->getQuantity() - $item['quantity'];
+            if($productDestination instanceof Product) {
+                $productDestination->addQuantity($item['quantity']);
+            } else {
+                $productDestination = new Product();
+                $productDestination->setCode($productSource->getCode());
+                $productDestination->setTitle($productSource->getTitle());
+                $productDestination->setWarehouse($warehouse);
+                $productDestination->setQuantity($item['quantity']);
+            }
+
+            if($productSource->getUuid() === $productDestination->getUuid()){
+                throw new \LogicException('Source and destination warehouse cannot be the same.');
+            }
+
+            $productSource->setQuantity($quantitySource);
+            $this->manager->persist($productDestination);
+            $this->manager->persist($productSource);
         }
         $this->manager->flush();
     }

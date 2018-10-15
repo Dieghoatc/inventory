@@ -9,6 +9,7 @@ use App\Services\ProductService;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -25,7 +26,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/", name="product_index", methods={"get"})
      */
-    public function index(ProductRepository $productRepo): Response
+    public function index(): Response
     {
         return $this->render('product/index.html.twig');
     }
@@ -84,13 +85,22 @@ class ProductController extends AbstractController
     /**
      * @Route("/move/{warehouse}", name="move", options={"expose"=true}, methods={"post"})
      */
-    public function move(ProductRepository $productRepo, Request $request, Warehouse $warehouse): Response
+    public function move(ProductService $productService, Request $request, Warehouse $warehouse): Response
     {
         $products = json_decode($request->getContent(), true);
         if(!\is_array($products)){
             throw new BadRequestHttpException('Malformed JSON request');
         }
 
-        dd($products);
+        $productService->moveProducts($products['data'], $warehouse);
+        return new JsonResponse(['status' => 'ok']);
+    }
+
+    /**
+     * @Route("/update/bar-code", name="bar_code", methods={"get"})
+     */
+    public function updateBarCode(): Response
+    {
+        return $this->render('product/bar-code.html.twig');
     }
 }

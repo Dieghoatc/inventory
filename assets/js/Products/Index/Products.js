@@ -17,29 +17,59 @@ class Products extends Component {
       selection: [],
       selectAll: false,
       confirm: [],
-      warehouse: 9
+      warehouseSelected: 1,
+      warehouses: [],
+      modals: {
+        confirmModal: false,
+      },
     };
     this.toggleAll = this.toggleAll.bind(this);
     this.toggleSelection = this.toggleSelection.bind(this);
     this.isSelected = this.isSelected.bind(this);
-    this.warehouseChange = this.warehouseChange.bind(this);
+    this.isModalOpen = this.isModalOpen.bind(this);
     this.selected = this.selected.bind(this);
   }
 
   componentDidMount() {
-    const { warehouse } = this.state;
-    axios.get(Routing.generate('product_all', { warehouse: warehouse })).then(res => res.data).then(
+    axios.get(Routing.generate('warehouse_all')).then(res => res.data).then(
       (result) => {
+        if (result.length <= 0) {
+          throw new Error('The number of warehouses is 0, please add another Warehouse');
+        }
+        const warehouse = result[0].id;
+        this.setState({
+          warehouseSelected: warehouse,
+          warehouses: result,
+        });
+        this.loadProducts(warehouse);
+      },
+    );
+  }
+
+  loadProducts(warehouse) {
+    this.setState({
+      loading: true,
+    });
+    axios.get(Routing.generate('product_all', { warehouse })).then(res => res.data).then(
+      (result2) => {
         this.setState({
           loading: false,
-          data: result,
+          data: result2,
+          warehouseSelected: warehouse,
         });
       },
     );
   }
 
-  warehouseChange() {
-    console.log('Change Warehouse');
+  isModalOpen(modalName, status) {
+    const { modals } = this.state;
+    if (typeof modals[modalName] === 'undefined') {
+      throw new Error('Modal name not defined');
+    }
+    modals[modalName] = status;
+    this.setState({
+      modals,
+    });
   }
 
   selected(e) {
@@ -53,9 +83,12 @@ class Products extends Component {
         }
       });
     });
-
+    const modals = {
+      confirmModal: true,
+    };
     this.setState({
       confirm,
+      modals,
     });
   }
 
@@ -98,7 +131,7 @@ class Products extends Component {
 
   render() {
     const {
-      loading, data, selectAll, confirm, selection, warehouse,
+      loading, data, selectAll, confirm, selection, warehouses, modals, warehouseSelected,
     } = this.state;
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
@@ -121,25 +154,21 @@ class Products extends Component {
       toggleAll,
       selectType: 'checkbox',
     };
-    const warehouses = [];
-    const warehousesRender = [];
-    data.forEach((item) => {
-      const found = warehouses.filter(item2 => (
-        item.warehouse.id === item2.id
-      ));
-      if (found.length === 0) {
-        warehouses.push(item.warehouse);
-        warehousesRender.push(
-          <option value={item.warehouse.id} key={item.warehouse.id}>{item.warehouse.name}</option>,
-        );
-      }
-    });
+
     return (
       <div>
         <div className="row">
           <div className="col-md-6">
-            <select className="form-control" onChange={this.warehouseChange}>
-              {warehousesRender}
+            <select className="form-control" onChange={e => this.loadProducts(e.target.value)}>
+              {warehouses.map(item => (
+                <option
+                  value={item.id}
+                  key={item.id}
+                  defaultValue={item.id === warehouseSelected}
+                >
+                  {item.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -167,11 +196,12 @@ class Products extends Component {
           {...checkboxProps}
           keyField="uuid"
         />
-        {confirm.length > 0 && (
+        {(modals.confirmModal && confirm.length > 0) && (
         <ConfirmSelectedProducts
           data={confirm}
-          visible
-          currentWarehouse={warehouse}
+          closeModal={this.isModalOpen}
+          warehouseSelected={warehouseSelected}
+          warehouses={warehouses}
         />)}
       </div>
     );

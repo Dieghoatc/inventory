@@ -4,12 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(fields={"code", "warehouse"})
  */
 class Product
 {
@@ -135,5 +137,10 @@ class Product
         $this->quantity = $quantity;
 
         return $this;
+    }
+
+    public function addQuantity(int $quantity): void
+    {
+        $this->quantity += $quantity;
     }
 }

@@ -2,26 +2,27 @@
 
 namespace App\Tests\Unit\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\Unit\Utils\UserWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProductControllerTest extends WebTestCase
+class ProductControllerTest extends UserWebTestCase
 {
     /**
      * @dataProvider getUrlsForRegularUsers
      */
     public function testOkByAllRoutes(string $httpMethod, string $url): void
     {
-        $client = static::createClient();
-        $client->request($httpMethod, $url);
-        $this->assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $this->logIn();
+        $this->client->request($httpMethod, $url);
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
+
     public function getUrlsForRegularUsers():?\Generator
     {
-        yield ['GET', '/product/'];
-        yield ['GET', '/product/upload'];
-        //yield ['GET', '/product/template'];
-        yield ['GET', '/product/all/1'];
+        yield ['GET', '/admin/product/'];
+        yield ['GET', '/admin/product/upload'];
+        //yield ['GET', '/admin/product/template'];
+        yield ['GET', '/admin/product/all/1'];
     }
 
 }

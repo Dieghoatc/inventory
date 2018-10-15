@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'product.index.title'|trans }}{% endblock %}
+{% block title %}{{ 'product.update.bar-code.title'|trans }}{% endblock %}
 
 {% block content %}
     <div class="card">
         <div class="card-header">
-            {{ 'warehouse.index.title'|trans }}
+            {{ 'product.update.bar-code.title'|trans }}
         </div>
         <div class="card-body">
             <div id="react-component"></div>
@@ -14,5 +14,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('build/product.js') }}"></script>
+    <script src="{{ asset('build/bar-code.js') }}"></script>
 {% endblock %}

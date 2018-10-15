@@ -1,6 +1,7 @@
 welcome: "Welcome"
 edit: "Edit"
 move: "Move"
+moving: "Moving"
 close: "Close"
 options: "Options"
 upload: "Upload"
@@ -30,6 +31,12 @@ product:
     quantity: "Quantity"
     title: "Title"
     products: "Products"
+  update:
+    bar-code:
+      title: "Update the inventory using a code reader machine."
+      description: "Using this view you can update your warehouses products using a code reader machine."
+      destination: "Destination Warehouse"
+      add_action: "Add this product"
 warehouses: "Warehouses"
 warehouse:
   index:
