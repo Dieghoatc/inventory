@@ -103,4 +103,17 @@ class ProductController extends AbstractController
     {
         return $this->render('product/bar-code.html.twig');
     }
+
+    /**
+     * @Route("/update/bar-code", name="bar_code_save", methods={"post"})
+     */
+    public function saveBarCode(Request $request): Response
+    {
+        $products = json_decode($request->getContent(), true);
+        if(!\is_array($products)){
+            throw new BadRequestHttpException('Malformed JSON request');
+        }
+
+        dd($products);
+    }
 }

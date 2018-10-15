@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/", name="user_index")
+     * @Route("/", name="index")
      */
     public function index(UserRepository $userRepo): Response
     {

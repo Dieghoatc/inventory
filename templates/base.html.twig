@@ -46,12 +46,19 @@
                         <div class="dropdown-menu" aria-labelledby="pagesDropdown">
                             <a class="dropdown-item" href="{{ path('product_product_index') }}">{{ 'product_list'|trans }}</a>
                             <a class="dropdown-item" href="{{ path('product_product_upload') }}">{{ 'products_upload'|trans }}</a>
+                            <a class="dropdown-item" href="{{ path('product_bar_code') }}">{{ 'product.update.bar-code.title'|trans }}</a>
                         </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('warehouse_warehouse_index') }}">
                             <i class="fas fa-fw fa-table"></i>
                             <span>{{ 'warehouses'|trans }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_index') }}">
+                            <i class="fas fa-fw fa-users"></i>
+                            <span>{{ 'user.index.title'|trans }}</span>
                         </a>
                     </li>
                 </ul>
