@@ -46,7 +46,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{user}", name="user_new")
+     * @Route("/edit/{user}", name="user_edit")
      */
     public function edit(Request $request, User $user): Response
     {

@@ -27,7 +27,9 @@
                             <td>{{ user.email }}</td>
                             <td>Rol</td>
                             <td>
-                                <a href="#" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> {{ 'edit'|trans }}</a>
+                                <a href="{{ path('user_user_edit', {user:user.id}) }}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-edit"></i> {{ 'edit'|trans }}
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
