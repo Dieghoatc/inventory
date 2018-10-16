@@ -49,17 +49,19 @@ class UserType extends AbstractType
             'attr' => [
                 'class' => 'form-control',
                 'label' => 'user.new.roles'
-            ]
+            ],
+            'multiple' => true
         ])
         ->add('enabled', ChoiceType::class, [
             'choices'  => [
-                '1' => 'Enabled',
-                '0' => 'Disabled',
+                'Enabled' => '1',
+                'Disabled' => '0',
             ],
             'attr' => [
                 'class' => 'form-control',
                 'label' => 'user.new.enabled'
-            ]
+            ],
+            'multiple' => false,
         ])
         ->add('save', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary'],
