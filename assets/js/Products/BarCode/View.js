@@ -11,13 +11,29 @@ class View extends Component {
       products: [],
       warehouse: null,
       showConfirm: false,
+      warehouses: [],
+      sending: false,
     };
     this.removeProduct = this.removeProduct.bind(this);
     this.addProduct = this.addProduct.bind(this);
-    this.setWarehouse = this.setWarehouse.bind(this);
+    this.handleWarehouse = this.handleWarehouse.bind(this);
+    this.toUpdateQuantities = this.toUpdateQuantities.bind(this);
   }
 
-  setWarehouse(e) {
+  componentDidMount() {
+    axios.get(Routing.generate('warehouse_all')).then(res => res.data).then(
+      (result) => {
+        if (result.length <= 0) {
+          throw new Error('The number of warehouses is 0, please add another Warehouse');
+        }
+        this.setState({
+          warehouses: result,
+        });
+      },
+    );
+  }
+
+  handleWarehouse(e) {
     this.setState({
       warehouse: e.target.value,
     });
@@ -61,18 +77,23 @@ class View extends Component {
 
   toUpdateQuantities() {
     const { products, warehouse } = this.state;
-    axios.post(Routing.generate('product_move', { warehouse }), {
+    this.setState({
+      sending: true,
+    });
+    axios.post(Routing.generate('product_bar_code_save', { warehouse }), {
       data: products,
     }).then(res => res.data).then(() => {
       this.setState({
         showConfirm: false,
+        sending: false,
+        products: [],
       });
     });
   }
 
   render() {
     const {
-      products, currentText, warehouse, showConfirm,
+      products, currentText, warehouse, showConfirm, warehouses, sending
     } = this.state;
     return (
       <div>
@@ -108,7 +129,7 @@ class View extends Component {
                   {products.map((item, key) => (
                     <tr key={item.code}>
                       <th scope="row">{key + 1}</th>
-                      <td>
+                      <td width="75%">
                         {item.code}
                       </td>
                       <td>
@@ -136,9 +157,11 @@ class View extends Component {
 
               <div className="form-group">
                 <label htmlFor="destinationWarehouse">{Translator.trans('product.update.bar-code.destination')}</label>
-                <select className="form-control form-control-sm" onChange={this.setWarehouse}>
-                  <option defaultValue>Colombia</option>
-                  <option>Usa</option>
+                <select className="form-control form-control-sm" onChange={this.handleWarehouse}>
+                  <option key={0} defaultValue>{Translator.trans('product.update.bar-code.select_some_warehouse')}</option>
+                  {warehouses.map(item => (
+                    <option value={item.id} key={item.id}>{item.name}</option>
+                  ))}
                 </select>
               </div>
 
@@ -165,7 +188,7 @@ class View extends Component {
             <div className="modal-body">
               <div className="row">
                 <div className="col-md-12">
-                  {Translator.trans('product.update.bar-code.confirm.body', { warehouse: warehouse })}
+                  {Translator.trans('product.update.bar-code.confirm.body', { warehouse })}
                   <hr />
                   <table className="table table-sm">
                     <thead>
@@ -177,8 +200,10 @@ class View extends Component {
                     <tbody>
                       {products.map((item, key) => (
                         <tr key={item.code}>
-                          <th scope="row">{key + 1}</th>
                           <td>
+                            {key + 1}
+                          </td>
+                          <td width="75%">
                             {item.code}
                           </td>
                         </tr>
@@ -189,12 +214,20 @@ class View extends Component {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn warning">
+              <button type="button" className="btn btn-danger">
                 {Translator.trans('cancel')}
               </button>
-              <button type="button" className="btn btn-primary" onClick={this.toUpdateQuantities}>
-                {Translator.trans('product.update.bar-code.confirm.action')}
-              </button>
+              {sending ? (
+                <button type="button" className="btn btn-primary disabled">
+                  {Translator.trans('product.update.bar-code.confirm.action_doing')}
+                  &nbsp;
+                  <i className="fas fa-sync fa-spin" />
+                </button>
+              ) : (
+                <button type="button" className="btn btn-primary" onClick={this.toUpdateQuantities}>
+                  {Translator.trans('product.update.bar-code.confirm.action')}
+                </button>
+              )}
             </div>
           </Modal>
         )}

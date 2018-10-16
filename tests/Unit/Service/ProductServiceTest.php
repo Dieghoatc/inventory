@@ -107,4 +107,25 @@ class ProductServiceTest extends WebTestCase
         $this->assertEquals(50, $productSource->getQuantity());
         $this->assertEquals(50, $productDestination->getQuantity());
     }
+
+    public function testMoveProducts(): void
+    {
+        $productService = $this->client->getContainer()->get(ProductService::class);
+        $warehouse = $this->client->getContainer()->get('doctrine')->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
+        $dataPrepared = [
+            ['code' => 'CODE-TEST-01']
+        ];
+        $productService->addProductsToInventory($dataPrepared, $warehouse);
+        $product = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['warehouse' => $warehouse]);
+        $products = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(Product::class)
+            ->findBy(['warehouse' => $warehouse]);
+
+        $this->assertEquals(51, $product->getQuantity());
+        $this->assertCount(4, $products);
+    }
 }

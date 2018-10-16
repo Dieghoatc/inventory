@@ -22,9 +22,16 @@ class UserFixures extends Fixture
         $items = [
             [
                 'name' => 'Sergio Barbosa',
-                'email' => 'sergio@example.com',
+                'email' => 'sergio@gmail.com',
                 'username' => 'sbarbosa115',
                 'password' => '123456',
+                'roles' => ['ROLE_ADMIN']
+            ],
+            [
+                'name' => 'Juan Diaz',
+                'email' => 'sales@klassicfab.com',
+                'username' => 'juan',
+                'password' => 'Klassic2018',
                 'roles' => ['ROLE_ADMIN']
             ],
         ];

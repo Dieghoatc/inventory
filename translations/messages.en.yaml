@@ -42,10 +42,12 @@ product:
       add_action: "Add this product"
       upload: "Upload Products"
       no_products: "No products to show"
+      select_some_warehouse: "Select some warehouse"
       confirm:
         title: "Confirm action"
         body: "Are you sure you want to update the quantity of those products for %warehouse% warehouse?"
         action: "Update Quantity"
+        action_doing: "Updating Quantity"
 warehouses: "Warehouses"
 warehouse:
   index:
@@ -62,6 +64,11 @@ user:
     rol: "Rol"
   new:
     title: "Add User"
+    name: "Name"
+    email: "Email"
+    rol: "Rol"
+  edit:
+    title: "Edit User"
     name: "Name"
     email: "Email"
     rol: "Rol"

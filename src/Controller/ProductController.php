@@ -105,15 +105,15 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/update/bar-code", name="bar_code_save", methods={"post"})
+     * @Route("/update/bar-code/{warehouse}", name="bar_code_save", options={"expose"=true}, methods={"post"})
      */
-    public function saveBarCode(Request $request): Response
+    public function saveBarCode(ProductService $productService, Request $request, Warehouse $warehouse): Response
     {
         $products = json_decode($request->getContent(), true);
         if(!\is_array($products)){
             throw new BadRequestHttpException('Malformed JSON request');
         }
-
-        dd($products);
+        $productService->addProductsToInventory($products['data'], $warehouse);
+        return new JsonResponse(['status' => 'ok']);
     }
 }

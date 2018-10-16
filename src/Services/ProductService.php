@@ -116,4 +116,16 @@ class ProductService
         }
         $this->manager->flush();
     }
+
+    public function addProductsToInventory(array $items, Warehouse $warehouse): void
+    {
+        foreach ($items as $item){
+            $product = $this->productRepo->findOneBy(['code' => $item['code'], 'warehouse' => $warehouse]);
+            if($product instanceof Product){
+                $product->addQuantity(1);
+                $this->manager->persist($product);
+            }
+        }
+        $this->manager->flush();
+    }
 }

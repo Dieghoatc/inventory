@@ -28,18 +28,39 @@ class UserType extends AbstractType
                 'label' => 'user.new.email'
             ]
         ])
+        ->add('username', TextType::class, [
+            'attr' => [
+                'class' => 'form-control',
+                'label' => 'user.new.username'
+            ]
+        ])
         ->add('password', PasswordType::class, [
             'attr' => [
                 'class' => 'form-control',
                 'label' => 'user.new.password'
             ]
         ])
-        /*->add('roles', ChoiceType::class, [
+        ->add('roles', ChoiceType::class, [
+            'choices'  => [
+                'ROLE_ADMIN' => 'ROLE_ADMIN',
+                'ROLE_LOADER_INVENTORY' => 'ROLE_LOADER_INVENTORY',
+                'ROLE_WAREHOUSE_ADMIN' => 'ROLE_WAREHOUSE_ADMIN',
+            ],
             'attr' => [
                 'class' => 'form-control',
                 'label' => 'user.new.roles'
             ]
-        ])*/
+        ])
+        ->add('enabled', ChoiceType::class, [
+            'choices'  => [
+                '1' => 'Enabled',
+                '0' => 'Disabled',
+            ],
+            'attr' => [
+                'class' => 'form-control',
+                'label' => 'user.new.enabled'
+            ]
+        ])
         ->add('save', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary'],
         ]);
