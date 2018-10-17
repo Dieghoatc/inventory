@@ -49,14 +49,28 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/template", name="template", methods={"get"})
+     * @Route("/template", name="template", methods={"get", "post"}, options={"expose"=true})
      */
-    public function uploadProductsTemplate(TranslatorInterface $translator): Response
-    {
+    public function uploadProductsTemplate(
+        ProductRepository $productRepo,
+        TranslatorInterface $translator,
+        Request $request
+    ): Response {
         $template = new Spreadsheet();
         $template->getActiveSheet()->setCellValue('A1', $translator->trans('product.template.code'));
         $template->getActiveSheet()->setCellValue('B1', $translator->trans('product.template.title'));
         $template->getActiveSheet()->setCellValue('C1', $translator->trans('product.template.quantity'));
+
+        if ($request->get('data')) {
+            $items = $request->get('data');
+            foreach ($items as $key => $item){
+                $row = $key + 2;
+                $product = $productRepo->findOneBy(['uuid' => $item]);
+                $template->getActiveSheet()->setCellValue("A{$row}", $product->getCode());
+                $template->getActiveSheet()->setCellValue("B{$row}", $product->getTitle());
+                $template->getActiveSheet()->setCellValue("C{$row}", 0);
+            }
+        }
 
         $writer = new Xls($template);
         $response =  new StreamedResponse(
@@ -116,4 +130,5 @@ class ProductController extends AbstractController
         $productService->addProductsToInventory($products['data'], $warehouse);
         return new JsonResponse(['status' => 'ok']);
     }
+
 }

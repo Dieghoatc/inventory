@@ -59,6 +59,15 @@ class Product
      */
     private $quantity;
 
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0}, nullable=true)
+     */
+    private $status;
+
+    const STATUS_COMFIRMED = 1;
+
+    const STATUS_PENDING_TO_CONFIRM = 2;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -142,5 +151,17 @@ class Product
     public function addQuantity(int $quantity): void
     {
         $this->quantity += $quantity;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }

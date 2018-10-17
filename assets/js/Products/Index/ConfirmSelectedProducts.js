@@ -42,7 +42,7 @@ class ConfirmSelectedProducts extends Component {
 
   selectDestinationWarehouse(id) {
     this.setState({
-      warehouseSelected: id,
+      destinationWarehouse: id,
     });
   }
 
@@ -82,7 +82,7 @@ class ConfirmSelectedProducts extends Component {
 
   render() {
     const {
-      data, loading, warehouses, sending, warehouseSelected, destinationWarehouse,
+      data, loading, warehouses, sending, warehouseSelected,
     } = this.state;
     const columns = [{
       Header: 'Code',
@@ -112,9 +112,6 @@ class ConfirmSelectedProducts extends Component {
               <select className="form-control" onChange={this.selectDestinationWarehouse}>
                 {warehouses.map((item) => {
                   if (item.id !== warehouseSelected) {
-                    if (destinationWarehouse === null) {
-                      this.setState({ destinationWarehouse: item.id });
-                    }
                     return (<option value={item.id} key={item.id}>{item.name}</option>);
                   }
                   return false;
@@ -133,9 +130,8 @@ class ConfirmSelectedProducts extends Component {
               </button>
             ) : (
               <button type="button" className="btn btn-secondary disabled">
+                <i className="fas fa-sync fa-spin">&nbsp;</i>
                 {Translator.trans('moving')}
-                &nbsp;
-                <i className="fas fa-sync fa-spin" />
               </button>
             )
           }

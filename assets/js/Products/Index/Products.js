@@ -3,6 +3,7 @@ import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import axios from 'axios';
+import downloadjs from 'downloadjs';
 import ConfirmSelectedProducts from './ConfirmSelectedProducts';
 
 const CheckboxTable = checkboxHOC(ReactTable);
@@ -38,7 +39,6 @@ class Products extends Component {
         }
         const warehouse = result[0].id;
         this.setState({
-          warehouseSelected: warehouse,
           warehouses: result,
         });
         this.loadProducts(warehouse);
@@ -89,6 +89,18 @@ class Products extends Component {
     this.setState({
       confirm,
       modals,
+    });
+  }
+
+  downloadExcel() {
+    const { selection } = this.state;
+    axios.get(Routing.generate('product_template'), {
+      params: {
+        data: selection,
+      },
+      responseType: 'blob',
+    }).then((response) => {
+      downloadjs(response.data, Translator.trans('product.template.products') + '.xlsx');
     });
   }
 
@@ -176,11 +188,20 @@ class Products extends Component {
         <div className="row">
           <div className="col-md-6">
             <button
-              className={selection.length > 0 ? 'btn btn-sm btn-success' : 'btn btn-sm btn-success disabled'}
+              className={selection.length > 0 ? 'btn btn-sm btn-success mr-1' : 'btn btn-sm btn-success mr-1 disabled'}
               onClick={e => this.selected(e)}
               type="button"
             >
+              <i className="fas fa-people-carry">&nbsp;</i>
               {Translator.trans('product.index.move_between_warehouses')}
+            </button>
+            <button
+              className={selection.length > 0 ? 'btn btn-sm btn-success mr-1' : 'btn btn-sm btn-success mr-1 disabled'}
+              onClick={e => this.downloadExcel(e)}
+              type="button"
+            >
+              <i className="fas fa-archive">&nbsp;</i>
+              {Translator.trans('product.index.update_inventory_excel')}
             </button>
           </div>
         </div>

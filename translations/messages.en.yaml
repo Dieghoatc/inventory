@@ -21,6 +21,7 @@ product:
     sku: "SKU"
     warehouse: "Warehouse"
     destination_warehouse: "Destination Warehouse"
+    update_inventory_excel: "Update Selected Using Excel"
   upload:
     title: "Upload products"
     description: "This form allows you upload a excel file with products to add or update them on the database."

@@ -58,24 +58,23 @@ class ProductService
         $validations = [];
         $productsAdded = [];
         foreach ($items as $key => $item) {
-            if($key === 0){
+            if($key === 0 || $item[2] === 0 || \in_array($item[0], $productsAdded, true)){
                 continue;
             }
 
-            if(\in_array($item[0], $productsAdded, true)){
-                continue;
+            $product =  $this->productRepo->findOneBy(['warehouse' => $warehouse, 'code' => $item[0]]);
+            if(!$product instanceof Product){
+                $product = new Product();
+                $product->setCode($item[0]);
+                $product->setTitle($item[1]);
+                $product->setWarehouse($warehouse);
             }
-
-            $productsAdded[] = $item[0];
-            $product = new Product();
-            $product->setCode($item[0]);
-            $product->setTitle($item[1]);
-            $product->setQuantity((int) $item[2]);
-            $product->setWarehouse($warehouse);
+            $product->addQuantity($item[2]);
             $errors = $this->validator->validate($product);
             if(\count($errors) !== 0){
                 $validations[] = $validations;
             } else {
+                $productsAdded[] = $item[0];
                 $this->manager->persist($product);
             }
         }

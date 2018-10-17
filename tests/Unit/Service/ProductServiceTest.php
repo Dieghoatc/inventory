@@ -119,7 +119,7 @@ class ProductServiceTest extends WebTestCase
         $product = $this->client->getContainer()
             ->get('doctrine')
             ->getRepository(Product::class)
-            ->findOneBy(['warehouse' => $warehouse]);
+            ->findOneBy(['warehouse' => $warehouse, 'code' => 'CODE-TEST-01']);
         $products = $this->client->getContainer()
             ->get('doctrine')
             ->getRepository(Product::class)
@@ -127,5 +127,41 @@ class ProductServiceTest extends WebTestCase
 
         $this->assertEquals(51, $product->getQuantity());
         $this->assertCount(4, $products);
+    }
+
+    public function testUpdateQuantityFromArray(): void
+    {
+        $productService = $this->client->getContainer()->get(ProductService::class);
+        $warehouse = $this->client->getContainer()->get('doctrine')->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
+        $dataPrepared = [
+            ['Code', 'Title', 'Quantity'],
+            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '49'],
+        ];
+
+        $productService->storeProducts($dataPrepared, $warehouse);
+
+        $product = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['warehouse' => $warehouse, 'code' => 'CODE-TEST-01']);
+        $this->assertEquals(100, $product->getQuantity());
+    }
+
+    public function testUpdateQuantityFromArrayCase0(): void
+    {
+        $productService = $this->client->getContainer()->get(ProductService::class);
+        $warehouse = $this->client->getContainer()->get('doctrine')->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
+        $dataPrepared = [
+            ['Code', 'Title', 'Quantity'],
+            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '0'],
+        ];
+
+        $productService->storeProducts($dataPrepared, $warehouse);
+
+        $product = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['warehouse' => $warehouse, 'code' => 'CODE-TEST-01']);
+        $this->assertEquals(100, $product->getQuantity());
     }
 }
