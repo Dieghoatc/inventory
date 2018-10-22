@@ -1,0 +1,37 @@
+version: '3'
+services:
+  web:
+    tty: true
+    build: .
+    volumes:
+      - .:/var/www/html:delegated
+    environment:
+      - DEBUG=true
+    command: >
+      sh -c '
+        /etc/init.d/nginx start
+        /etc/init.d/php7.2-fpm start
+        rm -rf var/cache/dev var/sessions/dev var/logs/dev
+        rm -rf var/cache/prod var/sessions/prod var/logs/prod
+        composer install
+        sleep 5
+        chmod 777 -R var/cache var/sessions var/logs
+        mkdir -p web/uploads
+        supervisord
+      '
+    ports:
+      - 80:80
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./Docker/mysql.cnf.d/sql_mode.cnf:/etc/my.cnf
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: "symfony"
+      MYSQL_USER: "symfony"
+      MYSQL_PASSWORD: "symfony"
+      MYSQL_ROOT_PASSWORD: "symfony"
+    depends_on:
+    - web
+    ports:
+      - 6603:3306
