@@ -13,6 +13,7 @@ class View extends Component {
       showConfirm: false,
       warehouses: [],
       sending: false,
+      enabled: true,
     };
     this.removeProduct = this.removeProduct.bind(this);
     this.addProduct = this.addProduct.bind(this);
@@ -33,6 +34,12 @@ class View extends Component {
     );
   }
 
+  componentDidUpdate() {
+    if(this.state.enabled === true) {
+      this.inputValue.focus();
+    }
+  }
+
   handleWarehouse(e) {
     this.setState({
       warehouse: e.target.value,
@@ -44,6 +51,7 @@ class View extends Component {
     if (currentText !== '') {
       products.push({
         code: currentText,
+        key: `${products.length-1}-${currentText}`
       });
       this.setState({
         products,
@@ -52,10 +60,11 @@ class View extends Component {
     }
   }
 
-  removeProduct(code) {
+  removeProduct(key) {
+    console.log(key);
     const { products } = this.state;
     const filtered = products.filter(item => (
-      item.code === code
+      item.key !== key
     ));
     this.setState({
       products: filtered,
@@ -91,6 +100,7 @@ class View extends Component {
     });
   }
 
+
   render() {
     const {
       products, currentText, warehouse, showConfirm, warehouses, sending
@@ -111,6 +121,8 @@ class View extends Component {
                   value={currentText}
                   onChange={e => this.currentText(e)}
                   onKeyPress={e => this.addProductKeyPressHandler(e)}
+                  autoFocus
+                  ref={input => this.inputValue = input}
                 />
                 <button type="button" className="btn btn-primary btn-sm my-2" onClick={this.addProduct}>
                   {Translator.trans('product.update.bar-code.add_action')}
@@ -127,7 +139,7 @@ class View extends Component {
                 </thead>
                 <tbody>
                   {products.map((item, key) => (
-                    <tr key={item.code}>
+                    <tr key={item.key}>
                       <th scope="row">{key + 1}</th>
                       <td width="75%">
                         {item.code}
@@ -136,7 +148,7 @@ class View extends Component {
                         <button
                           type="button"
                           className="btn btn-sm btn-danger"
-                          onClick={e => this.removeProduct(e, item.code)}
+                          onClick={() => this.removeProduct(item.key)}
                         >
                           <i className="fas fa-trash-alt" />
                         </button>
