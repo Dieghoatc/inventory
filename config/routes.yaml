@@ -1,3 +1,0 @@
-homepage:
-  path: /admin/
-  controller: App\Controller\ProductController::index
