@@ -15,6 +15,10 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
  */
 class Product
 {
+    const STATUS_COMFIRMED = 1;
+
+    const STATUS_PENDING_TO_CONFIRM = 2;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -63,10 +67,6 @@ class Product
      * @ORM\Column(type="integer", options={"default" : 0}, nullable=true)
      */
     private $status;
-
-    const STATUS_COMFIRMED = 1;
-
-    const STATUS_PENDING_TO_CONFIRM = 2;
 
     public function getId(): ?int
     {
