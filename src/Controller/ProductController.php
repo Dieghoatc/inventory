@@ -131,4 +131,5 @@ class ProductController extends AbstractController
         return new JsonResponse(['status' => 'ok']);
     }
 
+
 }

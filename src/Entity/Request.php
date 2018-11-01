@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\OrderRepository")
+ * @ORM\Entity(repositoryClass="RequestRepository")
  */
-class Order
+class Request
 {
     /**
      * @ORM\Id()
@@ -29,13 +29,13 @@ class Order
     private $status = [];
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="orders")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="request")
      * @ORM\JoinColumn(nullable=false)
      */
     private $customer;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="orders")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="request")
      */
     private $comment;
 
@@ -97,7 +97,7 @@ class Order
     {
         if (!$this->comment->contains($comment)) {
             $this->comment[] = $comment;
-            $comment->setOrders($this);
+            $comment->setRequest($this);
         }
 
         return $this;
@@ -108,8 +108,8 @@ class Order
         if ($this->comment->contains($comment)) {
             $this->comment->removeElement($comment);
             // set the owning side to null (unless already changed)
-            if ($comment->getOrders() === $this) {
-                $comment->setOrders(null);
+            if ($comment->getRequest() === $this) {
+                $comment->setRequest(null);
             }
         }
 

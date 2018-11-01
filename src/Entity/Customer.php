@@ -39,13 +39,13 @@ class Customer
     private $phone;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="customer", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Request", mappedBy="customer", orphanRemoval=true)
      */
-    private $orders;
+    private $request;
 
     public function __construct()
     {
-        $this->orders = new ArrayCollection();
+        $this->request = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -102,30 +102,30 @@ class Customer
     }
 
     /**
-     * @return Collection|Order[]
+     * @return Collection|Request[]
      */
-    public function getOrders(): Collection
+    public function getRequest(): Collection
     {
-        return $this->orders;
+        return $this->request;
     }
 
-    public function addOrder(Order $order): self
+    public function addRequest(Request $request): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setCustomer($this);
+        if (!$this->request->contains($request)) {
+            $this->request[] = $request;
+            $request->setCustomer($this);
         }
 
         return $this;
     }
 
-    public function removeOrder(Order $order): self
+    public function removeRequest(Request $request): self
     {
-        if ($this->orders->contains($order)) {
-            $this->orders->removeElement($order);
+        if ($this->request->contains($request)) {
+            $this->request->removeElement($request);
             // set the owning side to null (unless already changed)
-            if ($order->getCustomer() === $this) {
-                $order->setCustomer(null);
+            if ($request->getCustomer() === $this) {
+                $request->setCustomer(null);
             }
         }
 

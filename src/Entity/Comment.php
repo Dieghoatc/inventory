@@ -28,9 +28,9 @@ class Comment
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Order", inversedBy="comment")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Request", inversedBy="comment")
      */
-    private $orders;
+    private $request;
 
     public function getId(): ?int
     {
@@ -61,14 +61,14 @@ class Comment
         return $this;
     }
 
-    public function getOrders(): ?Order
+    public function getRequest(): ?Request
     {
-        return $this->orders;
+        return $this->request;
     }
 
-    public function setOrders(?Order $orders): self
+    public function setRequest(?Request $request): self
     {
-        $this->orders = $orders;
+        $this->request = $request;
 
         return $this;
     }

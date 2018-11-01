@@ -15,11 +15,13 @@ services:
         rm -rf var/cache/prod var/sessions/prod var/logs/prod
         composer install
         sleep 5
-        chmod 777 -R var/cache var/sessions var/logs
+        chmod 777 -R var/cache var/sessions var/logs var/data
         mkdir -p web/uploads
         php bin/console --no-interaction doctrine:migrations:migrate
         php bin/console doctrine:schema:update --force
         bin/console fos:js-routing:dump --format=json --target=public/js/fos_js_routes.json
+        touch var/data/inventory.sqlite
+        chmod 777 -R var/data/inventory.sqlite
         supervisord
       '
     ports:

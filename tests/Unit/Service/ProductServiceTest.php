@@ -17,6 +17,21 @@ class ProductServiceTest extends WebTestCase
         $this->client = static::createClient();
     }
 
+    public function testManyToManyChangeStoreProducts(): void
+    {
+        $warehouse = $this->client->getContainer()->get('doctrine')->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
+        $productService = $this->client->getContainer()->get(ProductService::class);
+        $products = [
+            ['Code', 'Product Name', 'Quantity'],
+            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '100'],
+            ['CODE-TEST-02', 'PRODUCT-TEST-NAME-02', '100'],
+            ['CODE-TEST-03', 'PRODUCT-TEST-NAME-03', '100'],
+            ['CODE-TEST-04', 'PRODUCT-TEST-NAME-04', '100'],
+            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-04', '100'],
+        ];
+        $productService->storeProducts($products, $warehouse);
+    }
+
     public function testStoreProducts(): void
     {
         //Warehouse taken from WarehouseFixtures.php

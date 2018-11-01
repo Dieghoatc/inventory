@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\OrderProductRepository")
+ * @ORM\Entity(repositoryClass="RequestProductRepository")
  */
-class OrderProduct
+class RequestProduct
 {
     /**
      * @ORM\Id()
@@ -28,10 +28,10 @@ class OrderProduct
     private $product;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Order", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Request", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $order;
+    private $request;
 
     public function getId(): ?int
     {
@@ -62,14 +62,14 @@ class OrderProduct
         return $this;
     }
 
-    public function getOrder(): ?Order
+    public function getRequest(): ?Request
     {
-        return $this->order;
+        return $this->request;
     }
 
-    public function setOrder(Order $order): self
+    public function setRequest(Request $request): self
     {
-        $this->order = $order;
+        $this->request = $request;
 
         return $this;
     }
