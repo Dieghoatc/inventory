@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ProductWarehouse;
+use App\Entity\Warehouse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -19,22 +20,16 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductWarehouse::class);
     }
 
-//    /**
-//     * @return ProductWarehouse[] Returns an array of ProductWarehouse objects
-//     */
-    /*
-    public function findByExampleField($value)
+    public function findByWarehouse(Warehouse $warehouse)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('p.warehouse = :warehouse')
+            ->setParameter('warehouse', $warehouse)
             ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?ProductWarehouse

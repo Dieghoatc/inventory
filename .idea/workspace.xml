@@ -2,16 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5201f090-bb8f-42c5-bb3b-d18e9f25a222" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Comment.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Comment.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Customer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Customer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Request.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Order.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/RequestProduct.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/OrderProduct.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RequestProductRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/OrderProductRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/RequestRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/OrderRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Product.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/ProductWarehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/ProductWarehouse.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Warehouse.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Warehouse.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180928152011.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180928153217.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180928153738.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ProductWarehouseRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ProductWarehouseRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Services/ProductService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/ProductService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Unit/Service/ProductServiceTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Unit/Service/ProductServiceTest.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,6 +55,13 @@
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
         <item name="symfony: schema" type="c314c289:MysqlImplModel$Schema" />
         <item name="product: table" type="98d5ac3d:MysqlImplModel$Table" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="Local" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="symfony: schema" type="c314c289:MysqlImplModel$Schema" />
+        <item name="product_warehouse: table" type="98d5ac3d:MysqlImplModel$Table" />
       </path>
     </expand>
     <select />
@@ -187,12 +194,13 @@
     <session id="-661058679">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="6" />
           <entry key="project.open.time.3" value="2" />
+          <entry key="project.open.time.30" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.5" value="2" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -204,7 +212,10 @@
           <entry key="env" value="2" />
           <entry key="js" value="3" />
           <entry key="md" value="1" />
-          <entry key="php" value="41" />
+          <entry key="order" value="1" />
+          <entry key="order_product" value="1" />
+          <entry key="php" value="53" />
+          <entry key="product_warehouse" value="1" />
           <entry key="sql" value="2" />
           <entry key="user" value="1" />
           <entry key="yaml" value="2" />
@@ -214,11 +225,11 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key=".env file" value="2" />
-          <entry key="Database Element" value="1" />
+          <entry key="Database Element" value="4" />
           <entry key="Dockerfile" value="4" />
           <entry key="JavaScript" value="3" />
           <entry key="Markdown" value="1" />
-          <entry key="PHP" value="41" />
+          <entry key="PHP" value="53" />
           <entry key="PLAIN_TEXT" value="1" />
           <entry key="Scratch" value="2" />
           <entry key="SmartyConfig" value="3" />
@@ -235,9 +246,9 @@
           <entry key="env" value="22" />
           <entry key="js" value="160" />
           <entry key="md" value="600" />
-          <entry key="php" value="856" />
+          <entry key="php" value="1087" />
           <entry key="sql" value="21" />
-          <entry key="txt" value="338" />
+          <entry key="txt" value="417" />
           <entry key="yaml" value="76" />
           <entry key="yml" value="105" />
         </counts>
@@ -248,8 +259,8 @@
           <entry key="Dockerfile" value="38" />
           <entry key="JavaScript" value="160" />
           <entry key="Markdown" value="600" />
-          <entry key="PHP" value="856" />
-          <entry key="PLAIN_TEXT" value="479" />
+          <entry key="PHP" value="1087" />
+          <entry key="PLAIN_TEXT" value="558" />
           <entry key="Scratch" value="21" />
           <entry key="SmartyConfig" value="51" />
           <entry key="XML" value="1" />
@@ -270,80 +281,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/Unit/Service/ProductServiceTest.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="5" lean-forward="true" selection-start-column="5" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/bootstrap.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
+            <state relative-caret-position="308">
+              <caret line="58" column="28" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
               <folding>
-                <element signature="e#50#65#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/phpunit.xml.dist">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="34" selection-start-line="7" selection-start-column="34" selection-end-line="7" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Services/ProductService.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="94" column="46" selection-start-line="94" selection-start-column="46" selection-end-line="94" selection-end-column="46" />
-              <folding>
-                <element signature="e#33#56#0#PHP" expanded="true" />
+                <element signature="e#3233#4953#0#PHP" />
+                <element signature="e#4959#5864#0#PHP" />
+                <element signature="e#5870#6626#0#PHP" />
+                <element signature="e#6632#7392#0#PHP" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Entity/ProductWarehouse.php">
+        <entry file="file://$PROJECT_DIR$/src/Repository/ProductWarehouseRepository.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entity/Order.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
-              <folding>
-                <element signature="e#30#78#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entity/Product.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="19" column="40" lean-forward="true" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entity/Warehouse.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-476">
-              <caret line="26" column="21" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="21" />
+            <state relative-caret-position="278">
+              <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -360,8 +314,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>/autoload.php&quot;</find>
-      <find>toChangeWarehouse</find>
       <find>onChange</find>
       <find>value</find>
       <find>user_index</find>
@@ -390,6 +342,8 @@
       <find>order</find>
       <find>const</find>
       <find>orderProduc</find>
+      <find>ware</find>
+      <find>add</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\User\Dev\inventory\config\packages</dir>
@@ -403,9 +357,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/config/packages/test/services.yaml" />
-        <option value="$PROJECT_DIR$/src/DependencyInjection/PublicForTest.php" />
-        <option value="$PROJECT_DIR$/config/services_test.yaml" />
         <option value="$PROJECT_DIR$/var/data/inventory.sqlite" />
         <option value="$PROJECT_DIR$/bin/phpunit" />
         <option value="$PROJECT_DIR$/tests/boostrap.php" />
@@ -440,7 +391,6 @@
         <option value="$PROJECT_DIR$/src/Controller/DefaultController.php" />
         <option value="$PROJECT_DIR$/Readme.md" />
         <option value="$PROJECT_DIR$/assets/js/Products/BarCode/View.js" />
-        <option value="$PROJECT_DIR$/src/Entity/Product.php" />
         <option value="$PROJECT_DIR$/src/Controller/ProductController.php" />
         <option value="$PROJECT_DIR$/docker-compose.yml" />
         <option value="$PROJECT_DIR$/src/Entity/Comment.php" />
@@ -450,10 +400,14 @@
         <option value="$PROJECT_DIR$/Dockerfile" />
         <option value="$PROJECT_DIR$/phpunit.xml.dist" />
         <option value="$PROJECT_DIR$/tests/bootstrap.php" />
-        <option value="$PROJECT_DIR$/tests/Unit/Service/ProductServiceTest.php" />
         <option value="$PROJECT_DIR$/src/Entity/Order.php" />
         <option value="$PROJECT_DIR$/src/Entity/OrderProduct.php" />
+        <option value="$PROJECT_DIR$/src/Entity/Warehouse.php" />
+        <option value="$PROJECT_DIR$/src/Entity/Product.php" />
+        <option value="$PROJECT_DIR$/src/Entity/ProductWarehouse.php" />
         <option value="$PROJECT_DIR$/src/Services/ProductService.php" />
+        <option value="$PROJECT_DIR$/tests/Unit/Service/ProductServiceTest.php" />
+        <option value="$PROJECT_DIR$/src/Repository/ProductWarehouseRepository.php" />
       </list>
     </option>
   </component>
@@ -480,8 +434,6 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths>
       <path value="$PROJECT_DIR$/package.json" />
-      <path value="$PROJECT_DIR$/vendor/friendsofsymfony/jsrouting-bundle/Resources/package.json" />
-      <path value="$PROJECT_DIR$/vendor/willdurand/js-translation-bundle/Resources/package.json" />
     </packageJsonPaths>
   </component>
   <component name="PhpServers">
@@ -736,6 +688,12 @@
               <item name="inventory" type="b2602c69:ProjectViewProjectNode" />
               <item name="inventory" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Migrations" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="inventory" type="b2602c69:ProjectViewProjectNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="Repository" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -759,6 +717,13 @@
             <path>
               <item name="inventory" type="b2602c69:ProjectViewProjectNode" />
               <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="Unit" type="462c0819:PsiDirectoryNode" />
+              <item name="Service" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="inventory" type="b2602c69:ProjectViewProjectNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
               <item name="var" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -776,11 +741,11 @@
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="ProductWare&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/ProductWarehouse.php&#10;bootstrap.php&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/tests/bootstrap.php&#10;ProductSer&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Services/ProductService.php&#10;ProductServ&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/tests/Unit/Service/ProductServiceTest.php&#10;Docker&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/Dockerfile&#10;packa&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;Product&#9;FILE&#9;file://C:/Users/User/Dev/inventory/assets/js/Products/Products.js&#10;Kernel&#9;null&#9;null&#10;User&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Entity/User.php&#10;secur&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;Securi&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;composer.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/composer.json&#10;package&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;services.yam&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/services.yaml&#10;ProductControllerTest&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;ProductControllerTest.php&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;productController&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Controller/ProductController.php&#10;ProductController&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Controller/ProductController.php&#10;ProducC&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;templates/user/index.html.twig&#9;FILE&#9;file://C:/Users/User/Dev/inventory/templates/user/index.html.twig&#10;Kernel.&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Kernel.php&#10;Fix&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/DataFixtures/UserFixures.php&#10;security&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;package.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;config.yml&#9;FILE&#9;file://C:/Users/User/Dev/inventory/vendor/symfony/framework-bundle/Tests/Functional/app/ContainerDebug/config.yml" />
+    <property name="SearchEverywhereHistoryKey" value="Product&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/Product.php&#10;ProductService&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Services/ProductService.php&#10;ProductWare&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/ProductWarehouse.php&#10;bootstrap.php&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/tests/bootstrap.php&#10;ProductSer&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Services/ProductService.php&#10;ProductServ&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/tests/Unit/Service/ProductServiceTest.php&#10;Docker&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/Dockerfile&#10;packa&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;Kernel&#9;null&#9;null&#10;User&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Entity/User.php&#10;secur&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;Securi&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;composer.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/composer.json&#10;package&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;services.yam&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/services.yaml&#10;ProductControllerTest&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;ProductControllerTest.php&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;productController&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Controller/ProductController.php&#10;ProductController&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Controller/ProductController.php&#10;ProducC&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;templates/user/index.html.twig&#9;FILE&#9;file://C:/Users/User/Dev/inventory/templates/user/index.html.twig&#10;Kernel.&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Kernel.php&#10;Fix&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/DataFixtures/UserFixures.php&#10;security&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;package.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;config.yml&#9;FILE&#9;file://C:/Users/User/Dev/inventory/vendor/symfony/framework-bundle/Tests/Functional/app/ContainerDebug/config.yml" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/var/data/inventory.sqlite" />
     <property name="database.console.LAST_STATE" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../bpe" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
@@ -791,7 +756,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="settings.editor.selected.configurable" value="Symfony.ProfilerSettingsForm" />
+    <property name="settings.editor.selected.configurable" value="tasks.servers" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -864,7 +829,8 @@
       <workItem from="1540817030349" duration="8015000" />
       <workItem from="1541035537105" duration="215000" />
       <workItem from="1541085826961" duration="3819000" />
-      <workItem from="1541469410182" duration="4833000" />
+      <workItem from="1541469410182" duration="4889000" />
+      <workItem from="1541508845316" duration="13464000" />
     </task>
     <task id="LOCAL-00001" summary="Added startbootstrap-sb-admin as template.&#10;Configured template.&#10;Configured Encore.">
       <created>1538065049965</created>
@@ -1069,17 +1035,24 @@
       <option name="project" value="LOCAL" />
       <updated>1541089559419</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Migration to many to many relation between Product and Warehouse.">
+      <created>1541474290489</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1541474290489</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="267176000" />
+    <option name="totallyTimeSpent" value="280696000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-11" width="1922" height="1092" extended-state="6" />
+    <frame x="0" y="-4" width="1920" height="1084" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1905016" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19263607" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="DB Browser" order="3" />
@@ -1092,7 +1065,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5021322" side_tool="true" weight="0.39045554" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.4978678" visible="true" weight="0.45502093" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4978678" visible="true" weight="0.30962342" />
       <window_info anchor="bottom" id="Docker" order="10" weight="0.3286334" />
       <window_info anchor="bottom" id="Database Changes" order="11" weight="0.3294979" />
       <window_info anchor="bottom" id="DB Execution Console" order="12" />
@@ -1101,7 +1074,7 @@
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" visible="true" weight="0.22411953" />
+      <window_info anchor="right" id="Database" order="3" visible="true" weight="0.1638207" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1134,74 +1107,10 @@
     <MESSAGE value="Solve issue with autofocus on BarCode view." />
     <MESSAGE value="New entities were added." />
     <MESSAGE value="Added docker support to PHP SQLlite&#10;Change entity name from Order to Request" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added docker support to PHP SQLlite&#10;Change entity name from Order to Request" />
+    <MESSAGE value="Migration to many to many relation between Product and Warehouse." />
+    <option name="LAST_COMMIT_MESSAGE" value="Migration to many to many relation between Product and Warehouse." />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/templates/user/new.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="38" column="48" selection-start-line="38" selection-start-column="48" selection-end-line="38" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/packages/routing.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/Products/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="4" column="60" selection-start-line="4" selection-start-column="60" selection-end-line="4" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/base.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="85" column="73" selection-start-line="85" selection-start-column="73" selection-end-line="85" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/product/upload.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="25" selection-start-column="25" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="63" lean-forward="true" selection-start-line="15" selection-start-column="63" selection-end-line="15" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181017155445.php" />
-    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181017155725.php" />
-    <entry file="file://$PROJECT_DIR$/tests/Unit/Controller/ProductControllerTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="7" column="49" selection-start-line="7" selection-start-column="49" selection-end-line="7" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/Products/Index/ConfirmSelectedProducts.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="25" column="38" selection-start-line="25" selection-start-column="38" selection-end-line="25" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="39" selection-start-line="22" selection-start-column="39" selection-end-line="22" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/translations/messages.en.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -1321,9 +1230,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20180928153738.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -1390,23 +1296,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/bootstrap.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="e#50#65#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/Unit/Service/ProductServiceTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="5" lean-forward="true" selection-start-column="5" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Entity/OrderProduct.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="139">
@@ -1423,7 +1312,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Entity/Order.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
+        <state relative-caret-position="105">
           <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
           <folding>
             <element signature="e#30#78#0#PHP" expanded="true" />
@@ -1431,34 +1320,122 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/Warehouse.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-476">
-          <caret line="26" column="21" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="21" />
+    <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/product_warehouse">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/Product.php">
+    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181101162623.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
-          <caret line="19" column="40" lean-forward="true" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181101162711.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-130" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181106130518.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-130" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20180928153738.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20180928152011.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20180928153217.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181106131215.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-90" />
+      </provider>
+    </entry>
+    <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/order">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/order_product">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Services/ProductService.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="94" column="46" selection-start-line="94" selection-start-column="46" selection-end-line="94" selection-end-column="46" />
+        <state relative-caret-position="38">
+          <caret line="100" column="41" selection-start-line="100" selection-start-column="41" selection-end-line="100" selection-end-column="41" />
           <folding>
             <element signature="e#33#56#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/Warehouse.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/Product.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1912">
+          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+          <folding>
+            <element signature="e#30#78#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Entity/ProductWarehouse.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+        <state relative-caret-position="293">
+          <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/bootstrap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="54" lean-forward="true" selection-start-line="33" selection-start-column="54" selection-end-line="33" selection-end-column="54" />
+          <folding>
+            <element signature="e#50#65#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181106153152.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/Unit/Service/ProductServiceTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="58" column="28" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
+          <folding>
+            <element signature="e#3233#4953#0#PHP" />
+            <element signature="e#4959#5864#0#PHP" />
+            <element signature="e#5870#6626#0#PHP" />
+            <element signature="e#6632#7392#0#PHP" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Repository/ProductWarehouseRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="29" column="25" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
         </state>
       </provider>
     </entry>

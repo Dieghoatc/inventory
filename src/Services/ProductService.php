@@ -81,8 +81,6 @@ class ProductService
                 $product = new Product();
                 $product->setCode($item[0]);
                 $product->setTitle($item[1]);
-                $product->setWarehouse($warehouse);
-                $product->setQuantity(0);
             }
 
             $productWarehouse = $this->productWarehouseRepo->findOneBy([
@@ -100,6 +98,7 @@ class ProductService
                 $productWarehouse->setQuantity($currentQuantity);
             }
 
+            $product->addProductWarehouse($productWarehouse);
             $errors = $this->validator->validate($product);
             if(\count($errors) !== 0){
                 $validations[] = $validations;

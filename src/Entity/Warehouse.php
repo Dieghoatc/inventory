@@ -24,14 +24,16 @@ class Warehouse
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="warehouse", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductWarehouse", mappedBy="warehouse")
      */
-    private $Products;
+    private $productWarehouses;
 
     public function __construct()
     {
-        $this->Products = new ArrayCollection();
+        $this->Product = new ArrayCollection();
+        $this->productWarehouses = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -51,33 +53,34 @@ class Warehouse
     }
 
     /**
-     * @return Collection|Product[]
+     * @return Collection|ProductWarehouse[]
      */
-    public function getProducts(): Collection
+    public function getProductWarehouses(): Collection
     {
-        return $this->Products;
+        return $this->productWarehouses;
     }
 
-    public function addProduct(Product $product): self
+    public function addProductWarehouse(ProductWarehouse $productWarehouse): self
     {
-        if (!$this->Products->contains($product)) {
-            $this->Products[] = $product;
-            $product->setWarehouse($this);
+        if (!$this->productWarehouses->contains($productWarehouse)) {
+            $this->productWarehouses[] = $productWarehouse;
+            $productWarehouse->setWarehouse($this);
         }
 
         return $this;
     }
 
-    public function removeProduct(Product $product): self
+    public function removeProductWarehouse(ProductWarehouse $productWarehouse): self
     {
-        if ($this->Products->contains($product)) {
-            $this->Products->removeElement($product);
+        if ($this->productWarehouses->contains($productWarehouse)) {
+            $this->productWarehouses->removeElement($productWarehouse);
             // set the owning side to null (unless already changed)
-            if ($product->getWarehouse() === $this) {
-                $product->setWarehouse(null);
+            if ($productWarehouse->getWarehouse() === $this) {
+                $productWarehouse->setWarehouse(null);
             }
         }
 
         return $this;
     }
+
 }

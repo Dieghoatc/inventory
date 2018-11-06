@@ -2,16 +2,15 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity(fields={"code", "warehouse"})
  */
 class Product
 {
@@ -52,21 +51,25 @@ class Product
     private $detail;
 
     /**
-     * @MaxDepth(2)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Warehouse", inversedBy="Products")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer", options={"default" : 0}, nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductWarehouse", mappedBy="ddd", orphanRemoval=true)
      */
     private $warehouse;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductWarehouse", mappedBy="product")
      */
-    private $quantity;
+    private $productWarehouses;
 
-    /**
-     * @ORM\Column(type="integer", options={"default" : 0}, nullable=true)
-     */
-    private $status;
+    public function __construct()
+    {
+        $this->warehouse = new ArrayCollection();
+        $this->productWarehouses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,30 +127,6 @@ class Product
         return $this;
     }
 
-    public function getWarehouse(): ?Warehouse
-    {
-        return $this->warehouse;
-    }
-
-    public function setWarehouse(?Warehouse $warehouse): self
-    {
-        $this->warehouse = $warehouse;
-
-        return $this;
-    }
-
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): self
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
     public function addQuantity(int $quantity): void
     {
         $this->quantity += $quantity;
@@ -161,6 +140,37 @@ class Product
     public function setStatus(int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductWarehouse[]
+     */
+    public function getProductWarehouses(): Collection
+    {
+        return $this->productWarehouses;
+    }
+
+    public function addProductWarehouse(ProductWarehouse $productWarehouse): self
+    {
+        if (!$this->productWarehouses->contains($productWarehouse)) {
+            $this->productWarehouses[] = $productWarehouse;
+            $productWarehouse->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductWarehouse(ProductWarehouse $productWarehouse): self
+    {
+        if ($this->productWarehouses->contains($productWarehouse)) {
+            $this->productWarehouses->removeElement($productWarehouse);
+            // set the owning side to null (unless already changed)
+            if ($productWarehouse->getProduct() === $this) {
+                $productWarehouse->setProduct(null);
+            }
+        }
 
         return $this;
     }
