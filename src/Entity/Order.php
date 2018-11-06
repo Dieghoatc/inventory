@@ -7,9 +7,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="RequestRepository")
+ * @ORM\Entity(repositoryClass="OrderProductRepository")
+ * @ORM\Table(name="`order`")
  */
-class Request
+class Order
 {
     /**
      * @ORM\Id()

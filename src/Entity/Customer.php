@@ -39,7 +39,7 @@ class Customer
     private $phone;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Request", mappedBy="customer", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Order", mappedBy="customer", orphanRemoval=true)
      */
     private $request;
 
@@ -102,14 +102,14 @@ class Customer
     }
 
     /**
-     * @return Collection|Request[]
+     * @return Collection|Order[]
      */
     public function getRequest(): Collection
     {
         return $this->request;
     }
 
-    public function addRequest(Request $request): self
+    public function addRequest(Order $request): self
     {
         if (!$this->request->contains($request)) {
             $this->request[] = $request;
@@ -119,7 +119,7 @@ class Customer
         return $this;
     }
 
-    public function removeRequest(Request $request): self
+    public function removeRequest(Order $request): self
     {
         if ($this->request->contains($request)) {
             $this->request->removeElement($request);
