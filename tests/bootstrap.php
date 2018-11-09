@@ -31,4 +31,4 @@ foreach ($inputs as $input){
     $application->run($input, new ConsoleOutput());
 }
 
-$output->write('Data was successfully prepared [OK]');
+$output->writeln('Data was successfully prepared [OK]');

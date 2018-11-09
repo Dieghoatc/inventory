@@ -34,6 +34,8 @@ product:
     quantity: "Quantity"
     title: "Title"
     products: "Products"
+    price: "Price"
+    no_available_product: "Quantity is 0"
   update:
     bar-code:
       title: "Barcode Reader"

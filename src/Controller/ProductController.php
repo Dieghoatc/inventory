@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Warehouse;
 use App\Form\UploadProductsType;
 use App\Repository\ProductRepository;
+use App\Repository\ProductWarehouseRepository;
 use App\Services\ProductService;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
@@ -88,9 +89,9 @@ class ProductController extends AbstractController
     /**
      * @Route("/all/{warehouse}", name="all", options={"expose"=true}, methods={"get"})
      */
-    public function all(ProductRepository $productRepo, Warehouse $warehouse): Response
+    public function all(ProductWarehouseRepository $productWarehouseRepo, Warehouse $warehouse): Response
     {
-        $products = $productRepo->findAllAsArray($warehouse);
+        $products = $productWarehouseRepo->findByWarehouse($warehouse);
         $response = new Response(json_encode($products));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
@@ -99,14 +100,19 @@ class ProductController extends AbstractController
     /**
      * @Route("/move/{warehouse}", name="move", options={"expose"=true}, methods={"post"})
      */
-    public function move(ProductService $productService, Request $request, Warehouse $warehouse): Response
+    public function move(
+        ProductService $productService,
+        Request $request,
+        Warehouse $warehouseSource,
+        Warehouse $warehouseDestination
+    ): Response
     {
         $products = json_decode($request->getContent(), true);
         if(!\is_array($products)){
             throw new BadRequestHttpException('Malformed JSON request');
         }
 
-        $productService->moveProducts($products['data'], $warehouse);
+        $productService->moveProducts($products['data'], $warehouseSource, $warehouseDestination);
         return new JsonResponse(['status' => 'ok']);
     }
 
@@ -130,6 +136,5 @@ class ProductController extends AbstractController
         $productService->addProductsToInventory($products['data'], $warehouse);
         return new JsonResponse(['status' => 'ok']);
     }
-
 
 }

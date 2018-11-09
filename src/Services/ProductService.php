@@ -71,7 +71,7 @@ class ProductService
         $validations = [];
         $productsAdded = [];
         foreach ($items as $key => $item) {
-            if($key === 0 || $item[2] === 0 || \in_array($item[0], $productsAdded, true)){
+            if($key === 0 || $item[0] === '' || $item[0] === null  || $item[2] === 0 || \in_array($item[0], $productsAdded,true)){
                 continue;
             }
 
@@ -81,6 +81,7 @@ class ProductService
                 $product = new Product();
                 $product->setCode($item[0]);
                 $product->setTitle($item[1]);
+                $product->setPrice((float) $item[3]);
             }
 
             $productWarehouse = $this->productWarehouseRepo->findOneBy([
@@ -91,7 +92,7 @@ class ProductService
                 $productWarehouse = new ProductWarehouse();
                 $productWarehouse->setProduct($product);
                 $productWarehouse->setStatus(1);
-                $productWarehouse->setQuantity($item[2]);
+                $productWarehouse->addQuantity($item[2]);
                 $productWarehouse->setWarehouse($warehouse);
             } else {
                 $currentQuantity = $productWarehouse->getQuantity() + $item[2];
@@ -111,35 +112,37 @@ class ProductService
         $this->manager->flush();
     }
 
-    public function moveProducts(array $items, Warehouse $warehouse): void
+    public function moveProducts(array $items, Warehouse $warehouseSource, Warehouse $warehouseDestination): void
     {
         foreach ($items as $item) {
-            $productSource = $this->productRepo->findOneBy(['uuid' => $item['uuid']]);
-            if(!$productSource){
+            $product = $this->productRepo->findOneBy(['uuid' => $item['uuid']]);
+            if(!$product){
                 throw new \InvalidArgumentException ('Product was not found');
             }
 
-            if($productSource->getQuantity() < $item['quantity']){
-                throw new \InvalidArgumentException ('The quantity given is greater that product quantity.');
-            }
-
-            $productDestination =  $this->productRepo->findOneBy(['warehouse' => $warehouse, 'code' => $productSource->getCode()]);
-            $quantitySource = $productSource->getQuantity() - $item['quantity'];
-            if($productDestination instanceof Product) {
-                $productDestination->addQuantity($item['quantity']);
-            } else {
-                $productDestination = new Product();
-                $productDestination->setCode($productSource->getCode());
-                $productDestination->setTitle($productSource->getTitle());
-                $productDestination->setWarehouse($warehouse);
-                $productDestination->setQuantity($item['quantity']);
-            }
-
-            if($productSource->getUuid() === $productDestination->getUuid()){
+            if($warehouseSource->getId() === $warehouseDestination->getId()){
                 throw new \LogicException('Source and destination warehouse cannot be the same.');
             }
 
-            $productSource->setQuantity($quantitySource);
+            $productSource = $this->productWarehouseRepo->findOneBy([
+                'warehouse' => $warehouseSource, 'product' => $product
+            ]);
+
+            $productSource->subQuantity($item['quantity']);
+            $productDestination = $this->productWarehouseRepo->findOneBy([
+                'warehouse' => $warehouseDestination, 'product' => $product
+            ]);
+
+            if($productDestination instanceof ProductWarehouse) {
+                $productDestination->addQuantity($item['quantity']);
+            } else {
+                $productDestination = new ProductWarehouse();
+                $productDestination->setWarehouse($warehouseDestination);
+                $productDestination->addQuantity($item['quantity']);
+                $productDestination->setProduct($product);
+                $productDestination->setStatus(1);
+            }
+
             $this->manager->persist($productDestination);
             $this->manager->persist($productSource);
         }
@@ -149,10 +152,14 @@ class ProductService
     public function addProductsToInventory(array $items, Warehouse $warehouse): void
     {
         foreach ($items as $item){
-            $product = $this->productRepo->findOneBy(['code' => $item['code'], 'warehouse' => $warehouse]);
-            if($product instanceof Product){
-                $product->addQuantity(1);
-                $this->manager->persist($product);
+            $product = $this->productRepo->findOneBy(['code' => $item['code']]);
+
+            $productDestination = $this->productWarehouseRepo
+                ->findOneBy(['warehouse' => $warehouse, 'product' => $product]);
+
+            if($productDestination instanceof ProductWarehouse){
+                $productDestination->addQuantity($item['quantity']);
+                $this->manager->persist($productDestination);
             }
         }
         $this->manager->flush();

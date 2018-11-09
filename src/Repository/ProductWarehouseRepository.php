@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Product;
 use App\Entity\ProductWarehouse;
 use App\Entity\Warehouse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -20,14 +22,29 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductWarehouse::class);
     }
 
-    public function findByWarehouse(Warehouse $warehouse)
+    public function findByWarehouse(Warehouse $warehouse): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.warehouse = :warehouse')
+        $products =  $this->createQueryBuilder('pw')
+            ->select('pw')
+            ->addSelect('w')
+            ->addSelect('p')
+            ->innerJoin('pw.product', 'p')
+            ->innerJoin('pw.warehouse', 'w')
+            ->where('pw.warehouse = :warehouse')
+            ->andWhere('pw.status = 1')
             ->setParameter('warehouse', $warehouse)
-            ->orderBy('p.id', 'ASC')
+            ->orderBy('pw.product', 'ASC')
             ->getQuery()
-            ->getResult();
+            ->getArrayResult();
+
+        foreach ($products as $key => $product){
+            $products[$key]['uuid'] = $product['product']['uuid'];
+            $products[$key]['title'] = $product['product']['title'];
+            $products[$key]['code'] = $product['product']['code'];
+            $products[$key]['price'] = $product['product']['price'];
+        }
+
+        return $products;
     }
 
 

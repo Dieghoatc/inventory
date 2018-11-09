@@ -88,4 +88,22 @@ class ProductWarehouse
 
         return $this;
     }
+
+    public function addQuantity(?int $quantity): void
+    {
+        if($quantity === null){
+            $quantity = 0;
+        }
+        $this->quantity += $quantity;
+    }
+
+    public function subQuantity(int $quantity): void
+    {
+        if ($quantity > $this->quantity) {
+            throw new \InvalidArgumentException(
+                'The quantity to subtraction should be less than the product one.'
+            );
+        }
+        $this->quantity -= $quantity;
+    }
 }

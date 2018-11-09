@@ -65,6 +65,11 @@ class Product
      */
     private $productWarehouses;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $price;
+
     public function __construct()
     {
         $this->warehouse = new ArrayCollection();
@@ -108,8 +113,12 @@ class Product
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
+        if($title === null){
+            $title = $this->code;
+        }
+
         $this->title = $title;
 
         return $this;
@@ -125,11 +134,6 @@ class Product
         $this->detail = $detail;
 
         return $this;
-    }
-
-    public function addQuantity(int $quantity): void
-    {
-        $this->quantity += $quantity;
     }
 
     public function getStatus(): ?int
@@ -171,6 +175,22 @@ class Product
                 $productWarehouse->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?float $price): self
+    {
+        if($price === null){
+            $price = 0;
+        }
+
+        $this->price = $price;
 
         return $this;
     }

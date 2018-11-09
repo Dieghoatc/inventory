@@ -156,6 +156,9 @@ class Products extends Component {
       Header: 'Quantity',
       accessor: 'quantity',
     }, {
+      Header: 'Price',
+      accessor: 'price',
+    }, {
       Header: 'Warehouse',
       accessor: 'warehouse.name',
     }];

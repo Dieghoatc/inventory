@@ -49,6 +49,7 @@ class ConfirmSelectedProducts extends Component {
   renderEditable(cellInfo) {
     const { data, dataRequest } = this.state;
     const options = [];
+    console.log(data);
 
     for (let i = 1; i <= data[cellInfo.index][cellInfo.column.id]; i += 1) {
       if (typeof dataRequest[data[cellInfo.index].uuid] === 'undefined' && i === 1) {
@@ -65,6 +66,7 @@ class ConfirmSelectedProducts extends Component {
     }
 
     return (
+      cellInfo.original.quantity > 0 ?
       <select
         className="form-control form-control-sm"
         onChange={(e) => {
@@ -76,7 +78,8 @@ class ConfirmSelectedProducts extends Component {
         }}
       >
         {options}
-      </select>
+      </select> :
+      <span>{Translator.trans('product.template.no_available_product')}</span>
     );
   }
 
@@ -84,6 +87,8 @@ class ConfirmSelectedProducts extends Component {
     const {
       data, loading, warehouses, sending, warehouseSelected,
     } = this.state;
+    console.log(warehouseSelected);
+    console.log(warehouseSelected);
     const columns = [{
       Header: 'Code',
       accessor: 'code',
