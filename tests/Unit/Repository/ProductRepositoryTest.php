@@ -35,11 +35,11 @@ class ProductRepositoryTest extends WebTestCase
         /** @var $productService ProductService */
         $productService = $this->client->getContainer()->get(ProductService::class);
         $products = [
-            ['Code', 'Product Name', 'Quantity'],
-            ['CODE-TEST-REPO-001', 'PRODUCT-TEST-NAME-01', '100'],
-            ['CODE-TEST-REPO-002', 'PRODUCT-TEST-NAME-01', '50'],
-            ['CODE-TEST-REPO-003', 'PRODUCT-TEST-NAME-01', '25'],
-            ['CODE-TEST-REPO-004', 'PRODUCT-TEST-NAME-01', '12'],
+            ['Code', 'Product Name', 'Quantity', 'Price'],
+            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '0', 100],
+            ['CODE-TEST-02', 'PRODUCT-TEST-NAME-01', '0', 100],
+            ['CODE-TEST-03', 'PRODUCT-TEST-NAME-01', '0', 100],
+            ['CODE-TEST-04', 'PRODUCT-TEST-NAME-01', '0', 100],
         ];
         $productService->storeProducts($products, $warehouse);
         $products = $this->productRepo->findAllAsArray();

@@ -10,15 +10,19 @@ class View extends Component {
       currentText: '',
       products: [],
       warehouse: null,
-      showConfirm: false,
+      confirmAddProduct: false,
+      confirmRemoveProduct: false,
       warehouses: [],
       sending: false,
-      enabled: true,
     };
     this.removeProduct = this.removeProduct.bind(this);
     this.addProduct = this.addProduct.bind(this);
     this.handleWarehouse = this.handleWarehouse.bind(this);
-    this.toUpdateQuantities = this.toUpdateQuantities.bind(this);
+    this.toAddRemoteProducts = this.toAddRemoteProducts.bind(this);
+    this.toRemoveRemoteProducts = this.toRemoveRemoteProducts.bind(this);
+    this.addOrUpdateProduct = this.addOrUpdateProduct.bind(this);
+    this.updateProduct = this.updateProduct.bind(this);
+    this.updateRemoteStatus = this.updateRemoteStatus.bind(this);
   }
 
   componentDidMount() {
@@ -34,12 +38,6 @@ class View extends Component {
     );
   }
 
-  componentDidUpdate() {
-    if(this.state.enabled === true) {
-      this.inputValue.focus();
-    }
-  }
-
   handleWarehouse(e) {
     this.setState({
       warehouse: e.target.value,
@@ -47,21 +45,51 @@ class View extends Component {
   }
 
   addProduct() {
-    const { products, currentText } = this.state;
+    const { currentText } = this.state;
     if (currentText !== '') {
-      products.push({
-        code: currentText,
-        key: `${products.length-1}-${currentText}`
-      });
-      this.setState({
-        products,
-        currentText: '',
-      });
+      this.addOrUpdateProduct(currentText);
     }
   }
 
+  addOrUpdateProduct(currentCode, quantity) {
+    const { products } = this.state;
+    const productExistIndex = products.findIndex(product => (product.code === currentCode));
+    if (productExistIndex > -1) {
+      let newQuantity = products[productExistIndex].quantity + 1;
+      if (quantity !== undefined) {
+        newQuantity = Number(quantity);
+      }
+      products[productExistIndex].quantity = newQuantity;
+    } else {
+      axios.get(Routing.generate('product_show', { code: currentCode })).then(res => res.data).then(
+        () => {
+          this.updateRemoteStatus(currentCode, true);
+        },
+        () => {
+          this.updateRemoteStatus(currentCode, false);
+        },
+      );
+
+      products.push({
+        exist: 'loading',
+        code: currentCode,
+        quantity: 1,
+        key: `${products.length - 1}-${currentCode}`,
+      });
+    }
+    this.setState({ products, currentText: '' });
+  }
+
+  updateRemoteStatus(currentCode, status) {
+    const { products } = this.state;
+    const productExistIndex = products.findIndex(product => (product.code === currentCode));
+    if (productExistIndex > -1) {
+      products[productExistIndex].exist = status;
+    }
+    this.setState({ products });
+  }
+
   removeProduct(key) {
-    console.log(key);
     const { products } = this.state;
     const filtered = products.filter(item => (
       item.key !== key
@@ -84,16 +112,32 @@ class View extends Component {
     }
   }
 
-  toUpdateQuantities() {
+  toAddRemoteProducts() {
     const { products, warehouse } = this.state;
     this.setState({
       sending: true,
     });
-    axios.post(Routing.generate('product_bar_code_save', { warehouse }), {
+    axios.post(Routing.generate('product_bar_code_add', { warehouse }), {
       data: products,
     }).then(res => res.data).then(() => {
       this.setState({
-        showConfirm: false,
+        confirmAddProduct: false,
+        sending: false,
+        products: [],
+      });
+    });
+  }
+
+  toRemoveRemoteProducts() {
+    const { products, warehouse } = this.state;
+    this.setState({
+      sending: true,
+    });
+    axios.post(Routing.generate('product_bar_code_remove', { warehouse }), {
+      data: products,
+    }).then(res => res.data).then(() => {
+      this.setState({
+        confirmRemoveProduct: false,
         sending: false,
         products: [],
       });
@@ -101,9 +145,18 @@ class View extends Component {
   }
 
 
+  addProductFocus(input) {
+    input.focus();
+  }
+
+  updateProduct(e) {
+    this.addOrUpdateProduct(e.target.getAttribute('data-code'), Number(e.target.value));
+  }
+
   render() {
     const {
-      products, currentText, warehouse, showConfirm, warehouses, sending
+      products, currentText, warehouse, confirmAddProduct,
+      confirmRemoveProduct, warehouses, sending,
     } = this.state;
     return (
       <div>
@@ -121,8 +174,7 @@ class View extends Component {
                   value={currentText}
                   onChange={e => this.currentText(e)}
                   onKeyPress={e => this.addProductKeyPressHandler(e)}
-                  autoFocus
-                  ref={input => this.inputValue = input}
+                  ref={this.addProductFocus}
                 />
                 <button type="button" className="btn btn-primary btn-sm my-2" onClick={this.addProduct}>
                   {Translator.trans('product.update.bar-code.add_action')}
@@ -133,8 +185,9 @@ class View extends Component {
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Code</th>
-                    <th scope="col">Options</th>
+                    <th scope="col">{Translator.trans('product.update.bar-code.code')}</th>
+                    <th scope="col">{Translator.trans('product.update.bar-code.quantity')}</th>
+                    <th scope="col">{Translator.trans('product.update.bar-code.options')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -145,20 +198,72 @@ class View extends Component {
                         {item.code}
                       </td>
                       <td>
+                        <input
+                          type="text"
+                          value={item.quantity}
+                          data-code={item.code}
+                          className="form-control form-control-sm"
+                          onChange={this.updateProduct}
+                        />
+                      </td>
+                      <td>
                         <button
                           type="button"
                           className="btn btn-sm btn-danger"
                           onClick={() => this.removeProduct(item.key)}
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title={Translator.trans('product.update.bar-code.remove_product')}
                         >
                           <i className="fas fa-trash-alt" />
                         </button>
+                        { ' ' }
+                        { item.exist === true
+                        && (
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-success"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title={Translator.trans('product.update.bar-code.product_exist')}
+                        >
+                          <i className="fas fa-check-circle" />
+                        </button>
+                        )
+                        }
+                        { item.exist === false
+                        && (
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-danger"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title={Translator.trans('product.update.bar-code.product_do_not_exist')}
+                          >
+                            <i className="fas fa-times-circle" />
+                          </button>
+                        )
+                        }
+                        { item.exist === 'loading'
+                        && (
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-info"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title={Translator.trans('product.update.bar-code.loading')}
+                          >
+                            <i className="fas fa-circle-notch fa-spin">{ ' ' }</i>
+                          </button>
+                        )
+                        }
                       </td>
                     </tr>
                   ))}
                   { products.length === 0
                   && (
                     <tr>
-                      <td colSpan="3" className="text-center">
+                      <td colSpan="4" className="text-center">
                         {Translator.trans('product.update.bar-code.no_products')}
                       </td>
                     </tr>
@@ -179,20 +284,32 @@ class View extends Component {
 
               <div className="form-inline">
                 {warehouse === null || products.length === 0 ? (
-                  <button type="button" className="btn btn-primary my-2 disabled" onClick={e => (e.preventDefault())}>
-                    {Translator.trans('product.update.bar-code.upload')}
-                  </button>
+                  <div>
+                    <button type="button" className="btn btn-primary my-2 disabled">
+                      {Translator.trans('product.update.bar-code.add_products')}
+                    </button>
+                    { ' ' }
+                    <button type="button" className="btn btn-danger my-2 disabled">
+                      {Translator.trans('product.update.bar-code.remove_products')}
+                    </button>
+                  </div>
                 ) : (
-                  <button type="button" className="btn btn-primary my-2" onClick={() => (this.setState({ showConfirm: true }))}>
-                    {Translator.trans('product.update.bar-code.upload')}
-                  </button>
+                  <div>
+                    <button type="button" className="btn btn-primary my-2" onClick={() => (this.setState({ confirmAddProduct: true }))}>
+                      {Translator.trans('product.update.bar-code.add_products')}
+                    </button>
+                    { ' ' }
+                    <button type="button" className="btn btn-danger my-2" onClick={() => (this.setState({ confirmRemoveProduct: true }))}>
+                      {Translator.trans('product.update.bar-code.remove_products')}
+                    </button>
+                  </div>
                 )}
               </div>
             </form>
           </div>
         </div>
 
-        {showConfirm && (
+        {confirmAddProduct && (
           <Modal visible onClickBackdrop={this.modalBackdropClicked} dialogClassName="modal-lg">
             <div className="modal-header">
               <h5 className="modal-title">{Translator.trans('product.update.bar-code.confirm.title')}</h5>
@@ -206,17 +323,76 @@ class View extends Component {
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Code</th>
+                        <th scope="col">{Translator.trans('product.update.bar-code.code')}</th>
+                        <th scope="col">{Translator.trans('product.update.bar-code.quantity')}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {products.map((item, key) => (
-                        <tr key={item.code}>
+                      {products.map((product, key) => (
+                        <tr key={product.code}>
                           <td>
                             {key + 1}
                           </td>
                           <td width="75%">
-                            {item.code}
+                            {product.code}
+                          </td>
+                          <td>
+                            {product.quantity}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-danger" onClick={() => (this.setState({ confirmAddProduct: false }))}>
+                {Translator.trans('cancel')}
+              </button>
+              {sending ? (
+                <button type="button" className="btn btn-primary disabled">
+                  {Translator.trans('product.update.bar-code.confirm.action_doing')}
+                  {' '}
+                  <i className="fas fa-sync fa-spin" />
+                </button>
+              ) : (
+                <button type="button" className="btn btn-primary" onClick={this.toAddRemoteProducts}>
+                  {Translator.trans('product.update.bar-code.confirm.action')}
+                </button>
+              )}
+            </div>
+          </Modal>
+        )}
+        {confirmRemoveProduct && (
+          <Modal visible onClickBackdrop={this.modalBackdropClicked} dialogClassName="modal-lg">
+            <div className="modal-header">
+              <h5 className="modal-title">{Translator.trans('product.update.bar-code.confirm.title')}</h5>
+            </div>
+            <div className="modal-body">
+              <div className="row">
+                <div className="col-md-12">
+                  {Translator.trans('product.update.bar-code.confirm.body', { warehouse })}
+                  <hr />
+                  <table className="table table-sm">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{Translator.trans('product.update.bar-code.code')}</th>
+                        <th scope="col">{Translator.trans('product.update.bar-code.quantity')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {products.map((product, key) => (
+                        <tr key={product.code}>
+                          <td>
+                            {key + 1}
+                          </td>
+                          <td width="75%">
+                            {product.code}
+                          </td>
+                          <td>
+                            {product.quantity}
                           </td>
                         </tr>
                       ))}
@@ -230,14 +406,14 @@ class View extends Component {
                 {Translator.trans('cancel')}
               </button>
               {sending ? (
-                <button type="button" className="btn btn-primary disabled">
+                <button type="button" className="btn btn-primary disabled" onClick={() => (this.setState({ confirmRemoveProduct: false }))}>
                   {Translator.trans('product.update.bar-code.confirm.action_doing')}
-                  &nbsp;
+                  {' '}
                   <i className="fas fa-sync fa-spin" />
                 </button>
               ) : (
-                <button type="button" className="btn btn-primary" onClick={this.toUpdateQuantities}>
-                  {Translator.trans('product.update.bar-code.confirm.action')}
+                <button type="button" className="btn btn-primary" onClick={this.toRemoveRemoteProducts}>
+                  {Translator.trans('product.update.bar-code.confirm.remove_quantity')}
                 </button>
               )}
             </div>

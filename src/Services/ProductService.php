@@ -154,11 +154,39 @@ class ProductService
         foreach ($items as $item){
             $product = $this->productRepo->findOneBy(['code' => $item['code']]);
 
+            if (!$product instanceof Product){
+                continue;
+            }
+
             $productDestination = $this->productWarehouseRepo
                 ->findOneBy(['warehouse' => $warehouse, 'product' => $product]);
 
             if($productDestination instanceof ProductWarehouse){
                 $productDestination->addQuantity($item['quantity']);
+                $this->manager->persist($productDestination);
+            }
+        }
+        $this->manager->flush();
+    }
+
+    public function removeProductsFromInventory(array $items, Warehouse $warehouse): void
+    {
+        foreach ($items as $item){
+            $product = $this->productRepo->findOneBy(['code' => $item['code']]);
+
+            if (!$product instanceof Product){
+                continue;
+            }
+
+            $productDestination = $this->productWarehouseRepo
+                ->findOneBy(['warehouse' => $warehouse, 'product' => $product]);
+
+            if($productDestination->getQuantity() < $item['quantity']){
+                throw new \LogicException('The quantity to delete must be equal or less than the stored one.');
+            }
+
+            if($productDestination instanceof ProductWarehouse){
+                $productDestination->subQuantity($item['quantity']);
                 $this->manager->persist($productDestination);
             }
         }

@@ -18,7 +18,7 @@ class Products extends Component {
       selection: [],
       selectAll: false,
       confirm: [],
-      warehouseSelected: 1,
+      warehouseSource: 1,
       warehouses: [],
       modals: {
         confirmModal: false,
@@ -55,7 +55,7 @@ class Products extends Component {
         this.setState({
           loading: false,
           data: result2,
-          warehouseSelected: warehouse,
+          warehouseSource: warehouse,
         });
       },
     );
@@ -100,11 +100,12 @@ class Products extends Component {
       },
       responseType: 'blob',
     }).then((response) => {
-      downloadjs(response.data, Translator.trans('product.template.products') + '.xlsx');
+      downloadjs(response.data, `${Translator.trans('product.template.products')}.xlsx`);
     });
   }
 
   toggleAll() {
+    // eslint-disable-next-line react/destructuring-assignment,react/no-access-state-in-setstate
     const selectAll = !this.state.selectAll;
     const selection = [];
     if (selectAll) {
@@ -119,6 +120,7 @@ class Products extends Component {
 
   toggleSelection(key) {
     // start off with the existing state
+    // eslint-disable-next-line react/destructuring-assignment,react/no-access-state-in-setstate
     let selection = [...this.state.selection];
     const keyIndex = selection.indexOf(key);
     // check to see if the key exists
@@ -143,23 +145,23 @@ class Products extends Component {
 
   render() {
     const {
-      loading, data, selectAll, confirm, selection, warehouses, modals, warehouseSelected,
+      loading, data, selectAll, confirm, selection, warehouses, modals, warehouseSource,
     } = this.state;
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
-      Header: 'Code',
+      Header: Translator.trans('product.template.code'),
       accessor: 'code',
     }, {
-      Header: 'Description',
+      Header: Translator.trans('product.template.description'),
       accessor: 'title',
     }, {
-      Header: 'Quantity',
+      Header: Translator.trans('product.template.quantity'),
       accessor: 'quantity',
     }, {
-      Header: 'Price',
+      Header: Translator.trans('product.template.price'),
       accessor: 'price',
     }, {
-      Header: 'Warehouse',
+      Header: Translator.trans('product.template.warehouse'),
       accessor: 'warehouse.name',
     }];
     const checkboxProps = {
@@ -179,7 +181,7 @@ class Products extends Component {
                 <option
                   value={item.id}
                   key={item.id}
-                  defaultValue={item.id === warehouseSelected}
+                  defaultValue={item.id === warehouseSource}
                 >
                   {item.name}
                 </option>
@@ -210,7 +212,7 @@ class Products extends Component {
         </div>
         <hr />
         <CheckboxTable
-          ref={r => (this.checkboxTable = r)}
+          ref={(r) => { this.checkboxTable = r; }}
           data={data}
           columns={columns}
           loading={loading}
@@ -224,7 +226,7 @@ class Products extends Component {
         <ConfirmSelectedProducts
           data={confirm}
           closeModal={this.isModalOpen}
-          warehouseSelected={warehouseSelected}
+          warehouseSource={Number(warehouseSource)}
           warehouses={warehouses}
         />)}
       </div>

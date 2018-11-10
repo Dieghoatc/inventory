@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap4-modal';
 import ReactTable from 'react-table';
 import axios from 'axios';
@@ -6,30 +7,30 @@ import axios from 'axios';
 class ConfirmSelectedProducts extends Component {
   constructor(props) {
     super(props);
-    const { data, warehouseSelected, warehouses } = this.props;
+    const { data, warehouseSource, warehouses } = this.props;
+
+    const warehouseDestination = warehouses.find(item => (item.id !== warehouseSource));
+
     this.state = {
       data,
       dataRequest: {},
       warehouses,
-      warehouseSelected,
-      destinationWarehouse: null,
+      warehouseSource,
+      warehouseDestination: warehouseDestination.id,
       loading: false,
       sending: false,
     };
+
     this.close = this.close.bind(this);
     this.moveProducts = this.moveProducts.bind(this);
     this.renderEditable = this.renderEditable.bind(this);
     this.selectDestinationWarehouse = this.selectDestinationWarehouse.bind(this);
   }
 
-  close() {
-    const { closeModal } = this.props;
-    closeModal('confirmModal', false);
-  }
-
   moveProducts() {
-    const { dataRequest, destinationWarehouse } = this.state;
-    axios.post(Routing.generate('product_move', { warehouse: destinationWarehouse }), {
+    const { dataRequest, warehouseDestination, warehouseSource } = this.state;
+
+    axios.post(Routing.generate('product_move', { warehouseSource, warehouseDestination }), {
       data: dataRequest,
     }).then(res => res.data).then(() => {
       this.close();
@@ -42,14 +43,18 @@ class ConfirmSelectedProducts extends Component {
 
   selectDestinationWarehouse(id) {
     this.setState({
-      destinationWarehouse: id,
+      warehouseDestination: id,
     });
+  }
+
+  close() {
+    const { closeModal } = this.props;
+    closeModal('confirmModal', false);
   }
 
   renderEditable(cellInfo) {
     const { data, dataRequest } = this.state;
     const options = [];
-    console.log(data);
 
     for (let i = 1; i <= data[cellInfo.index][cellInfo.column.id]; i += 1) {
       if (typeof dataRequest[data[cellInfo.index].uuid] === 'undefined' && i === 1) {
@@ -66,45 +71,46 @@ class ConfirmSelectedProducts extends Component {
     }
 
     return (
-      cellInfo.original.quantity > 0 ?
-      <select
-        className="form-control form-control-sm"
-        onChange={(e) => {
-          dataRequest[data[cellInfo.index].uuid] = {
-            uuid: data[cellInfo.index].uuid,
-            quantity: Number(e.target.value),
-          };
-          this.setState({ dataRequest });
-        }}
-      >
-        {options}
-      </select> :
-      <span>{Translator.trans('product.template.no_available_product')}</span>
+      cellInfo.original.quantity > 0
+        ? (
+          <select
+            className="form-control form-control-sm"
+            onChange={(e) => {
+              dataRequest[data[cellInfo.index].uuid] = {
+                uuid: data[cellInfo.index].uuid,
+                quantity: Number(e.target.value),
+              };
+              this.setState({ dataRequest });
+            }}
+          >
+            {options}
+          </select>
+        )
+        : <span>{Translator.trans('product.template.no_available_product')}</span>
     );
   }
 
   render() {
     const {
-      data, loading, warehouses, sending, warehouseSelected,
+      data, loading, warehouses, sending, warehouseSource,
     } = this.state;
-    console.log(warehouseSelected);
-    console.log(warehouseSelected);
+
     const columns = [{
-      Header: 'Code',
+      Header: Translator.trans('product.template.code'),
       accessor: 'code',
     }, {
-      Header: 'Description',
+      Header: Translator.trans('product.template.description'),
       accessor: 'title',
     }, {
-      Header: 'Quantity',
+      Header: Translator.trans('product.template.quantity'),
       accessor: 'quantity',
       Cell: this.renderEditable,
     }, {
-      Header: 'Warehouse',
+      Header: Translator.trans('product.template.warehouse'),
       accessor: 'warehouse.name',
     }];
     return (
-      <Modal visible onClickBackdrop={this.modalBackdropClicked} dialogClassName="modal-lg">
+      <Modal visible dialogClassName="modal-lg">
         <div className="modal-header">
           <h5 className="modal-title">{Translator.trans('product.index.move_between_warehouses')}</h5>
         </div>
@@ -116,7 +122,7 @@ class ConfirmSelectedProducts extends Component {
             <div className="col-md-6">
               <select className="form-control" onChange={this.selectDestinationWarehouse}>
                 {warehouses.map((item) => {
-                  if (item.id !== warehouseSelected) {
+                  if (item.id !== warehouseSource) {
                     return (<option value={item.id} key={item.id}>{item.name}</option>);
                   }
                   return false;
@@ -150,3 +156,10 @@ class ConfirmSelectedProducts extends Component {
 }
 
 export default ConfirmSelectedProducts;
+
+ConfirmSelectedProducts.propTypes = {
+  data: PropTypes.instanceOf(Array).isRequired,
+  warehouseSource: PropTypes.number.isRequired,
+  warehouses: PropTypes.instanceOf(Array).isRequired,
+  closeModal: PropTypes.func.isRequired,
+};

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Entity\Warehouse;
 use App\Form\UploadProductsType;
 use App\Repository\ProductRepository;
@@ -15,7 +16,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -30,6 +35,26 @@ class ProductController extends AbstractController
     public function index(): Response
     {
         return $this->render('product/index.html.twig');
+    }
+
+    /**
+     * @Route("/show/{code}", name="show", options={"expose"=true}, methods={"get"})
+     */
+    public function show(ProductRepository $productRepo, string $code): Response
+    {
+        $product = $productRepo->findOneBy(['code' => $code]);
+
+        if(!$product instanceof Product){
+            throw new NotFoundHttpException("No product with this code [{$code}] was found.");
+        }
+
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $data = $serializer->normalize($product, 'json', ['attributes' => [
+            'uuid',
+            'code',
+            'productWarehouses' => ['quantity']
+        ]]);
+        return new Response(json_encode($data), 200);
     }
 
     /**
@@ -98,7 +123,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/move/{warehouse}", name="move", options={"expose"=true}, methods={"post"})
+     * @Route("/move/{warehouseSource}/{warehouseDestination}", name="move", options={"expose"=true}, methods={"post"})
      */
     public function move(
         ProductService $productService,
@@ -107,7 +132,7 @@ class ProductController extends AbstractController
         Warehouse $warehouseDestination
     ): Response
     {
-        $products = json_decode($request->getContent(), true);
+        $products = \json_decode($request->getContent(), true);
         if(!\is_array($products)){
             throw new BadRequestHttpException('Malformed JSON request');
         }
@@ -125,11 +150,11 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/update/bar-code/{warehouse}", name="bar_code_save", options={"expose"=true}, methods={"post"})
+     * @Route("/update/bar-code/{warehouse}/add", name="bar_code_add", options={"expose"=true}, methods={"post"})
      */
-    public function saveBarCode(ProductService $productService, Request $request, Warehouse $warehouse): Response
+    public function addBarCode(ProductService $productService, Request $request, Warehouse $warehouse): Response
     {
-        $products = json_decode($request->getContent(), true);
+        $products = \json_decode($request->getContent(), true);
         if(!\is_array($products)){
             throw new BadRequestHttpException('Malformed JSON request');
         }
@@ -137,4 +162,16 @@ class ProductController extends AbstractController
         return new JsonResponse(['status' => 'ok']);
     }
 
+    /**
+     * @Route("/update/bar-code/{warehouse}/remove", name="bar_code_remove", options={"expose"=true}, methods={"post"})
+     */
+    public function removeBarCode(ProductService $productService, Request $request, Warehouse $warehouse): Response
+    {
+        $products = \json_decode($request->getContent(), true);
+        if(!\is_array($products)){
+            throw new BadRequestHttpException('Malformed JSON request');
+        }
+        $productService->removeProductsFromInventory($products['data'], $warehouse);
+        return new JsonResponse(['status' => 'ok']);
+    }
 }

@@ -26,17 +26,17 @@ class ProductServiceTest extends WebTestCase
         /** @var $productService ProductService */
         $productService = $this->client->getContainer()->get(ProductService::class);
         $products = [
-            ['Code', 'Product Name', 'Quantity'],
-            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '100'],
-            ['CODE-TEST-02', 'PRODUCT-TEST-NAME-02', '100'],
-            ['CODE-TEST-03', 'PRODUCT-TEST-NAME-03', '100'],
-            ['CODE-TEST-04', 'PRODUCT-TEST-NAME-04', '100'],
-            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-04', '100'],
+            ['Code', 'Product Name', 'Quantity', 'Price'],
+            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '100', '100'],
+            ['CODE-TEST-02', 'PRODUCT-TEST-NAME-02', '100', '100'],
+            ['CODE-TEST-03', 'PRODUCT-TEST-NAME-03', '100', '100'],
+            ['CODE-TEST-04', 'PRODUCT-TEST-NAME-04', '100',' 100'],
+            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-04', '100', '100'],
         ];
         $productService->storeProducts($products, $warehouse);
         $productsByWarehouse = $this->client->getContainer()->get('doctrine')
             ->getRepository(ProductWarehouse::class)->findBy(['warehouse' => $warehouse]);
-        $this->assertCount(8, $productsByWarehouse);
+        $this->assertCount(4, $productsByWarehouse);
     }
 
     public function testMoveProduct(): void
@@ -140,7 +140,7 @@ class ProductServiceTest extends WebTestCase
             ->findBy(['warehouse' => $warehouse]);
 
         $this->assertEquals(60, $product->getQuantity());
-        $this->assertCount(8, $products);
+        $this->assertCount(4, $products);
     }
 
     public function testUpdateQuantityFromArray(): void
@@ -151,8 +151,8 @@ class ProductServiceTest extends WebTestCase
             ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
 
         $dataPrepared = [
-            ['Code', 'Title', 'Quantity'],
-            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '40'],
+            ['Code', 'Title', 'Quantity', 'Price'],
+            ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '40', '100'],
         ];
 
         $productService->storeProducts($dataPrepared, $warehouse);
@@ -192,5 +192,84 @@ class ProductServiceTest extends WebTestCase
             ->findOneBy(['warehouse' => $warehouse, 'product' => $productToWork]);
 
         $this->assertEquals(100, $product->getQuantity());
+    }
+
+    public function testRemoveProductsFromInventory(): void
+    {
+        /** @var $productService ProductService */
+        $productService = $this->client->getContainer()->get(ProductService::class);
+        $warehouse = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
+
+        /** @var $productToWork Product */
+        $productToWork = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['code' => 'CODE-TEST-01']);
+
+        $dataPrepared = [
+            ['code' => 'CODE-TEST-01', 'quantity' => 10]
+        ];
+        $productService->removeProductsFromInventory($dataPrepared, $warehouse);
+        $product = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findOneBy(['warehouse' => $warehouse, 'product' => $productToWork]);
+
+        $products = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findBy(['warehouse' => $warehouse]);
+
+        $this->assertEquals(90, $product->getQuantity());
+        $this->assertCount(4, $products);
+    }
+
+    public function testRemoveProductsFromInventory0(): void
+    {
+        /** @var $productService ProductService */
+        $productService = $this->client->getContainer()->get(ProductService::class);
+        $warehouse = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
+
+        /** @var $productToWork Product */
+        $productToWork = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['code' => 'CODE-TEST-01']);
+
+        $dataPrepared = [
+            ['code' => 'CODE-TEST-01', 'quantity' => 0]
+        ];
+        $productService->removeProductsFromInventory($dataPrepared, $warehouse);
+        $product = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findOneBy(['warehouse' => $warehouse, 'product' => $productToWork]);
+
+        $products = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findBy(['warehouse' => $warehouse]);
+
+        $this->assertEquals(90, $product->getQuantity());
+        $this->assertCount(4, $products);
+    }
+
+
+    public function testRemoveProductsFromInventoryTryingToDeleteGreaterValue(): void
+    {
+        /** @var $productService ProductService */
+        $productService = $this->client->getContainer()->get(ProductService::class);
+        $warehouse = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
+
+        $dataPrepared = [
+            ['code' => 'CODE-TEST-01', 'quantity' => 100]
+        ];
+
+        try {
+            $productService->removeProductsFromInventory($dataPrepared, $warehouse);
+        } catch (\Exception $exception){
+            $this->expectException();
+        }
     }
 }

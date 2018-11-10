@@ -2,7 +2,7 @@
     "devDependencies": {
         "@symfony/webpack-encore": "^0.20.0",
         "babel-preset-react": "^6.24.1",
-        "eslint": "^5.6.1",
+        "eslint": "^5.9.0",
         "eslint-config-airbnb": "^17.1.0",
         "eslint-plugin-import": "^2.14.0",
         "eslint-plugin-jsx-a11y": "^6.1.2",
@@ -26,6 +26,7 @@
         "downloadjs": "^1.4.7",
         "jquery": "^3.3.1",
         "popper.js": "^1.14.4",
+        "prop-types": "^15.6.2",
         "react": "^16.5.2",
         "react-bootstrap4-modal": "^1.6.1",
         "react-dom": "^16.5.2",

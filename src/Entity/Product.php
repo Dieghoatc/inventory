@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -62,6 +63,7 @@ class Product
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ProductWarehouse", mappedBy="product")
+     * @MaxDepth(1)
      */
     private $productWarehouses;
 
