@@ -143,6 +143,36 @@ class ProductServiceTest extends WebTestCase
         $this->assertCount(4, $products);
     }
 
+    public function testMoveProductsWarehouseDoesNotHaveTheProduct(): void
+    {
+        /** @var $productService ProductService */
+        $productService = $this->client->getContainer()->get(ProductService::class);
+        $warehouse = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Warehouse::class)->findOneBy(['name' => 'Usa']);
+
+        /** @var $productToWork Product */
+        $productToWork = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['code' => 'CODE-TEST-02']);
+
+        $dataPrepared = [
+            ['code' => $productToWork->getCode(), 'quantity' => 10]
+        ];
+        $productService->addProductsToInventory($dataPrepared, $warehouse);
+        $product = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findOneBy(['warehouse' => $warehouse, 'product' => $productToWork]);
+
+        $products = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findBy(['warehouse' => $warehouse]);
+
+        $this->assertEquals(10, $product->getQuantity());
+        $this->assertCount(2, $products);
+    }
+
     public function testUpdateQuantityFromArray(): void
     {
         /** @var $productService ProductService */
@@ -254,7 +284,6 @@ class ProductServiceTest extends WebTestCase
         $this->assertCount(4, $products);
     }
 
-
     public function testRemoveProductsFromInventoryTryingToDeleteGreaterValue(): void
     {
         /** @var $productService ProductService */
@@ -266,10 +295,64 @@ class ProductServiceTest extends WebTestCase
             ['code' => 'CODE-TEST-01', 'quantity' => 100]
         ];
 
-        try {
-            $productService->removeProductsFromInventory($dataPrepared, $warehouse);
-        } catch (\Exception $exception){
-            $this->expectException();
-        }
+        $this->expectException(\LogicException::class);
+        $productService->removeProductsFromInventory($dataPrepared, $warehouse);
+    }
+
+    public function testMoveProductsFromAndBAndApproveThem(): void
+    {
+        /** @var $productService ProductService */
+        $productService = $this->client->getContainer()->get(ProductService::class);
+
+        /** @var $productToWork Product */
+        $productToWork = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['code' => 'CODE-TEST-03']);
+
+        /** @var $warehouseSource Warehouse */
+        $warehouseSource = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
+        /** @var $warehouseDestination Warehouse */
+        $warehouseDestination = $this->client->getContainer()->get('doctrine')
+            ->getRepository(Warehouse::class)->findOneBy(['name' => 'Usa']);
+
+        $dataPrepared = [
+            ['uuid' => $productToWork->getUuid(), 'quantity' => 50]
+        ];
+
+        $productService->moveProducts($dataPrepared, $warehouseSource, $warehouseDestination);
+
+        /** Testing initial state of products before move them to approved */
+        $productWarehouseSource = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findOneBy(['warehouse' => $warehouseSource, 'product' => $productToWork, 'status' => 1]);
+
+        $this->assertEquals(50, $productWarehouseSource->getQuantity());
+
+        $productWarehouseDestination = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findOneBy(['warehouse' => $warehouseDestination, 'product' => $productToWork]);
+
+        $this->assertEquals(50, $productWarehouseDestination->getQuantity());
+
+        /** Approving products in destination warehouse */
+        $productService->approveProducts($warehouseDestination);
+
+        /** Testing final state between on destination warehouse. */
+        $productWarehouseDestination = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findBy(['warehouse' => $warehouseDestination, 'product' => $productToWork, 'status' => 0]);
+
+        $this->assertCount(0, $productWarehouseDestination);
+
+        $productWarehouseDestination = $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(ProductWarehouse::class)
+            ->findOneBy(['warehouse' => $warehouseDestination, 'product' => $productToWork, 'status' => 1]);
+
+        $this->assertEquals(50, $productWarehouseDestination->getQuantity());
     }
 }

@@ -20,6 +20,7 @@ Encore
   .addEntry('app', './assets/js/app.js')
   .addEntry('product', './assets/js/Products/index.js')
   .addEntry('bar-code', './assets/js/Products/BarCode.js')
+  .addEntry('incoming', './assets/js/Products/IncomingProducts.js')
 // .addEntry('page2', './assets/js/page2.js')
 
 /*
@@ -44,6 +45,6 @@ Encore
 // uncomment if you're having problems with a jQuery plugin
 // .autoProvidejQuery()
 
-  .enableReactPreset()
+  .enableReactPreset();
 
 module.exports = Encore.getWebpackConfig();

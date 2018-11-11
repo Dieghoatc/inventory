@@ -15,9 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Product
 {
-    const STATUS_COMFIRMED = 1;
-
-    const STATUS_PENDING_TO_CONFIRM = 2;
+    const STATUS_ACTIVE = 1;
 
     /**
      * @ORM\Id()

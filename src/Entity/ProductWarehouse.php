@@ -9,6 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProductWarehouse
 {
+
+    const STATUS_COMFIRMED = 1;
+
+    const STATUS_PENDING_TO_CONFIRM = 0;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

@@ -354,7 +354,7 @@ class View extends Component {
                 <button type="button" className="btn btn-primary disabled">
                   {Translator.trans('product.update.bar-code.confirm.action_doing')}
                   {' '}
-                  <i className="fas fa-sync fa-spin" />
+                  <i className="fas fa-sync fa-spin">{' '}</i>
                 </button>
               ) : (
                 <button type="button" className="btn btn-primary" onClick={this.toAddRemoteProducts}>
@@ -402,14 +402,14 @@ class View extends Component {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-danger">
+              <button type="button" className="btn btn-danger" onClick={() => (this.setState({ confirmRemoveProduct: false }))}>
                 {Translator.trans('cancel')}
               </button>
               {sending ? (
-                <button type="button" className="btn btn-primary disabled" onClick={() => (this.setState({ confirmRemoveProduct: false }))}>
+                <button type="button" className="btn btn-primary disabled">
                   {Translator.trans('product.update.bar-code.confirm.action_doing')}
                   {' '}
-                  <i className="fas fa-sync fa-spin" />
+                  <i className="fas fa-sync fa-spin">{' '}</i>
                 </button>
               ) : (
                 <button type="button" className="btn btn-primary" onClick={this.toRemoveRemoteProducts}>

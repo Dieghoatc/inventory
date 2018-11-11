@@ -8,6 +8,14 @@
             {{ 'user.index.title'|trans }}
         </div>
         <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="{{ path('user_user_new') }}" class="btn btn-sm btn-success mr-1">
+                        <i class="fas fa-people-carry">&nbsp;</i>{{ 'user.index.create_user'|trans }}
+                    </a>
+                </div>
+            </div>
+            <hr />
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover">
                     <thead>
@@ -25,7 +33,11 @@
                             <td>{{ user.id }}</td>
                             <td>{{ user.name }}</td>
                             <td>{{ user.email }}</td>
-                            <td>Rol</td>
+                            <td>
+                                {% for rol in user.roles %}
+                                    <span class="badge badge-primary">{{ rol }}</span>
+                                {% endfor %}
+                            </td>
                             <td>
                                 <a href="{{ path('user_user_edit', {user:user.id}) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-edit"></i> {{ 'edit'|trans }}

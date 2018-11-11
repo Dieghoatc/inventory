@@ -7,6 +7,7 @@ use App\Entity\Warehouse;
 use App\Form\UploadProductsType;
 use App\Repository\ProductRepository;
 use App\Repository\ProductWarehouseRepository;
+use App\Services\LogService;
 use App\Services\ProductService;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
@@ -112,11 +113,15 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/all/{warehouse}", name="all", options={"expose"=true}, methods={"get"})
+     * @Route("/all/{warehouse}/{status}", name="all", options={"expose"=true}, defaults={"status"=1}, methods={"get"})
      */
-    public function all(ProductWarehouseRepository $productWarehouseRepo, Warehouse $warehouse): Response
+    public function all(
+        ProductWarehouseRepository $productWarehouseRepo,
+        Warehouse $warehouse,
+        int $status
+    ): Response
     {
-        $products = $productWarehouseRepo->findByWarehouse($warehouse);
+        $products = $productWarehouseRepo->findByWarehouse($warehouse, $status);
         $response = new Response(json_encode($products));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
@@ -129,7 +134,8 @@ class ProductController extends AbstractController
         ProductService $productService,
         Request $request,
         Warehouse $warehouseSource,
-        Warehouse $warehouseDestination
+        Warehouse $warehouseDestination,
+        LogService $logService
     ): Response
     {
         $products = \json_decode($request->getContent(), true);
@@ -138,6 +144,11 @@ class ProductController extends AbstractController
         }
 
         $productService->moveProducts($products['data'], $warehouseSource, $warehouseDestination);
+        $logService->add(
+            'Product',
+            "Moved products from {$warehouseSource->getName()} to {$warehouseDestination->getName()}",
+            $products
+        );
         return new JsonResponse(['status' => 'ok']);
     }
 
@@ -152,26 +163,66 @@ class ProductController extends AbstractController
     /**
      * @Route("/update/bar-code/{warehouse}/add", name="bar_code_add", options={"expose"=true}, methods={"post"})
      */
-    public function addBarCode(ProductService $productService, Request $request, Warehouse $warehouse): Response
+    public function addBarCode(
+        ProductService $productService,
+        Request $request,
+        Warehouse $warehouse,
+        LogService $logService
+    ): Response
     {
         $products = \json_decode($request->getContent(), true);
         if(!\is_array($products)){
             throw new BadRequestHttpException('Malformed JSON request');
         }
         $productService->addProductsToInventory($products['data'], $warehouse);
+        $logService->add(
+            'Product',
+            sprintf("Added %d products to {$warehouse->getName()}", \count($products['data'])),
+            $products
+        );
         return new JsonResponse(['status' => 'ok']);
     }
 
     /**
      * @Route("/update/bar-code/{warehouse}/remove", name="bar_code_remove", options={"expose"=true}, methods={"post"})
      */
-    public function removeBarCode(ProductService $productService, Request $request, Warehouse $warehouse): Response
+    public function removeBarCode(
+        ProductService $productService,
+        Request $request,
+        Warehouse $warehouse,
+        LogService $logService
+    ): Response
     {
         $products = \json_decode($request->getContent(), true);
         if(!\is_array($products)){
             throw new BadRequestHttpException('Malformed JSON request');
         }
         $productService->removeProductsFromInventory($products['data'], $warehouse);
+        $logService->add(
+            'Product',
+            sprintf("Removed %d products to {$warehouse->getName()}", \count($products['data'])),
+            $products
+        );
+        return new JsonResponse(['status' => 'ok']);
+    }
+
+    /**
+     * @Route("/incoming", name="incoming", methods={"get"})
+     */
+    public function incoming(): Response
+    {
+        return $this->render('product/incoming.html.twig');
+    }
+
+    /**
+     * @Route("/incoming/approve/{warehouse}", name="approve_incoming", methods={"post"}, options={"expose"=true})
+     */
+    public function approveIncoming(
+        ProductService $productService,
+        Warehouse $warehouse
+    ): Response
+    {
+        $productService->approveProducts($warehouse, $productService);
         return new JsonResponse(['status' => 'ok']);
     }
 }

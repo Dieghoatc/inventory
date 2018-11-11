@@ -63,6 +63,16 @@ product:
         action: "Update Quantity"
         action_doing: "Updating Quantity"
         remove_quantity: "Remove Quantities"
+  incoming:
+    title: "Incoming Products"
+    description: "Those are the incoming products that were send by other warehouses."
+    approve_all: "Approve All"
+    table:
+      description: "Description"
+      code: "Code"
+      quantity: "Quantity"
+      warehouse: "Warehouse"
+
 warehouses: "Warehouses"
 warehouse:
   index:
@@ -77,6 +87,7 @@ user:
     name: "Name"
     email: "Email"
     rol: "Rol"
+    create_user: "Create User"
   new:
     title: "Add User"
     name: "Name"

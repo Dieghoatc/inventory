@@ -2,11 +2,9 @@
 
 namespace App\Repository;
 
-use App\Entity\Product;
 use App\Entity\ProductWarehouse;
 use App\Entity\Warehouse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -22,7 +20,7 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductWarehouse::class);
     }
 
-    public function findByWarehouse(Warehouse $warehouse): array
+    public function findByWarehouse(Warehouse $warehouse, int $status): array
     {
         $products =  $this->createQueryBuilder('pw')
             ->select('pw')
@@ -31,7 +29,8 @@ class ProductWarehouseRepository extends ServiceEntityRepository
             ->innerJoin('pw.product', 'p')
             ->innerJoin('pw.warehouse', 'w')
             ->where('pw.warehouse = :warehouse')
-            ->andWhere('pw.status = 1')
+            ->andWhere('pw.status = :status')
+            ->setParameter('status', $status)
             ->setParameter('warehouse', $warehouse)
             ->orderBy('pw.product', 'ASC')
             ->getQuery()

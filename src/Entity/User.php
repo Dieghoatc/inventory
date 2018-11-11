@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
@@ -23,6 +25,17 @@ class User extends BaseUser
      */
     private $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Log", mappedBy="user")
+     */
+    private $log;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->log = new ArrayCollection();
+    }
+
     public function getName(): ?string
     {
         return $this->name;
@@ -43,6 +56,37 @@ class User extends BaseUser
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Log[]
+     */
+    public function getLog(): Collection
+    {
+        return $this->log;
+    }
+
+    public function addLog(Logs $log): self
+    {
+        if (!$this->log->contains($log)) {
+            $this->log[] = $log;
+            $log->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLog(Logs $log): self
+    {
+        if ($this->log->contains($log)) {
+            $this->log->removeElement($log);
+            // set the owning side to null (unless already changed)
+            if ($log->getUser() === $this) {
+                $log->setUser(null);
+            }
+        }
 
         return $this;
     }

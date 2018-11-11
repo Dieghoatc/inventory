@@ -24,6 +24,7 @@ class ProductControllerTest extends UserWebTestCase
         //yield ['GET', '/admin/product/template'];
         yield ['GET', '/admin/product/all/1'];
         yield ['GET', '/admin/product/update/bar-code'];
+        yield ['GET', '/admin/product/incoming'];
     }
 
 }

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Entity\Product;
 use App\Entity\ProductWarehouse;
 use App\Entity\Warehouse;
@@ -36,13 +35,17 @@ class ProductService
     /** @var $validator ValidatorInterface */
     protected $validator;
 
+    /** @var $logService LogService */
+    protected $logService;
+
     public function __construct(
         ProductRepository $productRepo,
         OrderProductRepository $orderProductRepo,
         ProductWarehouseRepository $productWarehouseRepo,
         WarehouseRepository $warehouseRepo,
         ObjectManager $manager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        LogService $logService
     ) {
         $this->orderProductRepo = $orderProductRepo;
         $this->productRepo = $productRepo;
@@ -50,6 +53,7 @@ class ProductService
         $this->warehouseRepo = $warehouseRepo;
         $this->manager = $manager;
         $this->validator = $validator;
+        $this->logService = $logService;
     }
 
     public function processXls(array $data): void
@@ -130,7 +134,7 @@ class ProductService
 
             $productSource->subQuantity($item['quantity']);
             $productDestination = $this->productWarehouseRepo->findOneBy([
-                'warehouse' => $warehouseDestination, 'product' => $product
+                'warehouse' => $warehouseDestination, 'product' => $product, 'status' => 0
             ]);
 
             if($productDestination instanceof ProductWarehouse) {
@@ -140,7 +144,7 @@ class ProductService
                 $productDestination->setWarehouse($warehouseDestination);
                 $productDestination->addQuantity($item['quantity']);
                 $productDestination->setProduct($product);
-                $productDestination->setStatus(1);
+                $productDestination->setStatus(0);
             }
 
             $this->manager->persist($productDestination);
@@ -161,10 +165,15 @@ class ProductService
             $productDestination = $this->productWarehouseRepo
                 ->findOneBy(['warehouse' => $warehouse, 'product' => $product]);
 
-            if($productDestination instanceof ProductWarehouse){
-                $productDestination->addQuantity($item['quantity']);
-                $this->manager->persist($productDestination);
+            if(!$productDestination instanceof ProductWarehouse){
+                $productDestination = new ProductWarehouse();
+                $productDestination->setProduct($product);
+                $productDestination->setWarehouse($warehouse);
+                $productDestination->setStatus(1);
             }
+
+            $productDestination->addQuantity($item['quantity']);
+            $this->manager->persist($productDestination);
         }
         $this->manager->flush();
     }
@@ -191,5 +200,22 @@ class ProductService
             }
         }
         $this->manager->flush();
+    }
+
+    public function approveProducts(Warehouse $warehouse): void
+    {
+        $productsPendingToApprove = $this->productWarehouseRepo->findBy([
+            'warehouse' => $warehouse,
+            'status' => 0,
+        ]);
+
+        $products = [];
+        foreach ($productsPendingToApprove as $product){
+            $products[] = ['code' => $product->getProduct()->getCode(), 'quantity' => $product->getQuantity()];
+            $this->manager->remove($product);
+        }
+
+        $this->manager->flush();
+        $this->addProductsToInventory($products, $warehouse);
     }
 }
