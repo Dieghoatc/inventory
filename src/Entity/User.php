@@ -52,9 +52,6 @@ class User extends BaseUser
     public function getRoles(): ?array
     {
         $roles = $this->roles;
-        if (empty($roles)) {
-            throw new LogicException('This user does not has a correct roles');
-        }
         return array_unique($roles);
     }
 

@@ -185,7 +185,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="Dockerfile" value="4" />
+          <entry key="Dockerfile" value="5" />
           <entry key="cache" value="1" />
           <entry key="conf" value="3" />
           <entry key="dist" value="2" />
@@ -201,31 +201,32 @@
           <entry key="product" value="5" />
           <entry key="product_warehouse" value="8" />
           <entry key="rnc" value="1" />
-          <entry key="sql" value="2" />
+          <entry key="sql" value="3" />
           <entry key="twig" value="7" />
           <entry key="user" value="3" />
-          <entry key="warehouse" value="1" />
+          <entry key="warehouse" value="2" />
           <entry key="xml" value="1" />
           <entry key="yaml" value="9" />
-          <entry key="yml" value="6" />
+          <entry key="yml" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key=".env file" value="2" />
-          <entry key="Database Element" value="22" />
-          <entry key="Dockerfile" value="4" />
+          <entry key="Database Element" value="23" />
+          <entry key="Dockerfile" value="5" />
           <entry key="JSON" value="3" />
           <entry key="JavaScript" value="25" />
           <entry key="Markdown" value="1" />
           <entry key="PHP" value="123" />
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="RNG Compact" value="1" />
+          <entry key="SQL" value="1" />
           <entry key="Scratch" value="2" />
           <entry key="SmartyConfig" value="3" />
           <entry key="Twig" value="7" />
           <entry key="XML" value="3" />
-          <entry key="YAML" value="15" />
+          <entry key="YAML" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -238,10 +239,10 @@
           <entry key="env" value="22" />
           <entry key="js" value="4530" />
           <entry key="md" value="600" />
-          <entry key="php" value="7766" />
+          <entry key="php" value="7768" />
           <entry key="sql" value="89" />
           <entry key="twig" value="249" />
-          <entry key="txt" value="1093" />
+          <entry key="txt" value="1142" />
           <entry key="yaml" value="1145" />
           <entry key="yml" value="105" />
         </counts>
@@ -252,8 +253,8 @@
           <entry key="Dockerfile" value="38" />
           <entry key="JavaScript" value="4530" />
           <entry key="Markdown" value="600" />
-          <entry key="PHP" value="7766" />
-          <entry key="PLAIN_TEXT" value="1241" />
+          <entry key="PHP" value="7768" />
+          <entry key="PLAIN_TEXT" value="1290" />
           <entry key="SQL" value="68" />
           <entry key="Scratch" value="28" />
           <entry key="SmartyConfig" value="51" />
@@ -314,8 +315,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Entity/User.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="53" column="30" selection-start-line="53" selection-start-column="30" selection-end-line="53" selection-end-column="30" />
+            <state relative-caret-position="619">
+              <caret line="85" column="30" lean-forward="true" selection-start-line="85" selection-start-column="30" selection-end-line="85" selection-end-column="30" />
+              <folding>
+                <element signature="e#30#78#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -329,20 +333,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/bootstrap.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="194">
               <caret line="33" column="17" lean-forward="true" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/base.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="65" column="28" selection-start-line="65" selection-start-column="28" selection-end-line="65" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -357,22 +352,24 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/assets/js/Products/IncomingProducts/View.js">
+        <entry file="file://$PROJECT_DIR$/Dockerfile">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docker-compose.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1095">
-              <caret line="76" column="11" selection-start-line="76" selection-start-column="11" selection-end-line="76" selection-end-column="11" />
-              <folding>
-                <element signature="e#0#37#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="315">
+              <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="91" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/translations/messages.en.yaml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1335">
-              <caret line="89" column="4" selection-start-line="89" selection-start-column="4" selection-end-line="89" selection-end-column="15" />
+      <file pinned="false" current-in-tab="true">
+        <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/warehouse">
+          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+            <state>
+              <filtering enabled="true" />
             </state>
           </provider>
         </entry>
@@ -481,9 +478,9 @@
         <option value="$PROJECT_DIR$/templates/user/index.html.twig" />
         <option value="$PROJECT_DIR$/templates/base.html.twig" />
         <option value="$PROJECT_DIR$/src/Controller/UserController.php" />
-        <option value="$PROJECT_DIR$/src/Entity/User.php" />
         <option value="$PROJECT_DIR$/src/Migrations/Version20181111142456.php" />
         <option value="$PROJECT_DIR$/config/packages/security.yaml" />
+        <option value="$PROJECT_DIR$/src/Entity/User.php" />
       </list>
     </option>
   </component>
@@ -774,10 +771,11 @@
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="user&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/User.php&#10;User&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/User.php&#10;Fixt&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/DataFixtures&#10;Product&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/Product.php&#10;ProductControll&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Controller/ProductController.php&#10;ProductWare&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/ProductWarehouse.php&#10;ProductService&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Services/ProductService.php&#10;bootstrap.php&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/tests/bootstrap.php&#10;ProductSer&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Services/ProductService.php&#10;ProductServ&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/tests/Unit/Service/ProductServiceTest.php&#10;Docker&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/Dockerfile&#10;packa&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;Kernel&#9;null&#9;null&#10;secur&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;Securi&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;composer.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/composer.json&#10;package&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;services.yam&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/services.yaml&#10;ProductControllerTest&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;ProductControllerTest.php&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;productController&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Controller/ProductController.php&#10;ProductController&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Controller/ProductController.php&#10;ProducC&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;templates/user/index.html.twig&#9;FILE&#9;file://C:/Users/User/Dev/inventory/templates/user/index.html.twig&#10;Kernel.&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Kernel.php&#10;Fix&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/DataFixtures/UserFixures.php&#10;security&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;package.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;config.yml&#9;FILE&#9;file://C:/Users/User/Dev/inventory/vendor/symfony/framework-bundle/Tests/Functional/app/ContainerDebug/config.yml" />
+    <property name="SearchEverywhereHistoryKey" value="User&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/User.php&#10;user&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/User.php&#10;Fixt&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/DataFixtures&#10;Product&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/Product.php&#10;ProductControll&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Controller/ProductController.php&#10;ProductWare&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Entity/ProductWarehouse.php&#10;ProductService&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Services/ProductService.php&#10;bootstrap.php&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/tests/bootstrap.php&#10;ProductSer&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/src/Services/ProductService.php&#10;ProductServ&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/tests/Unit/Service/ProductServiceTest.php&#10;Docker&#9;FILE&#9;file:///home/sbarbosa115/Projects/inventory/Dockerfile&#10;packa&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;Kernel&#9;null&#9;null&#10;secur&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;Securi&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;composer.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/composer.json&#10;package&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;services.yam&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/services.yaml&#10;ProductControllerTest&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;ProductControllerTest.php&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;productController&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Controller/ProductController.php&#10;ProductController&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Controller/ProductController.php&#10;ProducC&#9;FILE&#9;file://C:/Users/User/Dev/inventory/tests/Unit/Controller/ProductControllerTest.php&#10;templates/user/index.html.twig&#9;FILE&#9;file://C:/Users/User/Dev/inventory/templates/user/index.html.twig&#10;Kernel.&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/Kernel.php&#10;Fix&#9;FILE&#9;file://C:/Users/User/Dev/inventory/src/DataFixtures/UserFixures.php&#10;security&#9;FILE&#9;file://C:/Users/User/Dev/inventory/config/packages/security.yaml&#10;package.json&#9;FILE&#9;file://C:/Users/User/Dev/inventory/package.json&#10;config.yml&#9;FILE&#9;file://C:/Users/User/Dev/inventory/vendor/symfony/framework-bundle/Tests/Functional/app/ContainerDebug/config.yml" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/var/data/inventory.sqlite" />
     <property name="database.console.LAST_STATE" value="false" />
+    <property name="database.data.extractors.current.id" value="SQL Inserts" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -877,7 +875,7 @@
       <workItem from="1541526832716" duration="188000" />
       <workItem from="1541768427571" duration="15923000" />
       <workItem from="1541854080122" duration="38744000" />
-      <workItem from="1542026992622" duration="1964000" />
+      <workItem from="1542026992622" duration="3038000" />
     </task>
     <task id="LOCAL-00001" summary="Added startbootstrap-sb-admin as template.&#10;Configured template.&#10;Configured Encore.">
       <created>1538065049965</created>
@@ -1131,14 +1129,22 @@
       <option name="project" value="LOCAL" />
       <updated>1542028653250</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Solved issue on user related with log.">
+      <created>1542029153031</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1542029153031</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="337580000" />
+    <option name="totallyTimeSpent" value="338654000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="-11" width="1922" height="1092" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11632871" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -1153,7 +1159,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5026681" side_tool="true" weight="0.30962342" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32845187" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49733192" visible="true" weight="0.64853555" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49733192" weight="0.64853555" />
       <window_info anchor="bottom" id="Docker" order="10" weight="0.32845187" />
       <window_info anchor="bottom" id="Database Changes" order="11" weight="0.3294979" />
       <window_info anchor="bottom" id="DB Execution Console" order="12" />
@@ -1162,7 +1168,7 @@
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" weight="0.33724654" />
+      <window_info active="true" anchor="right" id="Database" order="3" visible="true" weight="0.33724654" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1172,7 +1178,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added product controller." />
     <MESSAGE value="Added translations and php-spreadsheets packs.&#10;Added controllers Product and Warehouse and theirs views." />
     <MESSAGE value="Added new UserController.&#10;Added new form Types." />
     <MESSAGE value="Login controller and view implemented.&#10;Solved issue with responsive design." />
@@ -1197,26 +1202,10 @@
     <MESSAGE value="Solved issues with interface.&#10;Added functionality to move products between warehouses.&#10;New PHPUnit testing added." />
     <MESSAGE value="Added logs support.&#10;Added move and approve function." />
     <MESSAGE value="Solved issues with migration.&#10;Disabled register page." />
-    <option name="LAST_COMMIT_MESSAGE" value="Solved issues with migration.&#10;Disabled register page." />
+    <MESSAGE value="Solved issue on user related with log." />
+    <option name="LAST_COMMIT_MESSAGE" value="Solved issue on user related with log." />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Entity/Warehouse.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181106153152.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/warehouse">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/doctrine/orm/lib/Doctrine/ORM/AbstractQuery.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10545">
@@ -1238,13 +1227,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="25" lean-forward="true" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="13" lean-forward="true" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -1495,20 +1477,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/user">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/User.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="53" column="30" selection-start-line="53" selection-start-column="30" selection-end-line="53" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Migrations/Version20181111130126.php">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1544,6 +1512,47 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="194">
           <caret line="33" column="17" lean-forward="true" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="619">
+          <caret line="85" column="30" lean-forward="true" selection-start-line="85" selection-start-column="30" selection-end-line="85" selection-end-column="30" />
+          <folding>
+            <element signature="e#30#78#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/user.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="2" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/user">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="91" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/warehouse">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
         </state>
       </provider>
     </entry>
