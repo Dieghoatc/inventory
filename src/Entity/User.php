@@ -73,7 +73,7 @@ class User extends BaseUser
         return $this->log;
     }
 
-    public function addLog(Logs $log): self
+    public function addLog(Log $log): self
     {
         if (!$this->log->contains($log)) {
             $this->log[] = $log;
@@ -83,7 +83,7 @@ class User extends BaseUser
         return $this;
     }
 
-    public function removeLog(Logs $log): self
+    public function removeLog(Log $log): self
     {
         if ($this->log->contains($log)) {
             $this->log->removeElement($log);
