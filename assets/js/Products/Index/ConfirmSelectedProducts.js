@@ -41,9 +41,9 @@ class ConfirmSelectedProducts extends Component {
     });
   }
 
-  selectDestinationWarehouse(id) {
+  selectDestinationWarehouse(e) {
     this.setState({
-      warehouseDestination: id,
+      warehouseDestination: Number(e.target.value),
     });
   }
 
