@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Order;
+use App\Entity\Warehouse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -18,6 +19,21 @@ class OrderRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Order::class);
     }
+
+    public function findByWarehouse(Warehouse $warehouse): array
+    {
+        $products =  $this->createQueryBuilder('o')
+            ->select('o')
+            ->innerJoin('o.customer', 'cu')
+            ->leftJoin('o.comment', 'co')
+            ->where('o.warehouse = :warehouse')
+            ->setParameter('warehouse', $warehouse)
+            ->getQuery()
+            ->getArrayResult();
+
+        return $products;
+    }
+
 
 //    /**
 //     * @return Order[] Returns an array of Order objects

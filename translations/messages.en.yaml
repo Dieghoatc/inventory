@@ -72,6 +72,11 @@ product:
       code: "Code"
       quantity: "Quantity"
       warehouse: "Warehouse"
+order:
+  index:
+    title: "View Orders"
+  new:
+    title: "Create a new order"
 
 warehouses: "Warehouses"
 warehouse:

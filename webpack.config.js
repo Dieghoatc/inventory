@@ -21,7 +21,7 @@ Encore
   .addEntry('product', './assets/js/Products/index.js')
   .addEntry('bar-code', './assets/js/Products/BarCode.js')
   .addEntry('incoming', './assets/js/Products/IncomingProducts.js')
-// .addEntry('page2', './assets/js/page2.js')
+  .addEntry('orders', './assets/js/Orders/index.js')
 
 /*
      * FEATURE CONFIG

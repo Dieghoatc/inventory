@@ -28,10 +28,15 @@ class Warehouse
      */
     private $productWarehouses;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="warehouse")
+     */
+    private $orders;
+
     public function __construct()
     {
-        $this->Product = new ArrayCollection();
         $this->productWarehouses = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
 
@@ -77,6 +82,37 @@ class Warehouse
             // set the owning side to null (unless already changed)
             if ($productWarehouse->getWarehouse() === $this) {
                 $productWarehouse->setWarehouse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setWarehouse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->contains($order)) {
+            $this->orders->removeElement($order);
+            // set the owning side to null (unless already changed)
+            if ($order->getWarehouse() === $this) {
+                $order->setWarehouse(null);
             }
         }
 

@@ -2,11 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Warehouse;
+use App\Entity\Customer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class WarehouseFixtures extends Fixture
+class CustomerFixtures extends Fixture
 {
     /**
      * Load data fixtures with the passed EntityManager
@@ -20,15 +20,19 @@ class WarehouseFixtures extends Fixture
     protected function createWarehouses(ObjectManager $manager): void
     {
         $items = [
-            ['name' => 'Colombia'],
-            ['name' => 'Usa'],
-            ['name' => 'España'],
+            ['first_name' => 'Jose'],
+            ['last_name' => 'Perez'],
+            ['email' => 'jose.perez@example.com'],
+            ['phone' => '+57 3002825566'],
         ];
 
         foreach ($items as $item) {
-            $warehouse = new Warehouse();
-            $warehouse->setName($item['name']);
-            $manager->persist($warehouse);
+            $customer = new Customer();
+            $customer->setFirstName($item['first_name']);
+            $customer->setLastName($item['last_name']);
+            $customer->setEmail($item['email']);
+            $customer->setPhone($item['phone']);
+            $manager->persist($customer);
         }
         $manager->flush();
     }
