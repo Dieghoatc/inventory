@@ -4,6 +4,7 @@
     <list default="true" id="5201f090-bb8f-42c5-bb3b-d18e9f25a222" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/js/Products/Index/ConfirmSelectedProducts.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/Products/Index/ConfirmSelectedProducts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/Products/Index/Products.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/Products/Index/Products.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -172,7 +173,7 @@
     <session id="-661058679">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="10" />
+          <entry key="project.closed" value="11" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.22" value="1" />
           <entry key="project.open.time.3" value="2" />
@@ -180,9 +181,9 @@
           <entry key="project.open.time.34" value="1" />
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="2" />
-          <entry key="project.open.time.7" value="1" />
+          <entry key="project.open.time.7" value="2" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="12" />
+          <entry key="project.opened" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -192,7 +193,7 @@
           <entry key="conf" value="3" />
           <entry key="dist" value="2" />
           <entry key="env" value="2" />
-          <entry key="js" value="28" />
+          <entry key="js" value="31" />
           <entry key="json" value="3" />
           <entry key="log" value="3" />
           <entry key="md" value="1" />
@@ -218,7 +219,7 @@
           <entry key="Database Element" value="25" />
           <entry key="Dockerfile" value="5" />
           <entry key="JSON" value="3" />
-          <entry key="JavaScript" value="28" />
+          <entry key="JavaScript" value="31" />
           <entry key="Markdown" value="1" />
           <entry key="PHP" value="124" />
           <entry key="PLAIN_TEXT" value="2" />
@@ -239,12 +240,12 @@
           <entry key="dist" value="1" />
           <entry key="dummy" value="148" />
           <entry key="env" value="22" />
-          <entry key="js" value="4548" />
+          <entry key="js" value="5447" />
           <entry key="md" value="600" />
           <entry key="php" value="7768" />
           <entry key="sql" value="89" />
           <entry key="twig" value="249" />
-          <entry key="txt" value="1142" />
+          <entry key="txt" value="1291" />
           <entry key="yaml" value="1145" />
           <entry key="yml" value="105" />
         </counts>
@@ -253,10 +254,10 @@
         <counts>
           <entry key=".env file" value="22" />
           <entry key="Dockerfile" value="38" />
-          <entry key="JavaScript" value="4548" />
+          <entry key="JavaScript" value="5447" />
           <entry key="Markdown" value="600" />
           <entry key="PHP" value="7768" />
-          <entry key="PLAIN_TEXT" value="1290" />
+          <entry key="PLAIN_TEXT" value="1439" />
           <entry key="SQL" value="68" />
           <entry key="Scratch" value="36" />
           <entry key="SmartyConfig" value="51" />
@@ -267,7 +268,7 @@
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
         <counts>
-          <entry key="ESLintLanguageService" value="2" />
+          <entry key="ESLintLanguageService" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.php.composer.actions" />
@@ -283,60 +284,33 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entity/User.php">
+        <entry file="file://$PROJECT_DIR$/assets/js/Products/IncomingProducts/View.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-73">
-              <caret line="53" column="30" selection-start-line="53" selection-start-column="30" selection-end-line="53" selection-end-column="30" />
-              <folding>
-                <element signature="e#30#78#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/assets/js/Products/BarCode.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/assets/js/Products/Index/Products.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2143">
-              <caret line="57" column="10" selection-start-line="57" selection-start-column="10" selection-end-line="57" selection-end-column="10" />
+            <state relative-caret-position="1095">
+              <caret line="76" column="11" selection-start-line="76" selection-start-column="11" selection-end-line="76" selection-end-column="11" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/assets/js/Products/Index/Products.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="215">
+              <caret line="154" column="25" selection-start-line="154" selection-start-column="25" selection-end-line="154" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/assets/js/Products/Index/ConfirmSelectedProducts.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/order">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://1083c5cb-b98b-4289-974a-001d3d999047/schema/symfony/table/warehouse">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
+            <state relative-caret-position="1785">
+              <caret line="167" column="40" selection-start-line="167" selection-start-column="40" selection-end-line="167" selection-end-column="40" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -353,10 +327,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>warehouseSelected</find>
-      <find>propTypes</find>
-      <find>product_move</find>
-      <find>destination</find>
       <find>destinationWarehouse</find>
       <find>warehouseSource</find>
       <find>console.log</find>
@@ -383,6 +353,10 @@
       <find>CODE-TEST-03</find>
       <find>product_approve_incoming</find>
       <find>approve_incoming</find>
+      <find>selectDestinationWarehouse</find>
+      <find>confirmModa</find>
+      <find>close</find>
+      <find>selectAll</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\User\Dev\inventory\config\packages</dir>
@@ -418,7 +392,6 @@
         <option value="$PROJECT_DIR$/tests/bootstrap.php" />
         <option value="$PROJECT_DIR$/tests/Unit/Repository/ProductRepository.php" />
         <option value="$PROJECT_DIR$/src/Repository/ProductRepository.php" />
-        <option value="$PROJECT_DIR$/assets/js/Products/Index/Products.js" />
         <option value="$PROJECT_DIR$/tests/Unit/Repository/ProductRepositoryTest.php" />
         <option value="$PROJECT_DIR$/src/Migrations/Version20181111130126.php" />
         <option value="$PROJECT_DIR$/assets/js/Products/BarCode/View.js" />
@@ -448,6 +421,7 @@
         <option value="$PROJECT_DIR$/config/packages/security.yaml" />
         <option value="$PROJECT_DIR$/src/Entity/User.php" />
         <option value="$PROJECT_DIR$/assets/js/Products/Index/ConfirmSelectedProducts.js" />
+        <option value="$PROJECT_DIR$/assets/js/Products/Index/Products.js" />
       </list>
     </option>
   </component>
@@ -705,6 +679,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -777,7 +752,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -788,7 +762,7 @@
     <property name="add_unversioned_files" value="$PROJECT_DIR$/var/data/inventory.sqlite" />
     <property name="database.console.LAST_STATE" value="false" />
     <property name="database.data.extractors.current.id" value="SQL Inserts" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/star-links" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
@@ -888,7 +862,8 @@
       <workItem from="1541768427571" duration="15923000" />
       <workItem from="1541854080122" duration="38744000" />
       <workItem from="1542026992622" duration="3635000" />
-      <workItem from="1542134513354" duration="865000" />
+      <workItem from="1542134513354" duration="1542000" />
+      <workItem from="1542461537529" duration="8332000" />
     </task>
     <task id="LOCAL-00001" summary="Added startbootstrap-sb-admin as template.&#10;Configured template.&#10;Configured Encore.">
       <created>1538065049965</created>
@@ -1156,30 +1131,37 @@
       <option name="project" value="LOCAL" />
       <updated>1542030209183</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Solved issue with React when you selected a different Warehouse moving products between warehouses.">
+      <created>1542136163576</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1542136163576</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="340116000" />
+    <option name="totallyTimeSpent" value="349125000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-11" width="1922" height="1092" extended-state="6" />
+    <frame x="0" y="-4" width="1920" height="1084" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.117395945" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.11846318" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="DB Browser" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49707174" weight="0.3294979" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3294979" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39958158" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5026681" side_tool="true" weight="0.30962342" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32845187" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49733192" visible="true" weight="0.26882845" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49733192" visible="true" weight="0.26882845" />
       <window_info anchor="bottom" id="Docker" order="10" weight="0.32845187" />
       <window_info anchor="bottom" id="Database Changes" order="11" weight="0.3294979" />
       <window_info anchor="bottom" id="DB Execution Console" order="12" />
@@ -1188,7 +1170,7 @@
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" visible="true" weight="0.22198506" />
+      <window_info anchor="right" id="Database" order="3" weight="0.22198506" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1198,7 +1180,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added translations and php-spreadsheets packs.&#10;Added controllers Product and Warehouse and theirs views." />
     <MESSAGE value="Added new UserController.&#10;Added new form Types." />
     <MESSAGE value="Login controller and view implemented.&#10;Solved issue with responsive design." />
     <MESSAGE value="Security implemented." />
@@ -1223,7 +1204,8 @@
     <MESSAGE value="Added logs support.&#10;Added move and approve function." />
     <MESSAGE value="Solved issues with migration.&#10;Disabled register page." />
     <MESSAGE value="Solved issue on user related with log." />
-    <option name="LAST_COMMIT_MESSAGE" value="Solved issue on user related with log." />
+    <MESSAGE value="Solved issue with React when you selected a different Warehouse moving products between warehouses." />
+    <option name="LAST_COMMIT_MESSAGE" value="Solved issue with React when you selected a different Warehouse moving products between warehouses." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/Repository/ProductRepository.php">
@@ -1442,13 +1424,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/Products/IncomingProducts/View.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1095">
-          <caret line="76" column="11" selection-start-line="76" selection-start-column="11" selection-end-line="76" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/translations/messages.en.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1335">
@@ -1536,16 +1511,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/User.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-73">
-          <caret line="53" column="30" selection-start-line="53" selection-start-column="30" selection-end-line="53" selection-end-column="30" />
-          <folding>
-            <element signature="e#30#78#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/assets/js/Products/BarCode.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -1553,17 +1518,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/Products/Index/Products.js">
+    <entry file="file://$PROJECT_DIR$/src/Entity/User.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2143">
-          <caret line="57" column="10" selection-start-line="57" selection-start-column="10" selection-end-line="57" selection-end-column="10" />
+        <state relative-caret-position="-73">
+          <caret line="53" column="30" selection-start-line="53" selection-start-column="30" selection-end-line="53" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/Products/IncomingProducts/View.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1095">
+          <caret line="76" column="11" selection-start-line="76" selection-start-column="11" selection-end-line="76" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/assets/js/Products/Index/ConfirmSelectedProducts.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
+        <state relative-caret-position="1785">
+          <caret line="167" column="40" selection-start-line="167" selection-start-column="40" selection-end-line="167" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/Products/Index/Products.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="154" column="25" selection-start-line="154" selection-start-column="25" selection-end-line="154" selection-end-column="25" />
         </state>
       </provider>
     </entry>

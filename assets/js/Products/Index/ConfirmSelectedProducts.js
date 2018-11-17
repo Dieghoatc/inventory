@@ -55,16 +55,19 @@ class ConfirmSelectedProducts extends Component {
   renderEditable(cellInfo) {
     const { data, dataRequest } = this.state;
     const options = [];
+    const { uuid } = data[cellInfo.index];
+    let defaultValue = null;
 
     for (let i = 1; i <= data[cellInfo.index][cellInfo.column.id]; i += 1) {
-      if (typeof dataRequest[data[cellInfo.index].uuid] === 'undefined' && i === 1) {
-        dataRequest[data[cellInfo.index].uuid] = {
-          uuid: data[cellInfo.index].uuid,
+      if (dataRequest[uuid] === undefined && i === 1) {
+        dataRequest[uuid] = {
+          uuid,
           quantity: Number(i),
         };
       }
-      if (dataRequest[cellInfo.index] && dataRequest[cellInfo.index].uuid.quantity === i) {
-        options.push(<option value={i} key={`${i}-KEY`} defaultValue>{i}</option>);
+      if (dataRequest[uuid] !== undefined && dataRequest[uuid].quantity === i) {
+        defaultValue = i;
+        options.push(<option value={i} key={`${i}-KEY`}>{i}</option>);
       } else {
         options.push(<option value={i} key={`${i}-KEY`}>{i}</option>);
       }
@@ -74,6 +77,7 @@ class ConfirmSelectedProducts extends Component {
       cellInfo.original.quantity > 0
         ? (
           <select
+            value={defaultValue}
             className="form-control form-control-sm"
             onChange={(e) => {
               dataRequest[data[cellInfo.index].uuid] = {

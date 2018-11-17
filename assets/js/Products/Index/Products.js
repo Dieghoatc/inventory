@@ -62,14 +62,17 @@ class Products extends Component {
   }
 
   isModalOpen(modalName, status) {
-    const { modals } = this.state;
+    const { modals, warehouseSource } = this.state;
     if (typeof modals[modalName] === 'undefined') {
       throw new Error('Modal name not defined');
     }
     modals[modalName] = status;
     this.setState({
       modals,
+      selection: [],
     });
+
+    this.loadProducts(warehouseSource);
   }
 
   selected(e) {
@@ -214,6 +217,13 @@ class Products extends Component {
         <CheckboxTable
           ref={(r) => { this.checkboxTable = r; }}
           data={data}
+          defaultFilterMethod={(filter, row) => {
+            const id = filter.pivotId || filter.id;
+            return (
+              row[id] !== undefined
+                ? String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase()) : true
+            );
+          }}
           columns={columns}
           loading={loading}
           defaultPageSize={10}
