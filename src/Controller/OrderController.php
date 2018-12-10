@@ -48,7 +48,7 @@ class OrderController extends AbstractController
         }
 
         return $this->render('order/new.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -58,8 +58,7 @@ class OrderController extends AbstractController
     public function all(
         OrderRepository $orderRepo,
         Warehouse $warehouse
-    ): Response
-    {
+    ): Response {
         $products = $orderRepo->findByWarehouse($warehouse);
         $response = new Response(json_encode($products));
         $response->headers->set('Content-Type', 'application/json');
