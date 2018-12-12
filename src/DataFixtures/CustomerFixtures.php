@@ -8,8 +8,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class CustomerFixtures extends Fixture
 {
+    public const CUSTOMER = 'customer';
     /**
-     * Load data fixtures with the passed EntityManager
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
@@ -20,10 +20,12 @@ class CustomerFixtures extends Fixture
     protected function createWarehouses(ObjectManager $manager): void
     {
         $items = [
-            ['first_name' => 'Jose'],
-            ['last_name' => 'Perez'],
-            ['email' => 'jose.perez@example.com'],
-            ['phone' => '+57 3002825566'],
+            [
+                'first_name' => 'Jose',
+                'last_name' => 'Perez',
+                'email' => 'jose.perez@example.com',
+                'phone' => '+57 3002825566',
+            ],
         ];
 
         foreach ($items as $item) {
@@ -33,6 +35,8 @@ class CustomerFixtures extends Fixture
             $customer->setEmail($item['email']);
             $customer->setPhone($item['phone']);
             $manager->persist($customer);
+
+            $this->addReference(self::CUSTOMER, $customer);
         }
         $manager->flush();
     }

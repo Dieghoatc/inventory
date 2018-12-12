@@ -14,6 +14,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Order
 {
+
+    public const SOURCE_WEB = 1;
+    public const SOURCE_PHONE = 2;
+    public const STATUS_CREATED = 1;
+    public const STATUS_INVOICED = 2;
+    public const STATUS_READY_TO_SEND = 3;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -68,11 +75,9 @@ class Order
      */
     private $modifiedAt;
 
-
-
     public function __construct()
     {
-        if ($this->getCreatedAt() === null) {
+        if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new \DateTime());
         }
         $this->comment = new ArrayCollection();
