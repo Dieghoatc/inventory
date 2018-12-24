@@ -22,9 +22,7 @@ class OrderController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('order/index.html.twig', [
-            'controller_name' => 'OrderController',
-        ]);
+        return $this->render('order/index.html.twig');
     }
 
     /**

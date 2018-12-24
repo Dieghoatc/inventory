@@ -75,6 +75,21 @@ product:
 order:
   index:
     title: "View Orders"
+    code: "Order #"
+    source: "Source"
+    status: "Status"
+    customer: "Customer"
+    sources:
+      web: 'Web'
+      phone: 'Phone'
+      unknown: 'Unknown'
+    statuses:
+      created: 'Created'
+      invoiced: 'Invoiced'
+      ready_to_send: 'Ready to Send'
+      unknown: 'Unknown'
+    date: 'Created Date'
+    options: 'Options'
   new:
     title: "Create a new order"
 

@@ -26,6 +26,31 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
                 'source' => Order::SOURCE_PHONE,
                 'status' => Order::STATUS_CREATED,
             ],
+            [
+                'code' => 'W00002',
+                'source' => Order::SOURCE_PHONE,
+                'status' => Order::STATUS_INVOICED,
+            ],
+            [
+                'code' => 'W00003',
+                'source' => Order::SOURCE_PHONE,
+                'status' => Order::STATUS_READY_TO_SEND,
+            ],
+            [
+                'code' => 'W00004',
+                'source' => Order::SOURCE_WEB,
+                'status' => Order::STATUS_CREATED,
+            ],
+            [
+                'code' => 'W00005',
+                'source' => Order::SOURCE_WEB,
+                'status' => Order::STATUS_INVOICED,
+            ],
+            [
+                'code' => 'W00006',
+                'source' => Order::SOURCE_WEB,
+                'status' => Order::STATUS_READY_TO_SEND,
+            ],
         ];
 
         foreach ($items as $item) {
