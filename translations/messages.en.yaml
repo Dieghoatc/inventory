@@ -90,6 +90,8 @@ order:
       unknown: 'Unknown'
     date: 'Created Date'
     options: 'Options'
+    edit: 'Edit'
+    detail: 'Detail'
   new:
     title: "Create a new order"
 

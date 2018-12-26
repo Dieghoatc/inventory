@@ -48,6 +48,10 @@ class Orders extends Component {
     );
   }
 
+  detail() {
+    console.log('editing');
+  }
+
   render() {
     const {
       selectAll, orders, warehouses, loading,
@@ -89,9 +93,11 @@ class Orders extends Component {
       Cell: row => (moment(row.original.created_at).format('DD MMM YYYY')),
       Header: Translator.trans('order.index.date'),
     }, {
-      Cell: row => (
+      Cell: () => (
         <div>
-          <button type='button' className="btn btn-action">Delete</button>
+          <button type="button" className="btn btn-sm btn-success" onClick={this.detail}>
+            {Translator.trans('order.index.detail')}
+          </button>
         </div>
       ),
       Header: Translator.trans('order.index.options'),
