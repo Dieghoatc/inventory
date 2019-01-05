@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="OrderProductRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\OrderProductRepository")
  */
 class OrderProduct
 {
@@ -22,14 +22,12 @@ class OrderProduct
     private $quantity;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Product", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="orderProduct")
      */
     private $product;
 
     /**
-     * @ORM\OneToOne(targetEntity="Order", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Order", inversedBy="orderProduct")
      */
     private $order;
 

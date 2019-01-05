@@ -1,55 +1,59 @@
-import 'react-table/react-table.css';
 import React, { Component } from 'react';
-import axios from 'axios';
-import { first } from 'lodash';
+import Modal from 'react-bootstrap4-modal';
 import ReactTable from 'react-table';
-import moment from 'moment';
-import checkboxHOC from 'react-table/lib/hoc/selectTable';
 
-const CheckboxTable = checkboxHOC(ReactTable);
-
-class Orders extends Component {
+class DetailOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      order: null,
+      showDetailModal: false,
+      loading: false,
+      data: [],
     };
   }
 
-  detail() {
-    console.log('editing');
-  }
-
   render() {
+    const {
+      showDetailModal, data, loading,
+    } = this.state;
+
+    const columns = [{
+      Header: Translator.trans('product.template.code'),
+      accessor: 'code',
+    }, {
+      Header: Translator.trans('product.template.description'),
+      accessor: 'title',
+    }, {
+      Header: Translator.trans('product.template.quantity'),
+      accessor: 'quantity',
+      Cell: this.renderEditable,
+    }, {
+      Header: Translator.trans('product.template.warehouse'),
+      accessor: 'warehouse.name',
+    }];
+
     return (
-      <div>
-        <div className="row">
-          <div className="col-md-6">
-            <select className="form-control" onChange={e => this.loadOrders(e.target.value)}>
-            </select>
-          </div>
+      <Modal visible dialogClassName="modal-lg" isOpen={showDetailModal}>
+        <div className="modal-header">
+          <h5 className="modal-title">{Translator.trans('product.index.move_between_warehouses')}</h5>
         </div>
-        <hr />
-        <CheckboxTable
-          data={orders}
-          defaultFilterMethod={(filter, row) => {
-            const id = filter.pivotId || filter.id;
-            return (
-              row[id] !== undefined
-                ? String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase()) : true
-            );
-          }}
-          columns={columns}
-          loading={loading}
-          defaultPageSize={10}
-          filterable
-          className="-striped -highlight"
-          {...checkboxProps}
-          keyField="id"
-        />
-      </div>
+        <div className="modal-body">
+          <div className="row">
+            <div className="col-md-6">
+              {Translator.trans('product.index.destination_warehouse')}
+            </div>
+          </div>
+          <hr />
+          <ReactTable data={data} columns={columns} defaultPageSize={5} loading={loading} />
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-primary" onClick={this.close}>
+            {Translator.trans('close')}
+          </button>
+        </div>
+      </Modal>
     );
   }
 }
 
-export default Orders;
+export default DetailOrder;

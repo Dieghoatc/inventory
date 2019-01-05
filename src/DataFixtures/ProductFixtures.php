@@ -10,6 +10,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class ProductFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const PRODUCT_KF_01 = 'kf-01';
+    public const PRODUCT_KF_02 = 'kf-02';
+    public const PRODUCT_KF_03 = 'kf-03';
+
     /**
      * @param ObjectManager $manager
      */
@@ -26,6 +30,16 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'title' => 'KF-01',
                 'price' => '100.00',
             ],
+            [
+                'code' => 'KF-02',
+                'title' => 'KF-02',
+                'price' => '150.00',
+            ],
+            [
+                'code' => 'KF-03',
+                'title' => 'KF-03',
+                'price' => '200.00',
+            ],
         ];
 
         foreach ($items as $item) {
@@ -41,6 +55,18 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             $productWarehouse->addQuantity(100);
             $productWarehouse->setWarehouse($this->getReference(WarehouseFixtures::WAREHOUSE_BOGOTA));
             $manager->persist($productWarehouse);
+
+            if ('KF-01' === $item['code']) {
+                $this->addReference(self::PRODUCT_KF_01, $product);
+            }
+
+            if ('KF-02' === $item['code']) {
+                $this->addReference(self::PRODUCT_KF_02, $product);
+            }
+
+            if ('KF-03' === $item['code']) {
+                $this->addReference(self::PRODUCT_KF_03, $product);
+            }
         }
         $manager->flush();
     }

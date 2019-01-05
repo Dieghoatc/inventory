@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Order;
 use App\Entity\Warehouse;
 use App\Form\OrderType;
+use App\Repository\OrderProductRepository;
 use App\Repository\OrderRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -61,5 +62,16 @@ class OrderController extends AbstractController
         $response = new Response(json_encode($products));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+
+    /**
+     * @Route("/detail/{order}", name="detail", options={"expose"=true}, methods={"get"})
+     */
+    public function detail(
+        Order $order,
+        OrderProductRepository $orderRepository
+    ): Response {
+        $products = $orderRepository->allProductsByOrder($order);
+        dd($products);
     }
 }
