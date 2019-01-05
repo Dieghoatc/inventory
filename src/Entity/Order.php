@@ -40,9 +40,9 @@ class Order
     private $customer;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="request")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="order")
      */
-    private $comment;
+    private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Warehouse", inversedBy="orders")
@@ -85,7 +85,7 @@ class Order
         if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new \DateTime());
         }
-        $this->comment = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -120,16 +120,16 @@ class Order
     /**
      * @return Collection|Comment[]
      */
-    public function getComment(): Collection
+    public function getComments(): Collection
     {
-        return $this->comment;
+        return $this->comments;
     }
 
     public function addComment(Comment $comment): self
     {
-        if (!$this->comment->contains($comment)) {
-            $this->comment[] = $comment;
-            $comment->setRequest($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setOrder($this);
         }
 
         return $this;
@@ -137,11 +137,11 @@ class Order
 
     public function removeComment(Comment $comment): self
     {
-        if ($this->comment->contains($comment)) {
-            $this->comment->removeElement($comment);
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
             // set the owning side to null (unless already changed)
-            if ($comment->getRequest() === $this) {
-                $comment->setRequest(null);
+            if ($comment->getOrder() === $this) {
+                $comment->setOrder(null);
             }
         }
 

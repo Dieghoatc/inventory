@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
-use Symfony\Component\Security\Core\Exception\LogicException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -31,10 +30,16 @@ class User extends BaseUser
      */
     private $log;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
     public function __construct()
     {
         parent::__construct();
         $this->log = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getName(): ?string
@@ -52,6 +57,7 @@ class User extends BaseUser
     public function getRoles(): ?array
     {
         $roles = $this->roles;
+
         return array_unique($roles);
     }
 

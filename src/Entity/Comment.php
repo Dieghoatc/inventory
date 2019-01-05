@@ -17,8 +17,7 @@ class Comment
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      */
     private $user;
 
@@ -28,9 +27,9 @@ class Comment
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Order", inversedBy="comment")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Order", inversedBy="comment")
      */
-    private $request;
+    private $order;
 
     public function getId(): ?int
     {
@@ -61,14 +60,14 @@ class Comment
         return $this;
     }
 
-    public function getRequest(): ?Order
+    public function getOrder(): ?Order
     {
-        return $this->request;
+        return $this->order;
     }
 
-    public function setRequest(?Order $request): self
+    public function setOrder(?Order $order): self
     {
-        $this->request = $request;
+        $this->order = $order;
 
         return $this;
     }

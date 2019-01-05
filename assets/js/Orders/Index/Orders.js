@@ -5,6 +5,7 @@ import { first } from 'lodash';
 import ReactTable from 'react-table';
 import moment from 'moment';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
+import DetailOrder from './DetailOrder';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 
@@ -15,7 +16,11 @@ class Orders extends Component {
       warehouses: [],
       loading: true,
       orders: [],
+      showDetailModal: false,
+      orderDetailId: null,
     };
+
+    this.detail = this.detail.bind(this);
   }
 
   componentDidMount() {
@@ -48,14 +53,18 @@ class Orders extends Component {
     );
   }
 
-  detail() {
-    console.log('editing');
+  detail(orderId) {
+    console.log(orderId);
+    this.setState({
+      orderDetailId: orderId,
+    });
   }
 
   render() {
     const {
-      selectAll, orders, warehouses, loading,
+      selectAll, orders, warehouses, loading, orderDetailId,
     } = this.state;
+
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
       Header: Translator.trans('order.index.customer'),
@@ -93,9 +102,9 @@ class Orders extends Component {
       Cell: row => (moment(row.original.created_at).format('DD MMM YYYY')),
       Header: Translator.trans('order.index.date'),
     }, {
-      Cell: () => (
+      Cell: row => (
         <div>
-          <button type="button" className="btn btn-sm btn-success" onClick={this.detail}>
+          <button type="button" className="btn btn-sm btn-success" onClick={() => this.detail(row.original.id)}>
             {Translator.trans('order.index.detail')}
           </button>
         </div>
@@ -143,6 +152,7 @@ class Orders extends Component {
           {...checkboxProps}
           keyField="id"
         />
+        { orderDetailId !== null && <DetailOrder orderDetailId={orderDetailId} /> }
       </div>
     );
   }

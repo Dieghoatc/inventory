@@ -29,7 +29,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ProductController extends AbstractController
 {
-
     /**
      * @Route("/", name="product_index", methods={"get"})
      */
@@ -45,7 +44,7 @@ class ProductController extends AbstractController
     {
         $product = $productRepo->findOneBy(['code' => $code]);
 
-        if(!$product instanceof Product){
+        if (!$product instanceof Product) {
             throw new NotFoundHttpException("No product with this code [{$code}] was found.");
         }
 
@@ -53,8 +52,9 @@ class ProductController extends AbstractController
         $data = $serializer->normalize($product, 'json', ['attributes' => [
             'uuid',
             'code',
-            'productWarehouses' => ['quantity']
+            'productWarehouses' => ['quantity'],
         ]]);
+
         return new Response(json_encode($data), 200);
     }
 
@@ -68,10 +68,12 @@ class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $productService->processXls($form->getData());
             $this->addFlash('success', $translator->trans('product.uploaded_successfully'));
+
             return $this->redirectToRoute('product_product_index');
         }
+
         return $this->render('product/upload.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -90,7 +92,7 @@ class ProductController extends AbstractController
 
         if ($request->get('data')) {
             $items = $request->get('data');
-            foreach ($items as $key => $item){
+            foreach ($items as $key => $item) {
                 $row = $key + 2;
                 $product = $productRepo->findOneBy(['uuid' => $item]);
                 $template->getActiveSheet()->setCellValue("A{$row}", $product->getCode());
@@ -100,7 +102,7 @@ class ProductController extends AbstractController
         }
 
         $writer = new Xls($template);
-        $response =  new StreamedResponse(
+        $response = new StreamedResponse(
             function () use ($writer) {
                 $writer->save('php://output');
             }
@@ -108,7 +110,8 @@ class ProductController extends AbstractController
 
         $response->headers->set('Content-Type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', 'attachment;filename="'.$translator->trans('product.template.products').'.xls"');
-        $response->headers->set('Cache-Control','max-age=0');
+        $response->headers->set('Cache-Control', 'max-age=0');
+
         return $response;
     }
 
@@ -119,11 +122,11 @@ class ProductController extends AbstractController
         ProductWarehouseRepository $productWarehouseRepo,
         Warehouse $warehouse,
         int $status
-    ): Response
-    {
+    ): Response {
         $products = $productWarehouseRepo->findByWarehouse($warehouse, $status);
         $response = new Response(json_encode($products));
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 
@@ -136,10 +139,9 @@ class ProductController extends AbstractController
         Warehouse $warehouseSource,
         Warehouse $warehouseDestination,
         LogService $logService
-    ): Response
-    {
+    ): Response {
         $products = \json_decode($request->getContent(), true);
-        if(!\is_array($products)){
+        if (!\is_array($products)) {
             throw new BadRequestHttpException('Malformed JSON request');
         }
 
@@ -149,6 +151,7 @@ class ProductController extends AbstractController
             "Moved products from {$warehouseSource->getName()} to {$warehouseDestination->getName()}",
             $products
         );
+
         return new JsonResponse(['status' => 'ok']);
     }
 
@@ -168,10 +171,9 @@ class ProductController extends AbstractController
         Request $request,
         Warehouse $warehouse,
         LogService $logService
-    ): Response
-    {
+    ): Response {
         $products = \json_decode($request->getContent(), true);
-        if(!\is_array($products)){
+        if (!\is_array($products)) {
             throw new BadRequestHttpException('Malformed JSON request');
         }
         $productService->addProductsToInventory($products['data'], $warehouse);
@@ -180,6 +182,7 @@ class ProductController extends AbstractController
             sprintf("Added %d products to {$warehouse->getName()}", \count($products['data'])),
             $products
         );
+
         return new JsonResponse(['status' => 'ok']);
     }
 
@@ -191,10 +194,9 @@ class ProductController extends AbstractController
         Request $request,
         Warehouse $warehouse,
         LogService $logService
-    ): Response
-    {
+    ): Response {
         $products = \json_decode($request->getContent(), true);
-        if(!\is_array($products)){
+        if (!\is_array($products)) {
             throw new BadRequestHttpException('Malformed JSON request');
         }
         $productService->removeProductsFromInventory($products['data'], $warehouse);
@@ -203,6 +205,7 @@ class ProductController extends AbstractController
             sprintf("Removed %d products to {$warehouse->getName()}", \count($products['data'])),
             $products
         );
+
         return new JsonResponse(['status' => 'ok']);
     }
 
@@ -220,9 +223,9 @@ class ProductController extends AbstractController
     public function approveIncoming(
         ProductService $productService,
         Warehouse $warehouse
-    ): Response
-    {
+    ): Response {
         $productService->approveProducts($warehouse, $productService);
+
         return new JsonResponse(['status' => 'ok']);
     }
 }

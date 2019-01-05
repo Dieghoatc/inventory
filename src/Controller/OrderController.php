@@ -12,6 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/order", name="order_")
@@ -72,6 +75,18 @@ class OrderController extends AbstractController
         OrderProductRepository $orderRepository
     ): Response {
         $products = $orderRepository->allProductsByOrder($order);
-        dd($products);
+
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $data = $serializer->normalize($order, 'json', ['attributes' => [
+            'id',
+            'code',
+            'status',
+            'source',
+        ]]);
+        dd($data);
+
+        $response = new Response(json_encode($products));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 }

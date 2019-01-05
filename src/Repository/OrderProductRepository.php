@@ -22,11 +22,14 @@ class OrderProductRepository extends ServiceEntityRepository
 
     public function allProductsByOrder(Order $order): array
     {
-        $products = $this->createQueryBuilder('op ')
+        $products = $this->createQueryBuilder('op')
+            ->select('op,p')
             ->innerJoin('op.order', 'o')
+            ->innerJoin('op.product', 'p')
             ->where('o.id = :order')
             ->setParameter('order', $order->getId())
-            ->getDQL();
+            ->getQuery()
+            ->getArrayResult();
 
         return $products;
     }

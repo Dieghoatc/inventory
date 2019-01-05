@@ -1,22 +1,31 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap4-modal';
 import ReactTable from 'react-table';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
 class DetailOrder extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      showDetailModal: false,
       loading: false,
       data: [],
     };
   }
 
-  render() {
-    const {
-      showDetailModal, data, loading,
-    } = this.state;
+  componentWillMount() {
+    const { orderDetailId } = this.props;
+    axios.get(Routing.generate('order_detail', { order: orderDetailId }))
+      .then((response) => {
+        this.setState({
+          data: response.data,
+        });
+      });
+  }
 
+  render() {
+    const { data, loading } = this.state;
     const columns = [{
       Header: Translator.trans('product.template.code'),
       accessor: 'code',
@@ -33,7 +42,7 @@ class DetailOrder extends Component {
     }];
 
     return (
-      <Modal visible dialogClassName="modal-lg" isOpen={showDetailModal}>
+      <Modal dialogClassName="modal-lg" visible>
         <div className="modal-header">
           <h5 className="modal-title">{Translator.trans('product.index.move_between_warehouses')}</h5>
         </div>
@@ -57,3 +66,7 @@ class DetailOrder extends Component {
 }
 
 export default DetailOrder;
+
+DetailOrder.propTypes = {
+  orderDetailId: PropTypes.number.isRequired,
+};
