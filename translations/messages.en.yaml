@@ -126,3 +126,7 @@ security:
     form:
       username: "Username"
       password: "Password"
+order_states:
+  created: 'Created'
+  invoiced: 'Invoiced'
+  ready_to_send: 'Ready to send'

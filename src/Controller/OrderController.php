@@ -46,6 +46,7 @@ class OrderController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'created_successfully');
+
             return $this->redirectToRoute('order_index');
         }
 
@@ -64,6 +65,7 @@ class OrderController extends AbstractController
         $products = $orderRepo->findByWarehouse($warehouse);
         $response = new Response(json_encode($products));
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 
@@ -74,19 +76,27 @@ class OrderController extends AbstractController
         Order $order,
         OrderProductRepository $orderRepository
     ): Response {
-        $products = $orderRepository->allProductsByOrder($order);
-
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
         $data = $serializer->normalize($order, 'json', ['attributes' => [
             'id',
             'code',
             'status',
             'source',
+            'customer' => ['email', 'firstName', 'lastName', 'defaultAddress' => [
+                'address', 'zipCode', 'city' => [
+                    'name',
+                ],
+            ]],
+            'comments' => [
+                'id',
+                'content',
+            ],
         ]]);
-        dd($data);
 
-        $response = new Response(json_encode($products));
+        $result = ['order' => $data, 'products' => $orderRepository->allProductsByOrder($order)];
+        $response = new Response(json_encode($result));
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 }

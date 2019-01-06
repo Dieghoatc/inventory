@@ -25,7 +25,7 @@ class OrderRepository extends ServiceEntityRepository
         $products = $this->createQueryBuilder('o')
             ->select('o,cu')
             ->innerJoin('o.customer', 'cu')
-            ->leftJoin('o.comment', 'co')
+            ->leftJoin('o.comments', 'co')
             ->where('o.warehouse = :warehouse')
             ->setParameter('warehouse', $warehouse)
             ->getQuery()

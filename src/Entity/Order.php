@@ -46,7 +46,7 @@ class Order
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Warehouse", inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false)comments
      */
     private $warehouse;
 
@@ -86,6 +86,7 @@ class Order
             $this->setCreatedAt(new \DateTime());
         }
         $this->comments = new ArrayCollection();
+        $this->orderProduct = new ArrayCollection();
     }
 
     public function getId(): ?int

@@ -3,10 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Customer;
+use App\Entity\CustomerAddress;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class CustomerFixtures extends Fixture
+class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {
     public const CUSTOMER = 'customer';
     /**
@@ -36,8 +38,22 @@ class CustomerFixtures extends Fixture
             $customer->setPhone($item['phone']);
             $manager->persist($customer);
 
+            $customerAddress = new CustomerAddress();
+            $customerAddress->setCustomer($customer);
+            $customerAddress->setAddress('Palm Beach 5800 Roger Regan Drive');
+            $customerAddress->setCity($this->getReference(LocationFixtures::DEFAULT_CITY));
+            $customerAddress->setZipCode(33415);
+            $manager->persist($customerAddress);
+
             $this->addReference(self::CUSTOMER, $customer);
         }
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            LocationFixtures::class,
+        ];
     }
 }

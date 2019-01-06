@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Customer;
+use App\Entity\Comment;
 use App\Entity\Order;
 use App\Entity\OrderProduct;
-use App\Entity\Product;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -70,6 +70,12 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             $order->setWarehouse($this->getReference(WarehouseFixtures::WAREHOUSE_BOGOTA));
             $manager->persist($order);
 
+            $comment = new Comment();
+            $comment->setOrder($order);
+            $comment->setContent("Comment for {$item['code']}");
+            $comment->setUser($this->getReference(UserFixtures::DEFAULT_USER));
+            $manager->persist($comment);
+
             /** Attaching products to this order */
             $orderProduct = new OrderProduct();
             $orderProduct->setOrder($order);
@@ -100,6 +106,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             CustomerFixtures::class,
             WarehouseFixtures::class,
             ProductFixtures::class,
+            UserFixtures::class,
         ];
     }
 }

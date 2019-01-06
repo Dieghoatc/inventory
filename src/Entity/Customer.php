@@ -43,9 +43,15 @@ class Customer
      */
     private $request;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CustomerAddress", mappedBy="customer")
+     */
+    private $addresses;
+
     public function __construct()
     {
         $this->request = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -53,7 +59,7 @@ class Customer
         return $this->id;
     }
 
-    public function getNameFirst(): ?string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -135,6 +141,45 @@ class Customer
     public function getFullName(): string
     {
         return "{$this->firstName } {$this->lastName }";
+    }
+
+    /**
+     * @return Collection|CustomerAddress[]
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(CustomerAddress $address): self
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(CustomerAddress $address): self
+    {
+        if ($this->addresses->contains($address)) {
+            $this->addresses->removeElement($address);
+            // set the owning side to null (unless already changed)
+            if ($address->getCustomer() === $this) {
+                $address->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDefaultAddress(): ?CustomerAddress
+    {
+        if ($this->getAddresses()->count() > 0) {
+            return $this->getAddresses()->first();
+        }
+        return null;
     }
 
 }
