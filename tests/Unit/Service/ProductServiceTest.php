@@ -6,13 +6,15 @@ use App\Entity\Product;
 use App\Entity\ProductWarehouse;
 use App\Entity\Warehouse;
 use App\Services\ProductService;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProductServiceTest extends WebTestCase
 {
+    /** @var $client Client */
     public $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = static::createClient();
     }
@@ -20,6 +22,7 @@ class ProductServiceTest extends WebTestCase
     public function testStoreProducts(): void
     {
         //Warehouse taken from WarehouseFixtures.php
+        /** @var $warehouse Warehouse */
         $warehouse = $this->client->getContainer()->get('doctrine')
             ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
         /** @var $productService ProductService */
@@ -35,7 +38,7 @@ class ProductServiceTest extends WebTestCase
         $productService->storeProducts($products, $warehouse);
         $productsByWarehouse = $this->client->getContainer()->get('doctrine')
             ->getRepository(ProductWarehouse::class)->findBy(['warehouse' => $warehouse]);
-        $this->assertCount(4, $productsByWarehouse);
+        $this->assertCount(7, $productsByWarehouse);
     }
 
     public function testMoveProduct(): void
@@ -139,7 +142,7 @@ class ProductServiceTest extends WebTestCase
             ->findBy(['warehouse' => $warehouse]);
 
         $this->assertEquals(60, $product->getQuantity());
-        $this->assertCount(4, $products);
+        $this->assertCount(7, $products);
     }
 
     public function testMoveProductsWarehouseDoesNotHaveTheProduct(): void
@@ -250,7 +253,7 @@ class ProductServiceTest extends WebTestCase
             ->findBy(['warehouse' => $warehouse]);
 
         $this->assertEquals(90, $product->getQuantity());
-        $this->assertCount(4, $products);
+        $this->assertCount(7, $products);
     }
 
     public function testRemoveProductsFromInventory0(): void
@@ -280,7 +283,7 @@ class ProductServiceTest extends WebTestCase
             ->findBy(['warehouse' => $warehouse]);
 
         $this->assertEquals(90, $product->getQuantity());
-        $this->assertCount(4, $products);
+        $this->assertCount(7, $products);
     }
 
     public function testRemoveProductsFromInventoryTryingToDeleteGreaterValue(): void

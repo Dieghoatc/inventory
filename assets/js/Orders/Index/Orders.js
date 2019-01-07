@@ -4,10 +4,8 @@ import axios from 'axios';
 import { first } from 'lodash';
 import ReactTable from 'react-table';
 import moment from 'moment';
-import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import DetailOrder from './DetailOrder';
 
-const CheckboxTable = checkboxHOC(ReactTable);
 
 class Orders extends Component {
   constructor(props) {
@@ -16,11 +14,11 @@ class Orders extends Component {
       warehouses: [],
       loading: true,
       orders: [],
-      showDetailModal: false,
       orderDetailId: null,
     };
 
     this.detail = this.detail.bind(this);
+    this.closeDetailModal = this.closeDetailModal.bind(this);
   }
 
   componentDidMount() {
@@ -57,6 +55,12 @@ class Orders extends Component {
     console.log(orderId);
     this.setState({
       orderDetailId: orderId,
+    });
+  }
+
+  closeDetailModal() {
+    this.setState({
+      orderDetailId: null,
     });
   }
 
@@ -135,7 +139,7 @@ class Orders extends Component {
           </div>
         </div>
         <hr />
-        <CheckboxTable
+        <ReactTable
           data={orders}
           defaultFilterMethod={(filter, row) => {
             const id = filter.pivotId || filter.id;
@@ -152,7 +156,9 @@ class Orders extends Component {
           {...checkboxProps}
           keyField="id"
         />
-        { orderDetailId !== null && <DetailOrder orderDetailId={orderDetailId} /> }
+        { orderDetailId !== null
+          && <DetailOrder orderDetailId={orderDetailId} closeModal={this.closeDetailModal} />
+        }
       </div>
     );
   }

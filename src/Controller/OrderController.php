@@ -5,16 +5,13 @@ namespace App\Controller;
 use App\Entity\Order;
 use App\Entity\Warehouse;
 use App\Form\OrderType;
-use App\Repository\OrderProductRepository;
 use App\Repository\OrderRepository;
+use App\Services\OrderService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/order", name="order_")
@@ -74,29 +71,19 @@ class OrderController extends AbstractController
      */
     public function detail(
         Order $order,
-        OrderProductRepository $orderRepository
+        OrderService $orderService
     ): Response {
-        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-        $data = $serializer->normalize($order, 'json', ['attributes' => [
-            'id',
-            'code',
-            'status',
-            'source',
-            'customer' => ['email', 'firstName', 'lastName', 'defaultAddress' => [
-                'address', 'zipCode', 'city' => [
-                    'name',
-                ],
-            ]],
-            'comments' => [
-                'id',
-                'content',
-            ],
-        ]]);
-
-        $result = ['order' => $data, 'products' => $orderRepository->allProductsByOrder($order)];
+        $result = $orderService->getOrder($order);
         $response = new Response(json_encode($result));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
+    }
+
+    /**
+     * @return Response
+     */
+    public function syncComments(): Response
+    {
     }
 }

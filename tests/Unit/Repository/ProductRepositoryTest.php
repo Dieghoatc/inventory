@@ -21,7 +21,7 @@ class ProductRepositoryTest extends WebTestCase
     /** @var $productRepository ProductRepository */
     public $productRepo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = static::createClient();
         $this->productRepo = $this->client->getContainer()->get('doctrine')
@@ -42,8 +42,8 @@ class ProductRepositoryTest extends WebTestCase
             ['CODE-TEST-04', 'PRODUCT-TEST-NAME-01', '0', 100],
         ];
         $productService->storeProducts($products, $warehouse);
-        $products = $this->productRepo->findAllAsArray();
-        $this->assertCount(4, $products);
+        $products = $this->productRepo->findAll();
+        $this->assertCount(7, $products);
     }
 
 }

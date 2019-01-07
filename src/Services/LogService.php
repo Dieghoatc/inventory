@@ -6,8 +6,8 @@ use App\Entity\Log;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class LogService {
-
+class LogService
+{
     private $objectManager;
 
     private $user;

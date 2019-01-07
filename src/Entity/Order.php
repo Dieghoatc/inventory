@@ -66,7 +66,7 @@ class Order
     private $deletedAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
 
@@ -230,4 +230,8 @@ class Order
         $this->setModified(new \DateTime());
     }
 
+    public function getCreatedAtAsIso8601(): string
+    {
+        return $this->getCreatedAt()->format('c');
+    }
 }
