@@ -13,6 +13,7 @@ class DetailOrder extends Component {
       loading: false,
       products: [],
       order: [],
+      comments: [],
     };
   }
 
@@ -20,48 +21,52 @@ class DetailOrder extends Component {
     const { orderDetailId } = this.props;
     axios.get(Routing.generate('order_detail', { order: orderDetailId }))
       .then((response) => {
-        console.log(response.data)
         this.setState({
           products: response.data.products,
           order: response.data.order,
+          comments: response.data.order.comments,
         });
       });
   }
 
-  updateComment(id) {
-    console.log('updating comment');
-  }
-
   deleteComment(id) {
-    const { order } = this.state;
-    order.comments.push({
-      id: null,
-      content: null,
-    });
-
-    this.setState({
-      order,
-    });
-  }
-
-  saveComment() {
-    console.log('save comment');
+    const { comments } = this.state;
+    console.log(comments.filter(comment => (comment.id !== id)));
+    this.syncComments(
+      comments.filter(comment => (comment.id !== id)),
+    );
   }
 
   addComment() {
-    const { order } = this.state;
-    order.comments.push({
+    const { comments } = this.state;
+    comments.push({
       id: null,
       content: null,
     });
+    this.syncComments(comments);
+  }
 
-    this.setState({
-      order,
+  saveComments() {
+    const { comments } = this.state;
+    this.syncComments(comments);
+  }
+
+  syncComments(comments) {
+    const { orderDetailId } = this.props;
+    axios.post(Routing.generate('order_sync_comments', { order: orderDetailId }), {
+      comments,
+    }).then((response) => {
+      const { data } = response;
+      this.setState({
+        comments: data.comments,
+      });
     });
   }
 
   render() {
-    const { products, order, loading } = this.state;
+    const {
+      products, order, loading, comments,
+    } = this.state;
     const { closeModal } = this.props;
     const columns = [{
       Header: Translator.trans('product.template.code'),
@@ -74,24 +79,29 @@ class DetailOrder extends Component {
       accessor: 'quantity',
       Cell: this.renderEditable,
     }];
-    let comments = [];
-    if (order.comments !== undefined) {
-      comments = order.comments.map((comment, index) => (
-        <div className="form-inline" key={`comment-${index}`}>
+    let commentsView = [];
+    if (comments.length > 0) {
+      commentsView = comments.map(comment => (
+        <div className="form-inline" key={comment.id}>
           <div className="form-group mb-2 col-md-10">
-            <textarea defaultValue={comment.content} className="form-control col-md-12" />
+            <textarea
+              defaultValue={comment.content}
+              className="form-control col-md-12"
+              onChange={(e) => {
+                comment.content = e.target.value;
+              }}
+            />
           </div>
-          <button type="button" className="btn btn-sm btn-primary m-1">
+          <button type="button" className="btn btn-sm btn-primary m-1" onClick={() => this.saveComments(comment.id)}>
             <i className="fas fa-save" />
           </button>
           { ' ' }
-          <button type="button" className="btn btn-sm btn-danger m-1">
+          <button type="button" className="btn btn-sm btn-danger m-1" onClick={() => this.deleteComment(comment.id)}>
             <i className="fas fa-times" />
           </button>
           { ' ' }
         </div>
       ));
-      console.log(comments);
     }
 
     return (
@@ -211,7 +221,7 @@ class DetailOrder extends Component {
           }
           <hr />
 
-          <ul className="nav nav-tabs" id="myTab" role="tablist">
+          <ul className="nav nav-tabs" role="tablist">
             <li className="nav-item">
               <a
                 className="nav-link active"
@@ -255,7 +265,7 @@ class DetailOrder extends Component {
               aria-labelledby="profile-tab"
             >
               <hr />
-              { order.comments !== undefined && comments }
+              { order.comments !== undefined && commentsView }
               <div className="col-md-12">
                 <button type="button" className="btn btn-sm btn-success" onClick={() => (this.addComment())}>
                   <i className="fas fa-plus" />

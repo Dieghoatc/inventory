@@ -87,6 +87,11 @@ class CommentServiceTest extends WebTestCase
             $comments[$commentKey]['content'] = "{$comment['content']} Edited";
         }
 
+        $comments[] = [
+            'id' => null,
+            'content' => 'New comment Added',
+        ];
+
         /** @var $order Order */
         $order = $this->client->getContainer()->get('doctrine')->getRepository(Order::class)->find($orderItem['order']['id']);
 
@@ -94,10 +99,26 @@ class CommentServiceTest extends WebTestCase
         $commentService = $this->client->getContainer()->get(CommentService::class);
         $commentService->syncComments($comments, $user, $order);
 
-        $this->assertEquals(2, $order->getComments()->count());
+        $this->assertEquals(3, $order->getComments()->count());
         foreach ($order->getComments() as $comment) {
             $commentEdited = strpos($comment->getContent(), 'Edited');
-            $this->assertNotFalse($commentEdited);
+            $commentAdded = strpos($comment->getContent(), 'Added');
+            $this->assertNotFalse($commentEdited || $commentAdded);
+        }
+
+        $comments = [
+            [
+                'id' => null,
+                'content' => 'This is the last comment Latest',
+            ],
+        ];
+
+        $commentService->syncComments($comments, $user, $order);
+        $this->assertEquals(1, $order->getComments()->count());
+
+        foreach ($order->getComments() as $comment) {
+            $latestComment = strpos($comment->getContent(), 'Latest');
+            $this->assertNotFalse($latestComment);
         }
     }
 }

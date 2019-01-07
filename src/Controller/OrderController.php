@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Entity\Warehouse;
 use App\Form\OrderType;
 use App\Repository\OrderRepository;
+use App\Services\CommentService;
 use App\Services\OrderService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -81,9 +82,24 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @return Response
+     * @Route("/sync-comments/{order}", name="sync_comments", options={"expose"=true}, methods={"post"})
      */
-    public function syncComments(): Response
-    {
+    public function syncComments(
+        Order $order,
+        CommentService $commentService,
+        Request $request
+    ): Response {
+        $user = $this->getUser();
+        $content = json_decode($request->getContent(), true);
+
+        if (!is_array($content)) {
+            throw new \LogicException('Invalid content request format.');
+        }
+
+        $commentService->syncComments($content['comments'], $user, $order);
+        $response = new Response(json_encode($commentService->getOrderComments($order)));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 }
