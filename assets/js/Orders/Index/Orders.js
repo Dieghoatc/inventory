@@ -52,7 +52,6 @@ class Orders extends Component {
   }
 
   detail(orderId) {
-    console.log(orderId);
     this.setState({
       orderDetailId: orderId,
     });
@@ -136,6 +135,14 @@ class Orders extends Component {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="col-md-6">
+            <a
+              className="btn btn-success"
+              href={Routing.generate('order_new')}
+            >
+              {Translator.trans('order.index.new')}
+            </a>
           </div>
         </div>
         <hr />

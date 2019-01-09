@@ -4,31 +4,15 @@
 
 {% block content %}
     <div class="card">
-        {{ form_start(form, {attr: {class: ''} }) }}
         <div class="card-header">
             {{ 'order.new.title'|trans }}
         </div>
         <div class="card-body">
-            <div class="form-group">
-                {{ form_label(form.code) }}
-                {{ form_widget(form.code) }}
-                {{ form_errors(form.code) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.status) }}
-                {{ form_widget(form.status) }}
-                {{ form_errors(form.status) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.source) }}
-                {{ form_widget(form.source) }}
-                {{ form_errors(form.source) }}
-            </div>
-
-            <div class="form-group">
-                {{ form_widget(form.save) }}
-            </div>
+            <div id="react-component"></div>
         </div>
-        {{ form_end(form) }}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('build/order/new.js') }}"></script>
 {% endblock %}

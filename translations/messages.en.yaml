@@ -101,6 +101,7 @@ order:
     detail: 'Order Detail'
     order_products: 'Products Detail'
     order_comments: 'Comments'
+    new: "Create a Order"
   new:
     title: "Create a new order"
 

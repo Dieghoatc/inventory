@@ -28,7 +28,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="user_new")
+     * @Route("/new", name="new", options={"expose"=true})
      * @IsGranted("ROLE_CAN_MANAGE_ORDERS")
      */
     public function new(Request $request): Response
