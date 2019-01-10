@@ -19,6 +19,17 @@ class CountryRepository extends ServiceEntityRepository
         parent::__construct($registry, Country::class);
     }
 
+    public function findAllAsArray(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c,s,ci')
+            ->innerJoin('c.states', 's')
+            ->innerJoin('s.cities', 'ci')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
 //    /**
 //     * @return Country[] Returns an array of Country objects
 //     */

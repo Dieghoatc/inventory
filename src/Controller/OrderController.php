@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Order;
 use App\Entity\Warehouse;
 use App\Form\OrderType;
+use App\Repository\CountryRepository;
 use App\Repository\OrderRepository;
 use App\Services\CommentService;
 use App\Services\OrderService;
@@ -31,8 +32,10 @@ class OrderController extends AbstractController
      * @Route("/new", name="new", options={"expose"=true})
      * @IsGranted("ROLE_CAN_MANAGE_ORDERS")
      */
-    public function new(Request $request): Response
-    {
+    public function new(
+        CountryRepository $countryRepo,
+        Request $request
+    ): Response {
         $order = new Order();
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
@@ -50,6 +53,7 @@ class OrderController extends AbstractController
 
         return $this->render('order/new.html.twig', [
             'form' => $form->createView(),
+            'locations' => $countryRepo->findAllAsArray(),
         ]);
     }
 

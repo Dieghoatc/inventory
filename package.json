@@ -33,6 +33,7 @@
         "react": "^16.5.2",
         "react-bootstrap4-modal": "^1.6.1",
         "react-dom": "^16.5.2",
+        "react-select": "^2.2.0",
         "react-table": "^6.8.6",
         "startbootstrap-sb-admin": "^5.0.2"
     }

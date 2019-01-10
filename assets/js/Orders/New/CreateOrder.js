@@ -1,8 +1,26 @@
 import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import DetailOrder from '../Index/DetailOrder';
 
 class CreateOrder extends Component {
+  constructor(props) {
+    super(props);
+
+    const { locations } = props;
+    this.state = {
+      loading: false,
+      countries: locations,
+      states: [],
+      cities: [],
+    };
+  }
+
+  setStates(countryId) {
+  }
+
   render() {
+    const { countries } = this.state;
     return (
       <div className="row">
         <div className="col-sm-6">
@@ -68,6 +86,7 @@ class CreateOrder extends Component {
             <div className="col-4">
               <select className="form-control">
                 <option>Seleccione Pais</option>
+                { countries.map(country => (<option value={country.id} key={country.id}>{country.name}</option>))}
               </select>
             </div>
             <div className="col-4">
@@ -137,3 +156,7 @@ class CreateOrder extends Component {
 }
 
 export default CreateOrder;
+
+CreateOrder.propTypes = {
+  locations: PropTypes.array.isRequired,
+};
