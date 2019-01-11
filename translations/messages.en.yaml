@@ -104,6 +104,18 @@ order:
     new: "Create a Order"
   new:
     title: "Create a new order"
+    first_name: "First Name"
+    last_name: "Last Name"
+    email: "Email"
+    phone: "Phone"
+    address: "Address"
+    zip_code: "Zip Code"
+    select_country: "Select Country"
+    country_required: "You must select a Country"
+    select_state: "Select State"
+    state_required: "You must select a State"
+    select_city: "Select City"
+    order_detail: "Order Detail"
 
 warehouses: "Warehouses"
 warehouse:

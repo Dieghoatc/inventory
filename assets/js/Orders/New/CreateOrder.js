@@ -1,7 +1,5 @@
-import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DetailOrder from '../Index/DetailOrder';
 
 class CreateOrder extends Component {
   constructor(props) {
@@ -9,18 +7,42 @@ class CreateOrder extends Component {
 
     const { locations } = props;
     this.state = {
-      loading: false,
       countries: locations,
       states: [],
       cities: [],
+      order: {
+        customer: {},
+        products: [],
+      },
     };
   }
 
-  setStates(countryId) {
+  filterStates(el) {
+    const countryId = el.target.value;
+    const { countries } = this.state;
+    const country = countries.find(countryItem => (Number(countryItem.id) === Number(countryId)));
+    this.setState({
+      states: country.states,
+    });
+  }
+
+  filterCities(el) {
+    const stateId = el.target.value;
+    const { states } = this.state;
+    const state = states.find(cityItem => (Number(cityItem.id) === Number(stateId)));
+    this.setState({
+      cities: state.cities,
+    });
+  }
+
+  addProduct() {
+    const { products } = this.state;
+    products.push()
   }
 
   render() {
-    const { countries } = this.state;
+    const { countries, states, cities } = this.state;
+    console.log(cities.length === 0);
     return (
       <div className="row">
         <div className="col-sm-6">
@@ -32,14 +54,14 @@ class CreateOrder extends Component {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="First Name"
+                  placeholder={Translator.trans('order.new.first_name')}
                 />
               </div>
               <div className="col-auto">
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Last Name"
+                  placeholder={Translator.trans('order.new.last_name')}
                 />
               </div>
             </div>
@@ -50,7 +72,7 @@ class CreateOrder extends Component {
               type="email"
               className="form-control"
               aria-describedby="emailHelp"
-              placeholder="Correo Electronico"
+              placeholder={Translator.trans('order.new.email')}
             />
           </div>
 
@@ -59,7 +81,7 @@ class CreateOrder extends Component {
               type="text"
               className="form-control"
               aria-describedby="emailHelp"
-              placeholder="Telefono"
+              placeholder={Translator.trans('order.new.phone')}
             />
           </div>
 
@@ -69,14 +91,14 @@ class CreateOrder extends Component {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Direccion"
+                  placeholder={Translator.trans('order.new.address')}
                 />
               </div>
               <div className="col-md-auto">
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Zip codigo"
+                  placeholder={Translator.trans('order.new.zip_code')}
                 />
               </div>
             </div>
@@ -84,26 +106,36 @@ class CreateOrder extends Component {
 
           <div className="form-row">
             <div className="col-4">
-              <select className="form-control">
-                <option>Seleccione Pais</option>
-                { countries.map(country => (<option value={country.id} key={country.id}>{country.name}</option>))}
+              <select className="form-control" onChange={e => (this.filterStates(e))}>
+                <option>{Translator.trans('order.new.select_country')}</option>
+                { countries.map(country => (
+                  <option value={country.id} key={country.id}>{country.name}</option>
+                ))}
               </select>
             </div>
             <div className="col-4">
-              <select className="form-control">
-                <option>Seleccione Estado</option>
+              <select className="form-control" onChange={e => (this.filterCities(e))} disabled={states.length === 0}>
+                { states.length === 0 && <option>{Translator.trans('order.new.country_required')}</option> }
+                { states.length !== 0 && <option>{Translator.trans('order.new.select_state')}</option> }
+                { states.map(state => (
+                  <option value={state.id} key={state.id}>{state.name}</option>
+                ))}
               </select>
             </div>
             <div className="col-4">
-              <select className="form-control">
-                <option>Seleccione Ciudad</option>
+              <select className="form-control" disabled={cities.length === 0}>
+                { cities.length === 0 && <option>{Translator.trans('order.new.state_required')}</option> }
+                { cities.length !== 0 && <option>{Translator.trans('order.new.select_city')}</option> }
+                { cities.map(city => (
+                  <option value={city.id} key={city.id}>{city.name}</option>
+                ))}
               </select>
             </div>
           </div>
 
         </div>
         <div className="col-sm-6">
-          <h4>Datos de la orden</h4>
+          <h4>{Translator.trans('order.new.order_detail')}</h4>
 
           <div className="form-group">
             <div className="form-row">
