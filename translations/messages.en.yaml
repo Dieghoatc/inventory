@@ -116,6 +116,11 @@ order:
     state_required: "You must select a State"
     select_city: "Select City"
     order_detail: "Order Detail"
+    customer_information: "Customer Information"
+    select_warehouse: "Select Warehouse"
+    select_status: "Select Order Status"
+    select_source: "Select Order Source"
+    quantity: "Quantity"
 
 warehouses: "Warehouses"
 warehouse:

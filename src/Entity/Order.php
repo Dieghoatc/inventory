@@ -14,7 +14,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Order
 {
-
     public const SOURCE_WEB = 1;
     public const SOURCE_PHONE = 2;
     public const STATUS_CREATED = 1;

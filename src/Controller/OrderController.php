@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Entity\Warehouse;
-use App\Form\OrderType;
 use App\Repository\CountryRepository;
+use App\Repository\CustomerRepository;
 use App\Repository\OrderRepository;
+use App\Repository\WarehouseRepository;
 use App\Services\CommentService;
 use App\Services\OrderService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -34,26 +35,13 @@ class OrderController extends AbstractController
      */
     public function new(
         CountryRepository $countryRepo,
-        Request $request
+        WarehouseRepository $warehouseRepo,
+        CustomerRepository $customerRepo
     ): Response {
-        $order = new Order();
-        $form = $this->createForm(OrderType::class, $order);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($order);
-            $em->flush();
-
-            $this->addFlash('success', 'created_successfully');
-
-            return $this->redirectToRoute('order_index');
-        }
-
         return $this->render('order/new.html.twig', [
-            'form' => $form->createView(),
             'locations' => $countryRepo->findAllAsArray(),
+            'warehouses' => $warehouseRepo->findAllAsArray(),
+            'customers' => $customerRepo->findAllAsArray(),
         ]);
     }
 

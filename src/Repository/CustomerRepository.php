@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Customer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -17,6 +18,19 @@ class CustomerRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Customer::class);
+    }
+
+    /**
+     * @return Customer[]
+     */
+    public function findAllAsArray(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c,a,city')
+            ->innerJoin('c.addresses', 'a')
+            ->innerJoin('a.city', 'city')
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
     }
 
 //    /**
