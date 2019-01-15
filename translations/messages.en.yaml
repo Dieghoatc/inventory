@@ -120,6 +120,7 @@ order:
     select_warehouse: "Select Warehouse"
     select_status: "Select Order Status"
     select_source: "Select Order Source"
+    search_customer: "Search Customer"
     quantity: "Quantity"
 
 warehouses: "Warehouses"

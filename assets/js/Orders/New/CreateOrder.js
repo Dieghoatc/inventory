@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Select from 'react-select';
+import Creatable from 'react-select/lib/Creatable';
 
 class CreateOrder extends Component {
   constructor(props) {
@@ -92,23 +93,6 @@ class CreateOrder extends Component {
     });
   }
 
-  getProductsByWarehouse(el) {
-    const warehouseId = el.target.value;
-    if (warehouseId) {
-      axios.get(Routing.generate('product_all', { warehouse: warehouseId }))
-        .then((response) => {
-          const productsByWarehouse = response.data.map((product) => {
-            product.value = product.uuid;
-            product.label = `${product.title} (${product.code})`;
-            return product;
-          });
-          this.setState({
-            productsByWarehouse,
-          });
-        });
-    }
-  }
-
   setWarehouse(el) {
     const orderId = el.target.value;
     this.getProductsByWarehouse(el);
@@ -126,6 +110,70 @@ class CreateOrder extends Component {
     const { order } = this.state;
     order.customer = customer;
     this.setOrder(order);
+    this.getStateByCity(customer);
+  }
+
+  getProductsByWarehouse(el) {
+    const warehouseId = el.target.value;
+    if (warehouseId) {
+      axios.get(Routing.generate('product_all', { warehouse: warehouseId }))
+        .then((response) => {
+          const productsByWarehouse = response.data.map((product) => {
+            product.value = product.uuid;
+            product.label = `${product.title} (${product.code})`;
+            return product;
+          });
+          this.setState({
+            productsByWarehouse,
+          });
+        });
+    }
+  }
+
+  getCountryByCity(customer) {
+    if (customer.addresses.length === 0
+      || (customer.addresses.length > 0 && customer.addresses[0].city === '')) {
+      return;
+    }
+
+    const { city } = customer.addresses[0];
+    const { countries } = this.state;
+    const country = countries.find(countryItem => (
+      countryItem.states.find(state => (
+        state.cities.find(cityItem => (
+          Number(cityItem.id) === Number(city.id)
+        ))))
+    ));
+
+
+    this.setState({
+      countries: [country],
+    });
+  }
+
+  getStateByCity(customer) {
+    const { countries } = this.state;
+    const selectedCountry = this.getCountryByCity(customer);
+
+    if (selectedCountry === undefined) {
+      return;
+    }
+
+    const country = countries.find(countryItem => (
+      Number(selectedCountry) === Number(countryItem.id)
+    ));
+
+    const { city } = customer.addresses[0];
+    const state = country.states.find(stateItem => (
+      stateItem.cities.find(cityItem => (
+        Number(cityItem.id) === Number(city.id)
+      ))
+    ));
+
+    console.log(state);
+    this.setState({
+      states: [state],
+    });
   }
 
   removeProduct(productUuid) {
@@ -172,6 +220,7 @@ class CreateOrder extends Component {
     return (product.quantity !== '' && product.uuid !== '');
   }
 
+
   render() {
     const {
       countries, states, cities, order, warehouses, orderStates, orderSources, productsByWarehouse,
@@ -183,6 +232,19 @@ class CreateOrder extends Component {
         <div className="col-sm-6">
           <h4>{Translator.trans('order.new.customer_information')}</h4>
 
+          <div className="form-group">
+            <Creatable
+              placeholder={Translator.trans('order.new.search_customer')}
+              options={customers}
+              value={customers.filter(customerItem => (
+                customerItem.id === customer.id
+              ))}
+              onChange={(selectedCustomer) => {
+                customer.id = selectedCustomer.id;
+                this.setCustomer(selectedCustomer);
+              }}
+            />
+          </div>
           <div className="form-group">
             <div className="form-row">
               <div className="col-auto">
@@ -213,14 +275,14 @@ class CreateOrder extends Component {
           </div>
 
           <div className="form-group">
-            <Select
-              options={customers}
-              value={customers.filter(customerItem => (
-                customerItem.id === customer.id
-              ))}
-              onChange={(selectedCustomer) => {
-                customer.id = selectedCustomer.id;
-                this.setCustomer(selectedCustomer);
+            <input
+              type="text"
+              className="form-control"
+              placeholder={Translator.trans('order.new.email')}
+              value={customer.email}
+              onChange={(e) => {
+                order.customer.email = e.target.value;
+                this.setOrder(order);
               }}
             />
           </div>
