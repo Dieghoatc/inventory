@@ -26,9 +26,11 @@ class CustomerRepository extends ServiceEntityRepository
     public function findAllAsArray(): array
     {
         return $this->createQueryBuilder('c')
-            ->select('c,a,city')
+            ->select('c,a,city,state,country')
             ->innerJoin('c.addresses', 'a')
             ->innerJoin('a.city', 'city')
+            ->innerJoin('city.state', 'state')
+            ->innerJoin('state.country', 'country')
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
     }
