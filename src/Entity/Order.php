@@ -5,13 +5,21 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="OrderProductRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\OrderRepository")
  * @ORM\Table(name="`order`")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Order
 {
+    public const SOURCE_WEB = 1;
+    public const SOURCE_PHONE = 2;
+    public const STATUS_CREATED = 1;
+    public const STATUS_INVOICED = 2;
+    public const STATUS_READY_TO_SEND = 3;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -25,24 +33,59 @@ class Order
     private $code;
 
     /**
-     * @ORM\Column(type="array")
-     */
-    private $status = [];
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="request")
      * @ORM\JoinColumn(nullable=false)
      */
     private $customer;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="request")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="order")
      */
-    private $comment;
+    private $comments;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Warehouse", inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)comments
+     */
+    private $warehouse;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $source;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $modifiedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderProduct", mappedBy="order")
+     */
+    private $orderProduct;
 
     public function __construct()
     {
-        $this->comment = new ArrayCollection();
+        if (null === $this->getCreatedAt()) {
+            $this->setCreatedAt(new \DateTime());
+        }
+        $this->comments = new ArrayCollection();
+        $this->orderProduct = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,18 +105,6 @@ class Order
         return $this;
     }
 
-    public function getStatus(): ?array
-    {
-        return $this->status;
-    }
-
-    public function setStatus(array $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     public function getCustomer(): ?Customer
     {
         return $this->customer;
@@ -89,16 +120,16 @@ class Order
     /**
      * @return Collection|Comment[]
      */
-    public function getComment(): Collection
+    public function getComments(): Collection
     {
-        return $this->comment;
+        return $this->comments;
     }
 
     public function addComment(Comment $comment): self
     {
-        if (!$this->comment->contains($comment)) {
-            $this->comment[] = $comment;
-            $comment->setRequest($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setOrder($this);
         }
 
         return $this;
@@ -106,15 +137,100 @@ class Order
 
     public function removeComment(Comment $comment): self
     {
-        if ($this->comment->contains($comment)) {
-            $this->comment->removeElement($comment);
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
             // set the owning side to null (unless already changed)
-            if ($comment->getRequest() === $this) {
-                $comment->setRequest(null);
+            if ($comment->getOrder() === $this) {
+                $comment->setOrder(null);
             }
         }
 
         return $this;
     }
 
+    public function getWarehouse(): ?Warehouse
+    {
+        return $this->warehouse;
+    }
+
+    public function setWarehouse(?Warehouse $warehouse): self
+    {
+        $this->warehouse = $warehouse;
+
+        return $this;
+    }
+
+    public function getSource(): ?int
+    {
+        return $this->source;
+    }
+
+    public function setSource(int $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(?\DateTimeInterface $modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function updateModifiedDatetime(): void
+    {
+        $this->setModified(new \DateTime());
+    }
+
+    public function getCreatedAtAsIso8601(): string
+    {
+        return $this->getCreatedAt()->format('c');
+    }
 }

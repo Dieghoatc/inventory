@@ -58,11 +58,11 @@ class ProductService
 
     public function processXls(array $data): void
     {
-        if(!$data['products'] instanceof UploadedFile){
+        if (!$data['products'] instanceof UploadedFile) {
             throw new ClassNotFoundException('The uploaded file class does not exits.');
         }
         $warehouse = $this->warehouseRepo->find($data['warehouse']);
-        if(!$warehouse instanceof Warehouse) {
+        if (!$warehouse instanceof Warehouse) {
             throw new ClassNotFoundException('The Warehouse class does not exits.');
         }
         $spreadsheet = IOFactory::load($data['products']->getPathname());
@@ -75,13 +75,13 @@ class ProductService
         $validations = [];
         $productsAdded = [];
         foreach ($items as $key => $item) {
-            if($key === 0 || $item[0] === '' || $item[0] === null  || $item[2] === 0 || \in_array($item[0], $productsAdded,true)){
+            if (0 === $key || '' === $item[0] || null === $item[0] || 0 === $item[2] || \in_array($item[0], $productsAdded, true)) {
                 continue;
             }
 
-            $product =  $this->productRepo->findOneBy(['code' => $item[0]]);
+            $product = $this->productRepo->findOneBy(['code' => $item[0]]);
 
-            if(!$product instanceof Product){
+            if (!$product instanceof Product) {
                 $product = new Product();
                 $product->setCode($item[0]);
                 $product->setTitle($item[1]);
@@ -89,10 +89,10 @@ class ProductService
             }
 
             $productWarehouse = $this->productWarehouseRepo->findOneBy([
-                'warehouse' => $warehouse, 'product' => $product, 'warehouse' => $warehouse
+                'warehouse' => $warehouse, 'product' => $product,
             ]);
 
-            if(!$productWarehouse instanceof ProductWarehouse){
+            if (!$productWarehouse instanceof ProductWarehouse) {
                 $productWarehouse = new ProductWarehouse();
                 $productWarehouse->setProduct($product);
                 $productWarehouse->setStatus(1);
@@ -105,7 +105,7 @@ class ProductService
 
             $product->addProductWarehouse($productWarehouse);
             $errors = $this->validator->validate($product);
-            if(\count($errors) !== 0){
+            if (0 !== \count($errors)) {
                 $validations[] = $validations;
             } else {
                 $productsAdded[] = $item[0];
@@ -120,24 +120,24 @@ class ProductService
     {
         foreach ($items as $item) {
             $product = $this->productRepo->findOneBy(['uuid' => $item['uuid']]);
-            if(!$product){
-                throw new \InvalidArgumentException ('Product was not found');
+            if (!$product) {
+                throw new \InvalidArgumentException('Product was not found');
             }
 
-            if($warehouseSource->getId() === $warehouseDestination->getId()){
+            if ($warehouseSource->getId() === $warehouseDestination->getId()) {
                 throw new \LogicException('Source and destination warehouse cannot be the same.');
             }
 
             $productSource = $this->productWarehouseRepo->findOneBy([
-                'warehouse' => $warehouseSource, 'product' => $product
+                'warehouse' => $warehouseSource, 'product' => $product,
             ]);
 
             $productSource->subQuantity($item['quantity']);
             $productDestination = $this->productWarehouseRepo->findOneBy([
-                'warehouse' => $warehouseDestination, 'product' => $product, 'status' => 0
+                'warehouse' => $warehouseDestination, 'product' => $product, 'status' => 0,
             ]);
 
-            if($productDestination instanceof ProductWarehouse) {
+            if ($productDestination instanceof ProductWarehouse) {
                 $productDestination->addQuantity($item['quantity']);
             } else {
                 $productDestination = new ProductWarehouse();
@@ -155,17 +155,17 @@ class ProductService
 
     public function addProductsToInventory(array $items, Warehouse $warehouse): void
     {
-        foreach ($items as $item){
+        foreach ($items as $item) {
             $product = $this->productRepo->findOneBy(['code' => $item['code']]);
 
-            if (!$product instanceof Product){
+            if (!$product instanceof Product) {
                 continue;
             }
 
             $productDestination = $this->productWarehouseRepo
                 ->findOneBy(['warehouse' => $warehouse, 'product' => $product]);
 
-            if(!$productDestination instanceof ProductWarehouse){
+            if (!$productDestination instanceof ProductWarehouse) {
                 $productDestination = new ProductWarehouse();
                 $productDestination->setProduct($product);
                 $productDestination->setWarehouse($warehouse);
@@ -180,21 +180,21 @@ class ProductService
 
     public function removeProductsFromInventory(array $items, Warehouse $warehouse): void
     {
-        foreach ($items as $item){
+        foreach ($items as $item) {
             $product = $this->productRepo->findOneBy(['code' => $item['code']]);
 
-            if (!$product instanceof Product){
+            if (!$product instanceof Product) {
                 continue;
             }
 
             $productDestination = $this->productWarehouseRepo
                 ->findOneBy(['warehouse' => $warehouse, 'product' => $product]);
 
-            if($productDestination->getQuantity() < $item['quantity']){
+            if ($productDestination->getQuantity() < $item['quantity']) {
                 throw new \LogicException('The quantity to delete must be equal or less than the stored one.');
             }
 
-            if($productDestination instanceof ProductWarehouse){
+            if ($productDestination instanceof ProductWarehouse) {
                 $productDestination->subQuantity($item['quantity']);
                 $this->manager->persist($productDestination);
             }
@@ -210,7 +210,7 @@ class ProductService
         ]);
 
         $products = [];
-        foreach ($productsPendingToApprove as $product){
+        foreach ($productsPendingToApprove as $product) {
             $products[] = ['code' => $product->getProduct()->getCode(), 'quantity' => $product->getQuantity()];
             $this->manager->remove($product);
         }

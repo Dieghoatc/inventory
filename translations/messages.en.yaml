@@ -1,4 +1,5 @@
 welcome: "Welcome"
+submit: "Submit"
 edit: "Edit"
 move: "Move"
 moving: "Moving"
@@ -72,6 +73,57 @@ product:
       code: "Code"
       quantity: "Quantity"
       warehouse: "Warehouse"
+order:
+  index:
+    title: "View Orders"
+    code: "Order #"
+    source: "Source"
+    status: "Status"
+    customer: "Customer"
+    email: "Email"
+    created_at: "Creation Date"
+    address: "Address"
+    zip_code: "Zip Code"
+    city: "City"
+    state: "State"
+    country: "Country"
+    sources:
+      web: 'Web'
+      phone: 'Phone'
+      unknown: 'Unknown'
+    statuses:
+      created: 'Created'
+      invoiced: 'Invoiced'
+      ready_to_send: 'Ready to Send'
+      unknown: 'Unknown'
+    date: 'Created Date'
+    options: 'Options'
+    edit: 'Edit'
+    detail: 'Order Detail'
+    order_products: 'Products Detail'
+    order_comments: 'Comments'
+    new: "Create a Order"
+  new:
+    title: "Create a new order"
+    first_name: "First Name"
+    last_name: "Last Name"
+    email: "Email"
+    phone: "Phone"
+    address: "Address"
+    zip_code: "Zip Code"
+    select_country: "Select Country"
+    country_required: "You must select a Country"
+    select_state: "Select State"
+    state_required: "You must select a State"
+    select_city: "Select City"
+    order_detail: "Order Detail"
+    customer_information: "Customer Information"
+    select_warehouse: "Select Warehouse"
+    select_status: "Select Order Status"
+    select_source: "Select Order Source"
+    search_customer: "Search Customer"
+    quantity: "Quantity"
+    consecutive: "Consecutive"
 
 warehouses: "Warehouses"
 warehouse:
@@ -104,3 +156,16 @@ security:
     form:
       username: "Username"
       password: "Password"
+order_states:
+  created: 'Created'
+  invoiced: 'Invoiced'
+  ready_to_send: 'Ready to send'
+
+order_statuses:
+  1: 'Created'
+  2: 'Invoiced'
+  3: 'Ready to Send'
+
+order_source:
+  1: 'Web'
+  2: 'Phone'

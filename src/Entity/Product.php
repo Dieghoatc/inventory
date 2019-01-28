@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -55,15 +54,14 @@ class Product
     private $status;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductWarehouse", mappedBy="ddd", orphanRemoval=true)
-     */
-    private $warehouse;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\ProductWarehouse", mappedBy="product")
-     * @MaxDepth(1)
      */
     private $productWarehouses;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderProduct", mappedBy="product")
+     */
+    private $orderProducts;
 
     /**
      * @ORM\Column(type="float")
@@ -72,8 +70,8 @@ class Product
 
     public function __construct()
     {
-        $this->warehouse = new ArrayCollection();
         $this->productWarehouses = new ArrayCollection();
+        $this->orderProducts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +91,7 @@ class Product
     {
         $uuid1 = Uuid::uuid1();
         $this->uuid = $uuid1->toString();
+
         return $this;
     }
 
@@ -115,7 +114,7 @@ class Product
 
     public function setTitle(?string $title): self
     {
-        if($title === null){
+        if (null === $title) {
             $title = $this->code;
         }
 
@@ -186,7 +185,7 @@ class Product
 
     public function setPrice(?float $price): self
     {
-        if($price === null){
+        if (null === $price) {
             $price = 0;
         }
 
@@ -194,4 +193,36 @@ class Product
 
         return $this;
     }
+
+    /**
+     * @return Collection|OrderProduct[]
+     */
+    public function getOrderProducts(): Collection
+    {
+        return $this->orderProducts;
+    }
+
+    public function addOrderProduct(OrderProduct $orderProduct): self
+    {
+        if (!$this->orderProducts->contains($orderProduct)) {
+            $this->orderProducts[] = $orderProduct;
+            $orderProduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderProduct(OrderProduct $orderProduct): self
+    {
+        if ($this->orderProducts->contains($orderProduct)) {
+            $this->OrderProducts->removeElement($orderProduct);
+            // set the owning side to null (unless already changed)
+            if ($orderProduct->getProduct() === $this) {
+                $orderProduct->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

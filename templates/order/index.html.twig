@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'order.index.title'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            {{ 'order.index.title'|trans }}
+        </div>
+        <div class="card-body">
+            <div id="react-component"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('build/order.js') }}"></script>
+{% endblock %}

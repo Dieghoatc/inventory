@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProductWarehouse
 {
-
     const STATUS_COMFIRMED = 1;
 
     const STATUS_PENDING_TO_CONFIRM = 0;
@@ -96,7 +95,7 @@ class ProductWarehouse
 
     public function addQuantity(?int $quantity): void
     {
-        if($quantity === null){
+        if (null === $quantity) {
             $quantity = 0;
         }
         $this->quantity += $quantity;

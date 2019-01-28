@@ -16,7 +16,7 @@ class UserWebTestCase extends WebTestCase
         $this->client = static::createClient();
     }
 
-    public  function logIn(): void
+    public function logIn(): void
     {
         $session = $this->client->getContainer()->get('session');
 
@@ -25,7 +25,7 @@ class UserWebTestCase extends WebTestCase
 
         $user = $this->client->getContainer()->get('doctrine')->getRepository(User::class)->findOneBy(['username' => 'sbarbosa115']);
 
-        $token = new UsernamePasswordToken($user, null, $firewallName, array('ROLE_ADMIN'));
+        $token = new UsernamePasswordToken($user, null, $firewallName, ['ROLE_ADMIN']);
         $session->set('_security_'.$firewallContext, serialize($token));
         $session->save();
 

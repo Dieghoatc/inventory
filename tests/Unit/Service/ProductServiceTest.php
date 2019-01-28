@@ -2,18 +2,19 @@
 
 namespace App\Tests\Unit\Service;
 
-
 use App\Entity\Product;
 use App\Entity\ProductWarehouse;
 use App\Entity\Warehouse;
 use App\Services\ProductService;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProductServiceTest extends WebTestCase
 {
+    /** @var $client Client */
     public $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = static::createClient();
     }
@@ -21,6 +22,7 @@ class ProductServiceTest extends WebTestCase
     public function testStoreProducts(): void
     {
         //Warehouse taken from WarehouseFixtures.php
+        /** @var $warehouse Warehouse */
         $warehouse = $this->client->getContainer()->get('doctrine')
             ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
         /** @var $productService ProductService */
@@ -30,13 +32,13 @@ class ProductServiceTest extends WebTestCase
             ['CODE-TEST-01', 'PRODUCT-TEST-NAME-01', '100', '100'],
             ['CODE-TEST-02', 'PRODUCT-TEST-NAME-02', '100', '100'],
             ['CODE-TEST-03', 'PRODUCT-TEST-NAME-03', '100', '100'],
-            ['CODE-TEST-04', 'PRODUCT-TEST-NAME-04', '100',' 100'],
+            ['CODE-TEST-04', 'PRODUCT-TEST-NAME-04', '100', '100'],
             ['CODE-TEST-01', 'PRODUCT-TEST-NAME-04', '100', '100'],
         ];
         $productService->storeProducts($products, $warehouse);
         $productsByWarehouse = $this->client->getContainer()->get('doctrine')
             ->getRepository(ProductWarehouse::class)->findBy(['warehouse' => $warehouse]);
-        $this->assertCount(4, $productsByWarehouse);
+        $this->assertCount(7, $productsByWarehouse);
     }
 
     public function testMoveProduct(): void
@@ -56,7 +58,7 @@ class ProductServiceTest extends WebTestCase
         $this->assertNotNull($productToWork);
 
         $dataPrepared = [
-            ['uuid' => $productToWork->getUuid(), 'quantity' => '40']
+            ['uuid' => $productToWork->getUuid(), 'quantity' => '40'],
         ];
         $productService->moveProducts($dataPrepared, $warehouseSource, $warehouseDestination);
 
@@ -92,7 +94,7 @@ class ProductServiceTest extends WebTestCase
         $this->assertNotNull($productToWork);
 
         $dataPrepared = [
-            ['uuid' => $productToWork->getUuid(), 'quantity' => '10']
+            ['uuid' => $productToWork->getUuid(), 'quantity' => '10'],
         ];
 
         $productService->moveProducts($dataPrepared, $warehouseSource, $warehouseDestination);
@@ -126,7 +128,7 @@ class ProductServiceTest extends WebTestCase
             ->findOneBy(['code' => 'CODE-TEST-01']);
 
         $dataPrepared = [
-            ['code' => 'CODE-TEST-01', 'quantity' => 10]
+            ['code' => 'CODE-TEST-01', 'quantity' => 10],
         ];
         $productService->addProductsToInventory($dataPrepared, $warehouse);
         $product = $this->client->getContainer()
@@ -140,7 +142,7 @@ class ProductServiceTest extends WebTestCase
             ->findBy(['warehouse' => $warehouse]);
 
         $this->assertEquals(60, $product->getQuantity());
-        $this->assertCount(4, $products);
+        $this->assertCount(7, $products);
     }
 
     public function testMoveProductsWarehouseDoesNotHaveTheProduct(): void
@@ -156,7 +158,7 @@ class ProductServiceTest extends WebTestCase
             ->findOneBy(['code' => 'CODE-TEST-02']);
 
         $dataPrepared = [
-            ['code' => $productToWork->getCode(), 'quantity' => 10]
+            ['code' => $productToWork->getCode(), 'quantity' => 10],
         ];
         $productService->addProductsToInventory($dataPrepared, $warehouse);
         $product = $this->client->getContainer()
@@ -237,7 +239,7 @@ class ProductServiceTest extends WebTestCase
             ->findOneBy(['code' => 'CODE-TEST-01']);
 
         $dataPrepared = [
-            ['code' => 'CODE-TEST-01', 'quantity' => 10]
+            ['code' => 'CODE-TEST-01', 'quantity' => 10],
         ];
         $productService->removeProductsFromInventory($dataPrepared, $warehouse);
         $product = $this->client->getContainer()
@@ -251,7 +253,7 @@ class ProductServiceTest extends WebTestCase
             ->findBy(['warehouse' => $warehouse]);
 
         $this->assertEquals(90, $product->getQuantity());
-        $this->assertCount(4, $products);
+        $this->assertCount(7, $products);
     }
 
     public function testRemoveProductsFromInventory0(): void
@@ -267,7 +269,7 @@ class ProductServiceTest extends WebTestCase
             ->findOneBy(['code' => 'CODE-TEST-01']);
 
         $dataPrepared = [
-            ['code' => 'CODE-TEST-01', 'quantity' => 0]
+            ['code' => 'CODE-TEST-01', 'quantity' => 0],
         ];
         $productService->removeProductsFromInventory($dataPrepared, $warehouse);
         $product = $this->client->getContainer()
@@ -281,7 +283,7 @@ class ProductServiceTest extends WebTestCase
             ->findBy(['warehouse' => $warehouse]);
 
         $this->assertEquals(90, $product->getQuantity());
-        $this->assertCount(4, $products);
+        $this->assertCount(7, $products);
     }
 
     public function testRemoveProductsFromInventoryTryingToDeleteGreaterValue(): void
@@ -292,7 +294,7 @@ class ProductServiceTest extends WebTestCase
             ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
 
         $dataPrepared = [
-            ['code' => 'CODE-TEST-01', 'quantity' => 100]
+            ['code' => 'CODE-TEST-01', 'quantity' => 100],
         ];
 
         $this->expectException(\LogicException::class);
@@ -317,7 +319,7 @@ class ProductServiceTest extends WebTestCase
             ->getRepository(Warehouse::class)->findOneBy(['name' => 'Usa']);
 
         $dataPrepared = [
-            ['uuid' => $productToWork->getUuid(), 'quantity' => 50]
+            ['uuid' => $productToWork->getUuid(), 'quantity' => 50],
         ];
 
         $productService->moveProducts($dataPrepared, $warehouseSource, $warehouseDestination);
@@ -337,7 +339,7 @@ class ProductServiceTest extends WebTestCase
 
         $this->assertEquals(50, $productWarehouseDestination->getQuantity());
 
-        /** Approving products in destination warehouse */
+        /* Approving products in destination warehouse */
         $productService->approveProducts($warehouseDestination);
 
         /** Testing final state between on destination warehouse. */

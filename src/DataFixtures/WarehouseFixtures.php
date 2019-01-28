@@ -8,8 +8,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class WarehouseFixtures extends Fixture
 {
+    public const WAREHOUSE_BOGOTA = 'warehouse-bogota';
+
     /**
-     * Load data fixtures with the passed EntityManager
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
@@ -21,13 +22,18 @@ class WarehouseFixtures extends Fixture
     {
         $items = [
             ['name' => 'Colombia'],
-            ['name' => 'Usa']
+            ['name' => 'Usa'],
+            ['name' => 'España'],
         ];
 
-        foreach ($items as $item) {
+        foreach ($items as $key => $item) {
             $warehouse = new Warehouse();
             $warehouse->setName($item['name']);
             $manager->persist($warehouse);
+
+            if (0 === $key) {
+                $this->addReference(self::WAREHOUSE_BOGOTA, $warehouse);
+            }
         }
         $manager->flush();
     }

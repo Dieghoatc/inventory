@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Order;
+use App\Entity\Warehouse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -19,32 +20,18 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-//    /**
-//     * @return Order[] Returns an array of Order objects
-//     */
-    /*
-    public function findByExampleField($value)
+    public function findByWarehouse(Warehouse $warehouse): array
     {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
+        $products = $this->createQueryBuilder('o')
+            ->select('o,cu')
+            ->innerJoin('o.customer', 'cu')
+            ->leftJoin('o.comments', 'co')
+            ->where('o.warehouse = :warehouse')
+            ->setParameter('warehouse', $warehouse)
             ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+            ->getArrayResult();
 
-    /*
-    public function findOneBySomeField($value): ?Order
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $products;
     }
-    */
+
 }
