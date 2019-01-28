@@ -44,6 +44,8 @@ class CreateOrder extends Component {
       states: [],
       cities: [],
       order: {
+        code: '',
+        status: '',
         customer: {
           firstName: '',
           lastName: '',
@@ -94,7 +96,7 @@ class CreateOrder extends Component {
     const stateId = el.target.value;
     if (stateId) {
       const { order } = this.state;
-      order.state = Number(stateId);
+      order.status = Number(stateId);
       this.setState({
         order,
       });
@@ -284,12 +286,32 @@ class CreateOrder extends Component {
     this.setProducts(products);
   }
 
+  orderValidation() {
+    const { order } = this.state;
+    return order.customer !== ''
+      && order.customer.firstName !== ''
+      && order.customer.lastName !== ''
+      && order.customer.email !== ''
+      && order.warehouse && Object.keys(order.warehouse).length > 0
+      && order.products && order.products.length > 0
+      && order.products.some(product => (product.quantity !== '' && product.uuid !== ''))
+      && order.source
+      && order.status;
+  }
+
+  saveOrder() {
+    const { order } = this.state;
+    axios.post(Routing.generate('order_create'), order).then(() => {
+      window.location.href = Routing.generate('order_index');
+    });
+  }
+
   render() {
     const {
       countries, states, cities, order, warehouses, orderStates, orderSources, productsByWarehouse,
       customers,
     } = this.state;
-    const { products, customer } = order;
+    const { products, customer, code } = order;
     return (
       <div className="row">
         <div className="col-sm-6">
@@ -443,7 +465,12 @@ class CreateOrder extends Component {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Consecutivo"
+                  value={code}
+                  placeholder={Translator.trans('order.new.consecutive')}
+                  onChange={(e) => {
+                    order.code = e.target.value;
+                    this.setOrder(order);
+                  }}
                 />
               </div>
               <div className="col-4">
@@ -511,13 +538,18 @@ class CreateOrder extends Component {
               </div>
             ))}
           </div>
-          <div className="col-sm-12">
-            <button type="button" className="btn btn-success" onClick={() => console.log(order)}>
-              {Translator.trans('submit')}
-              { ' ' }
-              <i className="fas fa-save" />
-            </button>
-          </div>
+          {
+            this.orderValidation()
+            && (
+              <div className="col-sm-12">
+                <button type="button" className="btn btn-success" onClick={() => this.saveOrder()}>
+                  <i className="fas fa-save" />
+                  { ' ' }
+                  {Translator.trans('submit')}
+                </button>
+              </div>
+            )
+          }
         </div>
       </div>
     );

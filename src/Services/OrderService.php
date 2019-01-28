@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App\Entity\Comment;
-use App\Entity\Customer;
 use App\Entity\Order;
 use App\Entity\OrderProduct;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Entity\Warehouse;
-use App\Repository\CustomerRepository;
 use App\Repository\OrderProductRepository;
 use App\Repository\ProductRepository;
 use App\Repository\WarehouseRepository;
@@ -26,52 +24,65 @@ class OrderService
     /** @var $productRepo ProductRepository */
     private $productRepo;
 
-    /** @var $customerRepo CustomerRepository */
-    private $customerRepo;
-
     /** @var $orderProductRepo OrderProductRepository */
     private $orderProductRepo;
 
     /** @var $warehouseRepo WarehouseRepository */
     private $warehouseRepo;
 
+    /** @var $customerService CustomerService */
+    private $customerService;
+
     public function __construct(
         ObjectManager $objectManager,
         ProductRepository $productRepo,
         OrderProductRepository $orderProductRepo,
-        CustomerRepository $customerRepo,
-        WarehouseRepository $warehouseRepo
+        WarehouseRepository $warehouseRepo,
+        CustomerService $customerService
     ) {
         $this->objectManager = $objectManager;
         $this->productRepo = $productRepo;
         $this->orderProductRepo = $orderProductRepo;
         $this->warehouseRepo = $warehouseRepo;
-        $this->customerRepo = $customerRepo;
+        $this->customerService = $customerService;
     }
 
-    public function addOrder(array $orderItem, User $user): array
+    public function add(array $orderData, User $user): array
     {
         $order = new Order();
-        $customer = $this->customerRepo->find($orderItem['customer']['id']);
-        if (!$customer instanceof Customer) {
-            throw new \LogicException('Customer not found');
-        }
+        $customer = $this->customerService->addOrUpdate($orderData['customer']);
 
-        $warehouse = $this->warehouseRepo->find($orderItem['warehouse']['id']);
+        $warehouse = $this->warehouseRepo->find($orderData['warehouse']['id']);
         if (!$warehouse instanceof Warehouse) {
             throw new \LogicException('Warehouse not found');
         }
 
         $order->setCustomer($customer);
         $order->setWarehouse($warehouse);
-        $order->setCode($orderItem['code']);
-        $order->setSource($orderItem['source']);
-        $order->setStatus($orderItem['status']);
+        $order->setCode($orderData['code']);
+        $order->setSource($orderData['source']);
+        $order->setStatus($orderData['status']);
         $this->objectManager->persist($order);
 
-        $products = $orderItem['products'];
+        if (!array_key_exists('products', $orderData)) {
+            throw new \LogicException('The order must have products.');
+        }
+
+        $this->attachProducts($order, $orderData['products']);
+
+        if (array_key_exists('comments', $orderData)) {
+            $this->attachComments($order, $user, $orderData['comments']);
+        }
+
+        $this->objectManager->flush();
+
+        return $this->getOrder($order);
+    }
+
+    public function attachProducts(Order $order, array $products): void
+    {
         foreach ($products as $productItem) {
-            $product = $this->productRepo->findOneBy(['code' => $productItem['code']]);
+            $product = $this->productRepo->findOneBy(['uuid' => $productItem['uuid']]);
 
             if (!$product instanceof Product) {
                 throw new \LogicException('The product does not exits');
@@ -80,21 +91,22 @@ class OrderService
             $orderProduct->setOrder($order);
             $orderProduct->setProduct($product);
             $orderProduct->setQuantity($productItem['quantity']);
+
             $this->objectManager->persist($orderProduct);
         }
+    }
 
-        $comments = $orderItem['comments'];
+    public function attachComments(Order $order, User $user, array $comments): void
+    {
         foreach ($comments as $commentItem) {
             $comment = new Comment();
-            $comment->setOrder($order);
             $comment->setContent($commentItem['content']);
             $comment->setUser($user);
+            $comment->setOrder($order);
             $order->addComment($comment);
             $this->objectManager->persist($comment);
+            $this->objectManager->persist($order);
         }
-
-        $this->objectManager->flush();
-        return $this->getOrder($order);
     }
 
     public function getOrder(Order $order): array

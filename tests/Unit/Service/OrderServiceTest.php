@@ -55,11 +55,11 @@ class OrderServiceTest extends WebTestCase
             ],
             'products' => [
                 [
-                    'code' => $productA->getCode(),
+                    'uuid' => $productA->getUuid(),
                     'quantity' => 10,
                 ],
                 [
-                    'code' => $productB->getCode(),
+                    'uuid' => $productB->getUuid(),
                     'quantity' => 20,
                 ],
             ],
@@ -76,7 +76,7 @@ class OrderServiceTest extends WebTestCase
         $user = $this->client->getContainer()->get('doctrine')
             ->getRepository(User::class)->findOneBy(['username' => 'sbarbosa115']);
 
-        $orderCreated = $orderService->addOrder($orderItem, $user);
+        $orderCreated = $orderService->add($orderItem, $user);
         $this->assertArrayHasKey('order', $orderCreated);
         $this->assertArrayHasKey('customer', $orderCreated['order']);
         $this->assertArrayHasKey('comments', $orderCreated['order']);

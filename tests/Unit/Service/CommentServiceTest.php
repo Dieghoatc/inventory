@@ -54,11 +54,11 @@ class CommentServiceTest extends WebTestCase
             ],
             'products' => [
                 [
-                    'code' => $productA->getCode(),
+                    'uuid' => $productA->getUuid(),
                     'quantity' => 10,
                 ],
                 [
-                    'code' => $productB->getCode(),
+                    'uuid' => $productB->getUuid(),
                     'quantity' => 20,
                 ],
             ],
@@ -71,7 +71,7 @@ class CommentServiceTest extends WebTestCase
         $user = $this->client->getContainer()->get('doctrine')
             ->getRepository(User::class)->findOneBy(['username' => 'sbarbosa115']);
 
-        return $orderService->addOrder($orderItem, $user);
+        return $orderService->add($orderItem, $user);
     }
 
     public function testSyncComments(): void

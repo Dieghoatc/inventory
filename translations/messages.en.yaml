@@ -123,6 +123,7 @@ order:
     select_source: "Select Order Source"
     search_customer: "Search Customer"
     quantity: "Quantity"
+    consecutive: "Consecutive"
 
 warehouses: "Warehouses"
 warehouse:

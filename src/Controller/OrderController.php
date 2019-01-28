@@ -46,6 +46,23 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/create", name="create", options={"expose"=true})
+     * @IsGranted("ROLE_CAN_MANAGE_ORDERS")
+     */
+    public function create(
+        Request $request,
+        OrderService $orderService
+    ): Response {
+        $orderData = json_decode($request->getContent(), true);
+        $orderService->add($orderData, $this->getUser());
+
+        $response = new Response();
+        $response->setContent(json_encode(['status' => 'ok']));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
      * @Route("/all/{warehouse}", name="all", options={"expose"=true}, defaults={"status"=1}, methods={"get"})
      */
     public function all(
@@ -94,4 +111,27 @@ class OrderController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * @Route("/sync-comments/{order}", name="sync_comments", options={"expose"=true}, methods={"post"})
+     */
+    public function pdf(
+        Order $order,
+        CommentService $commentService,
+        Request $request
+    ): Response {
+        $user = $this->getUser();
+        $content = json_decode($request->getContent(), true);
+
+        if (!is_array($content)) {
+            throw new \LogicException('Invalid content request format.');
+        }
+
+        $commentService->syncComments($content['comments'], $user, $order);
+        $response = new Response(json_encode($commentService->getOrderComments($order)));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
 }
