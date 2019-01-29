@@ -16,9 +16,13 @@ class Order
 {
     public const SOURCE_WEB = 1;
     public const SOURCE_PHONE = 2;
+
     public const STATUS_CREATED = 1;
-    public const STATUS_INVOICED = 2;
-    public const STATUS_READY_TO_SEND = 3;
+    public const STATUS_PROCESSED = 2;
+    public const STATUS_COMPLETED = 3;
+    public const STATUS_PARTIAL = 4;
+    public const STATUS_SENT = 5;
+    public const STATUS_DELIVERED = 6;
 
     /**
      * @ORM\Id()
@@ -146,6 +150,11 @@ class Order
         }
 
         return $this;
+    }
+
+    public function getOrderProducts(): Collection
+    {
+        return $this->orderProduct;
     }
 
     public function getWarehouse(): ?Warehouse

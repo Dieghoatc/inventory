@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,9 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Product
+class Product implements Translatable
 {
-    const STATUS_ACTIVE = 1;
+    public const STATUS_ACTIVE = 1;
 
     /**
      * @ORM\Id()
@@ -32,6 +34,7 @@ class Product
      * @Assert\NotEqualTo("·")
      * @Assert\NotEqualTo("CODE")
      * @Assert\NotNull()
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $code;
@@ -39,11 +42,13 @@ class Product
     /**
      * @Assert\NotEqualTo("PRODUCT")
      * @Assert\NotNull()
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="text", nullable=true)
      */
     private $detail;

@@ -110,6 +110,10 @@ class Orders extends Component {
           <button type="button" className="btn btn-sm btn-success" onClick={() => this.detail(row.original.id)}>
             {Translator.trans('order.index.detail')}
           </button>
+          { ' ' }
+          <a href={Routing.generate('order_pdf', { order: row.original.id })} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
+            <i className="fas fa-file-pdf" />
+          </a>
         </div>
       ),
       Header: Translator.trans('order.index.options'),
