@@ -111,114 +111,115 @@ class DetailOrder extends Component {
         </div>
         <div className="modal-body">
           { order.customer !== undefined
-          && <div className="row">
-            <div className="col-md-12">
-              <span>
-                { Translator.trans('order.index.source') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { Translator.trans(`order_statuses.${order.source}`) }
-                </strong>
-              </span>
-              { ' ' }
-              <span>
-                { Translator.trans('order.index.status') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { Translator.trans(`order_statuses.${order.status}`) }
-                </strong>
-              </span>
+          && (
+            <div className="row">
+              <div className="col-md-12">
+                <span>
+                  { Translator.trans('order.index.source') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { Translator.trans(`order_statuses.${order.source}`) }
+                  </strong>
+                </span>
+                { ' ' }
+                <span>
+                  { Translator.trans('order.index.status') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { Translator.trans(`order_statuses.${order.status}`) }
+                  </strong>
+                </span>
+              </div>
+              <div className="col-md-12">
+                <span>
+                  { Translator.trans('order.index.customer') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { order.customer.firstName }
+                    { order.customer.lastName }
+                  </strong>
+                </span>
+                { ' ' }
+                <span>
+                  { Translator.trans('order.index.email') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { order.customer.email }
+                  </strong>
+                </span>
+              </div>
+              <div className="col-md-12">
+                <span>
+                  { Translator.trans('order.index.code') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { order.code }
+                  </strong>
+                </span>
+                { ' ' }
+                <span>
+                  { Translator.trans('order.index.created_at') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { moment(order.customer.createdAtAsIso8601).format('MMMM D, YYYY') }
+                  </strong>
+                </span>
+              </div>
+              <div className="col-md-12">
+                <span>
+                  { Translator.trans('order.index.address') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { order.customer.defaultAddress.address }
+                  </strong>
+                </span>
+                { ' ' }
+                <span>
+                  { Translator.trans('order.index.zip_code') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { order.customer.defaultAddress.zipCode }
+                  </strong>
+                </span>
+              </div>
+              <div className="col-md-12">
+                <span>
+                  { Translator.trans('order.index.city') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { order.customer.defaultAddress.city.name }
+                  </strong>
+                </span>
+                { ' ' }
+                <span>
+                  { Translator.trans('order.index.state') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { order.customer.defaultAddress.city.state.name }
+                  </strong>
+                </span>
+                { ' ' }
+                <span>
+                  { Translator.trans('order.index.country') }
+                  { ':' }
+                  <strong>
+                    { ' ' }
+                    { order.customer.defaultAddress.city.state.country.name }
+                  </strong>
+                </span>
+              </div>
             </div>
-            <div className="col-md-12">
-              <span>
-                { Translator.trans('order.index.customer') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { order.customer.firstName }
-                  { order.customer.lastName }
-                </strong>
-              </span>
-              { ' ' }
-              <span>
-                { Translator.trans('order.index.email') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { order.customer.email }
-                </strong>
-              </span>
-            </div>
-            <div className="col-md-12">
-              <span>
-                { Translator.trans('order.index.code') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { order.code }
-                </strong>
-              </span>
-              { ' ' }
-              <span>
-                { Translator.trans('order.index.created_at') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { moment(order.customer.createdAtAsIso8601).format('MMMM D, YYYY') }
-                </strong>
-              </span>
-            </div>
-            <div className="col-md-12">
-              <span>
-                { Translator.trans('order.index.address') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { order.customer.defaultAddress.address }
-                </strong>
-              </span>
-              { ' ' }
-              <span>
-                { Translator.trans('order.index.zip_code') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { order.customer.defaultAddress.zipCode }
-                </strong>
-              </span>
-            </div>
-            <div className="col-md-12">
-              <span>
-                { Translator.trans('order.index.city') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { order.customer.defaultAddress.city.name }
-                </strong>
-              </span>
-              { ' ' }
-              <span>
-                { Translator.trans('order.index.state') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { order.customer.defaultAddress.city.state.name }
-                </strong>
-              </span>
-              { ' ' }
-              <span>
-                { Translator.trans('order.index.country') }
-                { ':' }
-                <strong>
-                  { ' ' }
-                  { order.customer.defaultAddress.city.state.country.name }
-                </strong>
-              </span>
-            </div>
-          </div>
-          }
+          )}
           <hr />
 
           <ul className="nav nav-tabs" role="tablist">
@@ -275,6 +276,11 @@ class DetailOrder extends Component {
           </div>
         </div>
         <div className="modal-footer">
+          <a href={Routing.generate('order_pdf', { order: order.id })} className="btn btn-success" target="_blank" rel="noopener noreferrer">
+            <i className="fas fa-file-pdf" />
+            { ' ' }
+            {Translator.trans('order.index.download_order')}
+          </a>
           <button type="button" className="btn btn-primary" onClick={() => closeModal()}>
             {Translator.trans('close')}
           </button>

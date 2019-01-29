@@ -103,6 +103,7 @@ order:
     order_products: 'Products Detail'
     order_comments: 'Comments'
     new: "Create a Order"
+    download_order: "Download"
   new:
     title: "Create a new order"
     first_name: "First Name"
@@ -124,7 +125,11 @@ order:
     search_customer: "Search Customer"
     quantity: "Quantity"
     consecutive: "Consecutive"
-
+  pdf:
+    order_number: "Order Number"
+    customer: "Customer"
+    created_at: "Date"
+    warehouse: "Warehouse"
 warehouses: "Warehouses"
 warehouse:
   index:
