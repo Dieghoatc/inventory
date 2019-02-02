@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProductWarehouse
 {
-    const STATUS_COMFIRMED = 1;
+    public const STATUS_CONFIRMED = 1;
 
-    const STATUS_PENDING_TO_CONFIRM = 0;
+    public const STATUS_PENDING_TO_CONFIRM = 0;
 
     /**
      * @ORM\Id()

@@ -59,7 +59,7 @@ class OrderController extends AbstractController
         $orderService->add($orderData, $this->getUser());
 
         $response = new Response();
-        $response->setContent(json_encode(['status' => 'ok']));
+        $response->setContent(json_encode(['status' => 'ok', 'route' => $this->generateUrl('order_index')]));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }

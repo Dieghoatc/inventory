@@ -168,8 +168,11 @@ order_states:
 
 order_statuses:
   1: 'Created'
-  2: 'Invoiced'
-  3: 'Ready to Send'
+  2: 'Processed'
+  3: 'Completed'
+  4: 'Partial'
+  5: 'Sent'
+  6: 'Delivered'
 
 order_source:
   1: 'Web'

@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import Select from 'react-select';
 
-class CreateOrder extends Component {
-  static customerHasAddress(customer) {
-    return customer
-      && customer.addresses && customer.addresses.length > 0 && customer.addresses[0].city !== '';
-  }
+import CreatableSelect from 'react-select/lib/Creatable';
 
+const isValidNewOption = (inputValue, selectValue, selectOptions) => (
+  !(inputValue.trim().length === 0 || selectOptions.find(option => option.name === inputValue))
+);
+
+class CreateOrder extends Component {
   static isCurrentProductFilled(product) {
     return (product.quantity !== '' && product.uuid !== '');
   }
@@ -20,26 +21,36 @@ class CreateOrder extends Component {
   constructor(props) {
     super(props);
 
-    const { locations, warehouses } = props;
+    const { warehouses } = props;
     const customers = props.customers.map((customer) => {
       customer.value = (customer.id).toString();
       customer.label = `${customer.firstName} ${customer.lastName} [${customer.email}] [${customer.phone}]`;
       return customer;
     });
 
+    const countries = props.locations.map((country) => {
+      country.value = (country.id).toString();
+      country.label = country.name;
+      return country;
+    });
+
     this.state = {
+      sending: false,
       warehouses,
       customers,
       orderStates: [
         { name: Translator.trans('order_statuses.1'), id: 1 },
         { name: Translator.trans('order_statuses.2'), id: 2 },
         { name: Translator.trans('order_statuses.3'), id: 3 },
+        { name: Translator.trans('order_statuses.4'), id: 4 },
+        { name: Translator.trans('order_statuses.5'), id: 5 },
+        { name: Translator.trans('order_statuses.6'), id: 6 },
       ],
       orderSources: [
         { name: Translator.trans('order_source.1'), id: 1 },
         { name: Translator.trans('order_source.2'), id: 2 },
       ],
-      countries: locations,
+      countries,
       productsByWarehouse: [],
       states: [],
       cities: [],
@@ -148,7 +159,7 @@ class CreateOrder extends Component {
         ],
       };
     }
-    this.setDefaultAddress(customer);
+
     this.setOrder(order);
   }
 
@@ -169,80 +180,73 @@ class CreateOrder extends Component {
     }
   }
 
-  getCurrentCountry() {
+  getCountry() {
     const { order } = this.state;
     const { customer } = order;
-    const { city } = customer.addresses[0];
-    const { country } = city.state;
-    return Object.keys(country).length === 0 ? '' : country.id;
+    if (customer.addresses.length > 0
+      && customer.addresses[0].city
+      && customer.addresses[0].city.state
+      && customer.addresses[0].city.state.country
+      && customer.addresses[0].city.state.country.name
+    ) {
+      return customer.addresses[0].city.state.country;
+    }
+    return '';
   }
 
-  setCountryByCity(customer) {
-    if (!CreateOrder.customerHasAddress(customer)) {
+  getState() {
+    const { order } = this.state;
+    const { customer } = order;
+    if (customer.addresses.length > 0
+      && customer.addresses[0].city
+      && customer.addresses[0].city.state
+      && customer.addresses[0].city.state.name
+    ) {
+      return customer.addresses[0].city.state;
+    }
+    return '';
+  }
+
+  getCity() {
+    const { order } = this.state;
+    const { customer } = order;
+    if (customer.addresses.length > 0
+      && customer.addresses[0].city
+      && customer.addresses[0].city.name
+    ) {
+      return customer.addresses[0].city;
+    }
+    return '';
+  }
+
+  filterStates(countryId) {
+    const states = [];
+    if (countryId) {
       const { locations } = this.props;
-      this.setState({
-        countries: locations,
+      locations.forEach((locationItem) => {
+        if (Number(locationItem.id) === Number(countryId)) {
+          locationItem.states.forEach((state) => {
+            states.push({
+              cities: state.cities,
+              name: state.name,
+              id: (state.id).toString(),
+            });
+          });
+        }
       });
-      return;
     }
 
-    const { city } = customer.addresses[0];
-    const { countries } = this.state;
-    const country = countries.find(countryItem => (
-      countryItem.states.find(state => (
-        state.cities.find(cityItem => (
-          Number(cityItem.id) === Number(city.id)
-        ))))
-    ));
-
-    this.setState({
-      countries: [country],
-    });
+    this.setState({ states });
   }
 
-  setStateByCity(customer) {
-    if (!CreateOrder.customerHasAddress(customer)) {
-      this.setState({
-        states: [],
-      });
-      return;
+  filterCities(stateId) {
+    let cities = [];
+    if (stateId) {
+      const { states } = this.state;
+      const state = states.find(stateItem => (Number(stateItem.id) === Number(stateId)));
+      ({ cities } = state);
     }
-
-    const { countries } = this.state;
-    if (countries.length === 0) {
-      return;
-    }
-
-    const country = countries[0];
-    const { city } = customer.addresses[0];
-    const state = country.states.find(stateItem => (
-      stateItem.cities.find(cityItem => (
-        Number(cityItem.id) === Number(city.id)
-      ))
-    ));
-
-    this.setState({
-      states: [state],
-    });
-  }
-
-  setDefaultCity(customer) {
-    if (!CreateOrder.customerHasAddress(customer)) {
-      this.setState({
-        cities: [],
-      });
-      return;
-    }
-    const { city } = customer.addresses[0];
-    this.setState({
-      cities: [city],
-    });
-  }
-
-  setDefaultAddress(customer) {
-    this.setCountryByCity(customer);
-    this.setStateByCity(customer);
-    this.setDefaultCity(customer);
+    this.setState({ cities });
   }
 
   removeProduct(productUuid) {
@@ -251,29 +255,6 @@ class CreateOrder extends Component {
       productUuid !== product.uuid
     ));
     this.setProducts(products);
-  }
-
-  filterStates(el) {
-    const countryId = el.target.value;
-    const { countries } = this.state;
-    countries.forEach((countryItem) => {
-      if (Number(countryItem.id) === Number(countryId)) {
-        this.setState({
-          states: countryItem.states,
-        });
-      }
-    });
-  }
-
-  filterCities(el) {
-    const stateId = el.target.value;
-    if (stateId) {
-      const { states } = this.state;
-      const state = states.find(cityItem => (Number(cityItem.id) === Number(stateId)));
-      this.setState({
-        cities: state.cities,
-      });
-    }
   }
 
   addEmptyProduct() {
@@ -301,15 +282,19 @@ class CreateOrder extends Component {
 
   saveOrder() {
     const { order } = this.state;
-    axios.post(Routing.generate('order_create'), order).then(() => {
-      window.location.href = Routing.generate('order_index');
+    this.setState({
+      sending: true,
+    });
+    axios.post(Routing.generate('order_create'), order).then((response) => {
+      const destinationUrl = response.data.route;
+      window.location.href = destinationUrl;
     });
   }
 
   render() {
     const {
       countries, states, cities, order, warehouses, orderStates, orderSources, productsByWarehouse,
-      customers,
+      customers, sending,
     } = this.state;
     const { products, customer, code } = order;
     return (
@@ -419,30 +404,83 @@ class CreateOrder extends Component {
 
           <div className="form-row">
             <div className="col-4">
-              <select className="form-control" onChange={e => (this.filterStates(e))} defaultValue={!this.getCurrentCountry()}>
-                { !CreateOrder.isAnyCustomerSelected(customer) && <option value="">{Translator.trans('order.new.select_country')}</option> }
-                { countries.map(country => (
-                  <option value={country.id} key={country.id}>{country.name}</option>
-                ))}
-              </select>
+              <CreatableSelect
+                isClearable
+                getOptionLabel={option => option.name}
+                getOptionValue={option => option.id}
+                getNewOptionData={(inputValue, optionLabel) => ({
+                  id: null,
+                  name: optionLabel,
+                })}
+                isValidNewOption={isValidNewOption}
+                value={this.getCountry()}
+                options={countries}
+                onChange={(country) => {
+                  if (country !== null) {
+                    order.customer.addresses[0].city.state.country.id = country.id;
+                    order.customer.addresses[0].city.state.country.name = country.name;
+                    this.filterStates(country.id);
+                  } else {
+                    order.customer.addresses[0].city.state.country = { };
+                    this.filterStates(null);
+                  }
+                  this.setOrder(order);
+                }}
+              />
             </div>
             <div className="col-4">
-              <select className="form-control" onChange={e => (this.filterCities(e))} disabled={states.length === 0}>
-                { states.length === 0 && <option>{Translator.trans('order.new.country_required')}</option> }
-                { states.length > 1 && <option>{Translator.trans('order.new.select_state')}</option> }
-                { states.map(state => (
-                  <option value={state.id} key={state.id}>{state.name}</option>
-                ))}
-              </select>
+              <CreatableSelect
+                isClearable
+                getOptionLabel={option => option.name}
+                getOptionValue={option => option.id}
+                getNewOptionData={(inputValue, optionLabel) => ({
+                  id: null,
+                  name: optionLabel,
+                })}
+                isValidNewOption={isValidNewOption}
+                value={this.getState()}
+                options={states}
+                onChange={(state) => {
+                  if (state !== null) {
+                    order.customer.addresses[0].city.state.id = state.id;
+                    order.customer.addresses[0].city.state.name = state.name;
+                    this.filterCities(state.id);
+                  } else {
+                    order.customer.addresses[0].city.state = {
+                      country: {},
+                    };
+                    this.filterCities(null);
+                  }
+                  this.setOrder(order);
+                }}
+              />
             </div>
             <div className="col-4">
-              <select className="form-control" disabled={cities.length === 0}>
-                { cities.length === 0 && <option>{Translator.trans('order.new.state_required')}</option> }
-                { cities.length > 1 && <option>{Translator.trans('order.new.select_city')}</option> }
-                { cities.map(city => (
-                  <option value={city.id} key={city.id}>{city.name}</option>
-                ))}
-              </select>
+              <CreatableSelect
+                isClearable
+                getOptionLabel={option => option.name}
+                getOptionValue={option => option.id}
+                getNewOptionData={(inputValue, optionLabel) => ({
+                  id: null,
+                  name: optionLabel,
+                })}
+                isValidNewOption={isValidNewOption}
+                value={this.getCity()}
+                options={cities}
+                onChange={(city) => {
+                  if (city !== null) {
+                    order.customer.addresses[0].city.id = city.id;
+                    order.customer.addresses[0].city.name = city.name;
+                  } else {
+                    order.customer.addresses[0].city = {
+                      state: {
+                        country: {},
+                      },
+                    };
+                  }
+                  this.setOrder(order);
+                }}
+              />
             </div>
           </div>
 
@@ -542,10 +580,12 @@ class CreateOrder extends Component {
             this.orderValidation()
             && (
               <div className="col-sm-12">
-                <button type="button" className="btn btn-success" onClick={() => this.saveOrder()}>
+                <button type="button" className="btn btn-success" onClick={() => this.saveOrder()} disabled={sending}>
                   <i className="fas fa-save" />
                   { ' ' }
                   {Translator.trans('submit')}
+                  { ' ' }
+                  { sending && <i className="fas fa-spinner fa-pulse" /> }
                 </button>
               </div>
             )

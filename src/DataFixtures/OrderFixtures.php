@@ -5,7 +5,6 @@ namespace App\DataFixtures;
 use App\Entity\Comment;
 use App\Entity\Order;
 use App\Entity\OrderProduct;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -32,32 +31,68 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             [
                 'code' => 'W00002',
                 'source' => Order::SOURCE_PHONE,
-                'status' => Order::STATUS_INVOICED,
+                'status' => Order::STATUS_PROCESSED,
                 'quantity' => 15,
             ],
             [
                 'code' => 'W00003',
                 'source' => Order::SOURCE_PHONE,
-                'status' => Order::STATUS_READY_TO_SEND,
+                'status' => Order::STATUS_COMPLETED,
                 'quantity' => 20,
             ],
             [
                 'code' => 'W00004',
+                'source' => Order::SOURCE_PHONE,
+                'status' => Order::STATUS_PARTIAL,
+                'quantity' => 25,
+            ],
+            [
+                'code' => 'W00005',
+                'source' => Order::SOURCE_PHONE,
+                'status' => Order::STATUS_SENT,
+                'quantity' => 30,
+            ],
+            [
+                'code' => 'W00006',
+                'source' => Order::SOURCE_PHONE,
+                'status' => Order::STATUS_DELIVERED,
+                'quantity' => 35,
+            ],
+            [
+                'code' => 'W00007',
                 'source' => Order::SOURCE_WEB,
                 'status' => Order::STATUS_CREATED,
                 'quantity' => 25,
             ],
             [
-                'code' => 'W00005',
+                'code' => 'W00008',
                 'source' => Order::SOURCE_WEB,
-                'status' => Order::STATUS_INVOICED,
+                'status' => Order::STATUS_PROCESSED,
                 'quantity' => 30,
             ],
             [
-                'code' => 'W00006',
+                'code' => 'W00009',
                 'source' => Order::SOURCE_WEB,
-                'status' => Order::STATUS_READY_TO_SEND,
+                'status' => Order::STATUS_COMPLETED,
                 'quantity' => 35,
+            ],
+            [
+                'code' => 'W00010',
+                'source' => Order::SOURCE_WEB,
+                'status' => Order::STATUS_PARTIAL,
+                'quantity' => 40,
+            ],
+            [
+                'code' => 'W00011',
+                'source' => Order::SOURCE_WEB,
+                'status' => Order::STATUS_SENT,
+                'quantity' => 45,
+            ],
+            [
+                'code' => 'W00012',
+                'source' => Order::SOURCE_WEB,
+                'status' => Order::STATUS_DELIVERED,
+                'quantity' => 50,
             ],
         ];
 
