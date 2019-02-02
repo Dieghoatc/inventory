@@ -72,7 +72,7 @@ class CustomerService
             throw new \InvalidArgumentException('Missing city ID?');
         }
 
-        if ($cityData['id'] !== null) {
+        if (null !== $cityData['id']) {
             $city = $this->cityRepo->find($cityData['id']);
 
             if (!$city instanceof City) {
@@ -93,17 +93,16 @@ class CustomerService
 
     public function findOrCreateState(array $stateData): State
     {
-        if (!array_key_exists('id', $stateData)){
+        if (!array_key_exists('id', $stateData)) {
             throw new \InvalidArgumentException('Missing state ID?');
         }
 
-        if ($stateData['id'] !== null) {
+        if (null !== $stateData['id']) {
             $state = $this->stateRepo->find($stateData['id']);
 
-            if(!$state instanceof State) {
+            if (!$state instanceof State) {
                 throw new \InvalidArgumentException('This state not was found.');
             }
-
         } else {
             $country = $this->findOrCreateCountry($stateData['country']);
 
@@ -123,9 +122,9 @@ class CustomerService
             throw new \InvalidArgumentException('Missing country ID?');
         }
 
-        if ($countryData['id'] !== null) {
+        if (null !== $countryData['id']) {
             $country = $this->countryRepo->find($countryData['id']);
-            if(!$country instanceof Country) {
+            if (!$country instanceof Country) {
                 throw new \InvalidArgumentException('This country not was found.');
             }
         } else {
@@ -171,6 +170,5 @@ class CustomerService
 
     public function findOrCreate(array $customerData): Customer
     {
-
     }
 }

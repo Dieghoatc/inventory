@@ -11,6 +11,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LocationFixtures extends Fixture
 {
     public const DEFAULT_CITY = 'city';
+
     /**
      * @param ObjectManager $manager
      */
@@ -38,6 +39,4 @@ class LocationFixtures extends Fixture
 
         $this->addReference(self::DEFAULT_CITY, $city);
     }
-
-
 }

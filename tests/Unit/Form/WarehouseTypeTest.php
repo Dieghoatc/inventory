@@ -10,9 +10,9 @@ class WarehouseTypeTest extends TypeTestCase
 {
     public function testSomething()
     {
-        $formData = array(
-            'name' => 'TEST-WAREHOUSE-01'
-        );
+        $formData = [
+            'name' => 'TEST-WAREHOUSE-01',
+        ];
         $objectToCompare = new Warehouse();
         $form = $this->factory->create(WarehouseType::class, $objectToCompare);
 
@@ -20,6 +20,6 @@ class WarehouseTypeTest extends TypeTestCase
         $warehouse->setName('TEST-WAREHOUSE-01');
         $form->submit($formData);
         $this->assertTrue($form->isSynchronized());
-        $this->assertEquals($warehouse, $objectToCompare);
+        $this->assertSame($warehouse, $objectToCompare);
     }
 }

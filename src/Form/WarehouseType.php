@@ -14,7 +14,7 @@ class WarehouseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('name', TextType::class, [
-            'attr' => ['class' => 'form-control', 'label' => 'warehouse.form.name']
+            'attr' => ['class' => 'form-control', 'label' => 'warehouse.form.name'],
             ])->add('save', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary'],
         ]);

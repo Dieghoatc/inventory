@@ -23,21 +23,21 @@ class UploadProductsType extends AbstractType
                     'application/vnd.ms-excel',
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-                ]])
+                ]]),
             ],
             'attr' => [
                 'class' => 'form-control-file',
-                'label' => 'product.upload.label_input'
-            ]
+                'label' => 'product.upload.label_input',
+            ],
         ])->add('warehouse', EntityType::class, [
             'class' => Warehouse::class,
             'choice_label' => 'name',
             'constraints' => [
-                new Required()
+                new Required(),
             ],
             'attr' => [
-                'class' => 'form-control'
-            ]
+                'class' => 'form-control',
+            ],
         ])->add('upload', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary'],
         ]);

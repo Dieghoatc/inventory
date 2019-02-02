@@ -22,14 +22,14 @@ class LogService
     {
         $detailAsString = '';
         if ($detail) {
-            $detailAsString = \json_encode($detail);
+            $detailAsString = json_encode($detail);
         }
 
         $log = new Log();
         $log->setCreatedAt(new \DateTime('now'));
         $log->setUser($this->user->getToken()->getUser());
         $log->setEvent($event);
-        $log->setEntity(strtolower($entity));
+        $log->setEntity(mb_strtolower($entity));
         $log->setDetail($detailAsString);
         $this->objectManager->persist($log);
         $this->objectManager->flush();

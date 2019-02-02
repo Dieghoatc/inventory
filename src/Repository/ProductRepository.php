@@ -23,6 +23,7 @@ class ProductRepository extends ServiceEntityRepository
 
     /**
      * @param Warehouse $warehouse
+     *
      * @return Product[]
      */
     public function findAllAsArray(Warehouse $warehouse): array
@@ -35,7 +36,6 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
     }
-
 
     /*
     public function findOneBySomeField($value): ?Product

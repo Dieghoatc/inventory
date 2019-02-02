@@ -22,7 +22,7 @@ class ProductWarehouseRepository extends ServiceEntityRepository
 
     public function findByWarehouse(Warehouse $warehouse, int $status): array
     {
-        $products =  $this->createQueryBuilder('pw')
+        $products = $this->createQueryBuilder('pw')
             ->select('pw')
             ->addSelect('w')
             ->addSelect('p')
@@ -36,7 +36,7 @@ class ProductWarehouseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
-        foreach ($products as $key => $product){
+        foreach ($products as $key => $product) {
             $products[$key]['uuid'] = $product['product']['uuid'];
             $products[$key]['title'] = $product['product']['title'];
             $products[$key]['code'] = $product['product']['code'];
@@ -45,7 +45,6 @@ class ProductWarehouseRepository extends ServiceEntityRepository
 
         return $products;
     }
-
 
     /*
     public function findOneBySomeField($value): ?ProductWarehouse

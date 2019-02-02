@@ -22,12 +22,12 @@ class ProductServiceTest extends WebTestCase
     public function createProduct(
         Warehouse $warehouse = null,
         string $code = 'CODE-TEST-01',
-        int $quantity = 100)
-    : Product {
+        int $quantity = 100): Product
+    {
         /** @var $productService ProductService */
         $productService = $this->client->getContainer()->get(ProductService::class);
 
-        if ($warehouse === null) {
+        if (null === $warehouse) {
             $warehouse = $this->client->getContainer()->get('doctrine')
                 ->getRepository(Warehouse::class)->findOneBy(['name' => 'Colombia']);
         }
@@ -43,7 +43,6 @@ class ProductServiceTest extends WebTestCase
         $product = $this->client->getContainer()->get('doctrine')
             ->getRepository(Product::class)
             ->findOneBy(['code' => $code]);
-
 
         return $product;
     }
@@ -61,7 +60,6 @@ class ProductServiceTest extends WebTestCase
         return $this->client->getContainer()->get('doctrine')
             ->getRepository(Warehouse::class)->findOneBy(['name' => $name]);
     }
-
 
     public function testStoreProducts(): void
     {
@@ -102,11 +100,11 @@ class ProductServiceTest extends WebTestCase
 
         $productWarehouseSource = $this->getProductWarehouse($product, $warehouseSource);
         $this->assertNotNull($productWarehouseSource);
-        $this->assertEquals(60, $productWarehouseSource->getQuantity());
+        $this->assertSame(60, $productWarehouseSource->getQuantity());
 
         $productWarehouseDestination = $this->getProductWarehouse($product, $warehouseDestination);
         $this->assertNotNull($productWarehouseDestination);
-        $this->assertEquals(40, $productWarehouseDestination->getQuantity());
+        $this->assertSame(40, $productWarehouseDestination->getQuantity());
     }
 
     public function testCaseUpdateQuantityExisting(): void
@@ -127,8 +125,8 @@ class ProductServiceTest extends WebTestCase
         $productSource = $this->getProductWarehouse($productToWork, $warehouseSource);
         $productDestination = $this->getProductWarehouse($productToWork, $warehouseDestination);
 
-        $this->assertEquals(50, $productSource->getQuantity());
-        $this->assertEquals(50, $productDestination->getQuantity());
+        $this->assertSame(50, $productSource->getQuantity());
+        $this->assertSame(50, $productDestination->getQuantity());
     }
 
     public function testMoveProducts(): void
@@ -148,18 +146,17 @@ class ProductServiceTest extends WebTestCase
         $productService->addProductsToInventory($dataPrepared, $warehouse);
 
         $productWarehouseA = $this->getProductWarehouse($productA, $warehouse);
-        $this->assertEquals(110, $productWarehouseA->getQuantity());
+        $this->assertSame(110, $productWarehouseA->getQuantity());
         $productWarehouseB = $this->getProductWarehouse($productB, $warehouse);
-        $this->assertEquals(120, $productWarehouseB->getQuantity());
+        $this->assertSame(120, $productWarehouseB->getQuantity());
 
         $productService->moveProducts($dataPrepared, $warehouse, $warehouseDestination);
 
         $productWarehouseA = $this->getProductWarehouse($productA, $warehouseDestination);
-        $this->assertEquals(10, $productWarehouseA->getQuantity());
-        $this->assertEquals(ProductWarehouse::STATUS_PENDING_TO_CONFIRM, $productWarehouseA->getStatus());
+        $this->assertSame(10, $productWarehouseA->getQuantity());
+        $this->assertSame(ProductWarehouse::STATUS_PENDING_TO_CONFIRM, $productWarehouseA->getStatus());
         $productWarehouseB = $this->getProductWarehouse($productB, $warehouseDestination);
-        $this->assertEquals(20, $productWarehouseB->getQuantity());
-        $this->assertEquals(ProductWarehouse::STATUS_PENDING_TO_CONFIRM, $productWarehouseB->getStatus());
+        $this->assertSame(20, $productWarehouseB->getQuantity());
+        $this->assertSame(ProductWarehouse::STATUS_PENDING_TO_CONFIRM, $productWarehouseB->getStatus());
     }
-
 }

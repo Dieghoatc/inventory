@@ -140,7 +140,7 @@ class ProductController extends AbstractController
         Warehouse $warehouseDestination,
         LogService $logService
     ): Response {
-        $products = \json_decode($request->getContent(), true);
+        $products = json_decode($request->getContent(), true);
         if (!\is_array($products)) {
             throw new BadRequestHttpException('Malformed JSON request');
         }
@@ -172,7 +172,7 @@ class ProductController extends AbstractController
         Warehouse $warehouse,
         LogService $logService
     ): Response {
-        $products = \json_decode($request->getContent(), true);
+        $products = json_decode($request->getContent(), true);
         if (!\is_array($products)) {
             throw new BadRequestHttpException('Malformed JSON request');
         }
@@ -195,7 +195,7 @@ class ProductController extends AbstractController
         Warehouse $warehouse,
         LogService $logService
     ): Response {
-        $products = \json_decode($request->getContent(), true);
+        $products = json_decode($request->getContent(), true);
         if (!\is_array($products)) {
             throw new BadRequestHttpException('Malformed JSON request');
         }

@@ -16,10 +16,10 @@ class UserControllerTest extends UserWebTestCase
         $this->client->request($httpMethod, $url);
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
-    public function getUrlsForRegularUsers():?\Generator
+
+    public function getUrlsForRegularUsers(): ?\Generator
     {
         yield ['GET', '/admin/user/'];
         yield ['GET', '/admin/user/new'];
     }
-
 }

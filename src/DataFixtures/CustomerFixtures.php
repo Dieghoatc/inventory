@@ -11,6 +11,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {
     public const CUSTOMER = 'customer';
+
     /**
      * @param ObjectManager $manager
      */

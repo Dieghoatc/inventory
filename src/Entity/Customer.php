@@ -179,7 +179,7 @@ class Customer
         if ($this->getAddresses()->count() > 0) {
             return $this->getAddresses()->first();
         }
+
         return null;
     }
-
 }

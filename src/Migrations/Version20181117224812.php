@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
@@ -10,20 +12,20 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20181117224812 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE `order` ADD warehouse_id INT NOT NULL, ADD source INT NOT NULL, CHANGE status status INT NOT NULL');
         $this->addSql('ALTER TABLE `order` ADD CONSTRAINT FK_F52993985080ECDE FOREIGN KEY (warehouse_id) REFERENCES warehouse (id)');
         $this->addSql('CREATE INDEX IDX_F52993985080ECDE ON `order` (warehouse_id)');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE `order` DROP FOREIGN KEY FK_F52993985080ECDE');
         $this->addSql('DROP INDEX IDX_F52993985080ECDE ON `order`');

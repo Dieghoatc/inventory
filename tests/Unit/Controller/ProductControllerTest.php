@@ -17,7 +17,7 @@ class ProductControllerTest extends UserWebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
-    public function getUrlsForRegularUsers():?\Generator
+    public function getUrlsForRegularUsers(): ?\Generator
     {
         yield ['GET', '/admin/product/'];
         yield ['GET', '/admin/product/upload'];
@@ -26,5 +26,4 @@ class ProductControllerTest extends UserWebTestCase
         yield ['GET', '/admin/product/update/bar-code'];
         yield ['GET', '/admin/product/incoming'];
     }
-
 }

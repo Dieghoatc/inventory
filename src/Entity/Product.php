@@ -229,5 +229,4 @@ class Product implements Translatable
 
         return $this;
     }
-
 }

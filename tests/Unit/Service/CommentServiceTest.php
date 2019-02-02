@@ -99,10 +99,10 @@ class CommentServiceTest extends WebTestCase
         $commentService = $this->client->getContainer()->get(CommentService::class);
         $commentService->syncComments($comments, $user, $order);
 
-        $this->assertEquals(3, $order->getComments()->count());
+        $this->assertSame(3, $order->getComments()->count());
         foreach ($order->getComments() as $comment) {
-            $commentEdited = strpos($comment->getContent(), 'Edited');
-            $commentAdded = strpos($comment->getContent(), 'Added');
+            $commentEdited = mb_strpos($comment->getContent(), 'Edited');
+            $commentAdded = mb_strpos($comment->getContent(), 'Added');
             $this->assertNotFalse($commentEdited || $commentAdded);
         }
 
@@ -114,10 +114,10 @@ class CommentServiceTest extends WebTestCase
         ];
 
         $commentService->syncComments($comments, $user, $order);
-        $this->assertEquals(1, $order->getComments()->count());
+        $this->assertSame(1, $order->getComments()->count());
 
         foreach ($order->getComments() as $comment) {
-            $latestComment = strpos($comment->getContent(), 'Latest');
+            $latestComment = mb_strpos($comment->getContent(), 'Latest');
             $this->assertNotFalse($latestComment);
         }
     }

@@ -23,6 +23,7 @@ class UserController extends AbstractController
     public function index(UserRepository $userRepo): Response
     {
         $users = $userRepo->findAll();
+
         return $this->render('user/index.html.twig', [
             'users' => $users,
         ]);
@@ -45,11 +46,12 @@ class UserController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'updated_successfully');
+
             return $this->redirectToRoute('user_index');
         }
 
         return $this->render('user/new.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -62,18 +64,17 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
-
             $this->addFlash('success', 'updated_successfully');
+
             return $this->redirectToRoute('user_index');
         }
 
         return $this->render('user/edit.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 }

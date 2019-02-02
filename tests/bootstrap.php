@@ -4,8 +4,8 @@ require __DIR__.'/../vendor/autoload.php';
 
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 $kernel = new Kernel('test', true); // create a "test" kernel
 $application = new Application($kernel);

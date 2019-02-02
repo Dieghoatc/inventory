@@ -61,6 +61,7 @@ class OrderController extends AbstractController
         $response = new Response();
         $response->setContent(json_encode(['status' => 'ok', 'route' => $this->generateUrl('order_index')]));
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 
@@ -103,7 +104,7 @@ class OrderController extends AbstractController
         $user = $this->getUser();
         $content = json_decode($request->getContent(), true);
 
-        if (!is_array($content)) {
+        if (!\is_array($content)) {
             throw new \LogicException('Invalid content request format.');
         }
 
@@ -122,10 +123,9 @@ class OrderController extends AbstractController
     ): Response {
         $pdfOptions = new Options();
 
-
         $dompdf = new Dompdf($pdfOptions);
         $html = $this->renderView('order/pdf.html.twig', [
-            'order' => $order
+            'order' => $order,
         ]);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('letter', 'portrait');
@@ -135,7 +135,7 @@ class OrderController extends AbstractController
         $response->setContent($dompdf->output());
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'application/pdf');
+
         return $response;
     }
-
 }

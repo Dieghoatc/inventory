@@ -11,5 +11,4 @@ class ProductFileReader implements IReadFilter
         dump($column);
         dd($row);
     }
-
 }

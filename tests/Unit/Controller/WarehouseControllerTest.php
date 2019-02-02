@@ -16,11 +16,11 @@ class WarehouseControllerTest extends UserWebTestCase
         $this->client->request($httpMethod, $url);
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
-    public function getUrlsForRegularUsers():?\Generator
+
+    public function getUrlsForRegularUsers(): ?\Generator
     {
         yield ['GET', '/admin/warehouse/'];
         yield ['GET', '/admin/warehouse/edit/1'];
         yield ['GET', '/admin/warehouse/all'];
     }
-
 }

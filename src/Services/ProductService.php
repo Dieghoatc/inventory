@@ -11,7 +11,6 @@ use App\Repository\ProductWarehouseRepository;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Symfony\Component\Debug\Exception\ClassNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -69,14 +68,14 @@ class ProductService
     protected function getQueryFilter(array $rowData): array
     {
         $queryFilter = null;
-        if(array_key_exists('uuid', $rowData)) {
+        if (array_key_exists('uuid', $rowData)) {
             $queryFilter = ['uuid' => $rowData['uuid']];
         }
-        if(array_key_exists('code', $rowData)) {
+        if (array_key_exists('code', $rowData)) {
             $queryFilter = ['code' => $rowData['code']];
         }
 
-        if ($queryFilter === null) {
+        if (null === $queryFilter) {
             throw new \InvalidArgumentException('No one query filter, Code or Uuid was defined.');
         }
 
@@ -252,7 +251,6 @@ class ProductService
 
         $products = [];
         foreach ($productsPendingToApprove as $product) {
-
             if (!$product instanceof Product) {
                 throw new \LogicException('Product not found.');
             }

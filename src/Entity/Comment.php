@@ -84,6 +84,7 @@ class Comment
         if (null === $content) {
             $this->content = '';
         }
+
         return $this;
     }
 

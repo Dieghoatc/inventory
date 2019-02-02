@@ -33,5 +33,4 @@ class OrderRepository extends ServiceEntityRepository
 
         return $products;
     }
-
 }

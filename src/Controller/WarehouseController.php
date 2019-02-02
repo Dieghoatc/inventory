@@ -22,8 +22,9 @@ class WarehouseController extends AbstractController
     public function index(WarehouseRepository $warehouseRepo): Response
     {
         $warehouses = $warehouseRepo->findAll();
+
         return $this->render('warehouse/index.html.twig', [
-            'warehouses' => $warehouses
+            'warehouses' => $warehouses,
         ]);
     }
 
@@ -37,19 +38,22 @@ class WarehouseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'updated_successfully');
+
             return $this->redirectToRoute('warehouse_warehouse_index');
         }
 
         return $this->render('warehouse/edit.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
     /**
      * @Route("/all", name="all", methods={"get"}, options={"expose"=true})
      */
-    public function all(WarehouseRepository $warehouseRepo) {
+    public function all(WarehouseRepository $warehouseRepo)
+    {
         $warehouses = $warehouseRepo->findAllAsArray();
+
         return new JsonResponse($warehouses);
     }
 }

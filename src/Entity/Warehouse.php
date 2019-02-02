@@ -39,7 +39,6 @@ class Warehouse
         $this->orders = new ArrayCollection();
     }
 
-
     public function getId(): ?int
     {
         return $this->id;
@@ -118,5 +117,4 @@ class Warehouse
 
         return $this;
     }
-
 }
