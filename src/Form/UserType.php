@@ -43,9 +43,10 @@ class UserType extends AbstractType
         ->add('roles', ChoiceType::class, [
             'choices' => [
                 'ROLE_ADMIN' => 'ROLE_ADMIN',
-                'ROLE_LOADER_INVENTORY' => 'ROLE_LOADER_INVENTORY',
-                'ROLE_WAREHOUSE_ADMIN' => 'ROLE_WAREHOUSE_ADMIN',
-                'ROLE_ORDER_MANAGEMENT' => 'ROLE_ORDER_MANAGEMENT',
+                'ROLE_CAN_MANAGE_INVENTORY' => 'ROLE_CAN_MANAGE_INVENTORY',
+                'ROLE_CAN_MANAGE_WAREHOUSES' => 'ROLE_CAN_MANAGE_WAREHOUSES',
+                'ROLE_CAN_MANAGE_USERS' => 'ROLE_CAN_MANAGE_USERS',
+                'ROLE_CAN_MANAGE_ORDERS' => 'ROLE_CAN_MANAGE_ORDERS',
             ],
             'attr' => [
                 'class' => 'form-control',
