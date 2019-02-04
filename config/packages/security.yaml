@@ -36,4 +36,4 @@ security:
   - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
   - { path: ^/register, role: ROLE_ADMIN }
   - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-  - { path: ^/admin/, role: [ROLE_LOADER_INVENTORY,ROLE_WAREHOUSE_ADMIN,ROLE_ADMIN] }
+  - { path: ^/admin/, role: [ROLE_MANAGE_INVENTORY,ROLE_MANAGE_ORDERS,ROLE_ADMIN,ROLE_MANAGE_USERS,ROLE_CAN_MANAGE_WAREHOUSES] }
