@@ -19,6 +19,7 @@ product:
     move_between_warehouses: "Move to Warehouse"
     quantity: "Quantity"
     description: "Description"
+    create_product : "Create Product"
     sku: "SKU"
     warehouse: "Warehouse"
     destination_warehouse: "Destination Warehouse"
@@ -29,7 +30,29 @@ product:
     upload: "Upload"
     label_input: "Select a xls file from your computer, then click on upload to load the products."
     donwload_template: "Download template"
+    donwload_all_products: "Download All Products"
   uploaded_successfully: "Uploaded successfully"
+  edit:
+    title: "Edit product"
+    updated_successfully: "The product was updated successfully"
+    code: "Code"
+    title_product: "Title"
+    detail: "Detail"
+    status: "Status"
+    price: "Price"
+    english: "English"
+    spanish: "Spanish"
+    editing_english_version: "Editing English Version"
+    editing_spanish_version: "Editing Spanish Version"
+  new:
+    title: "Create product"
+    message_no_products: "This product won't be shown on the product list until you add quantities using Excel."
+    created_successfully: "The product was created successfully"
+    code: "Code"
+    title_product: "Title"
+    detail: "Detail"
+    status: "Status"
+    price: "Price"
   template:
     code: "Code"
     quantity: "Quantity"
@@ -38,6 +61,7 @@ product:
     warehouse: "Warehouse"
     products: "Products"
     price: "Price"
+    detail: "Detail"
     no_available_product: "Product quantity is 0"
   update:
     bar-code:
@@ -177,3 +201,7 @@ order_statuses:
 order_source:
   1: 'Web'
   2: 'Phone'
+
+product_statuses:
+  0: "Inactive"
+  1: "Active"

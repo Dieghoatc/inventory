@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Entity\Warehouse;
+use App\Form\ProductType;
 use App\Form\UploadProductsType;
 use App\Repository\ProductRepository;
 use App\Repository\ProductWarehouseRepository;
 use App\Services\LogService;
 use App\Services\ProductService;
+use Doctrine\Common\Persistence\ObjectManager;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/product", name="product_")
@@ -40,8 +42,10 @@ class ProductController extends AbstractController
     /**
      * @Route("/show/{code}", name="show", options={"expose"=true}, methods={"get"})
      */
-    public function show(ProductRepository $productRepo, string $code): Response
-    {
+    public function show(
+        ProductRepository $productRepo,
+        string $code
+    ): Response {
         $product = $productRepo->findOneBy(['code' => $code]);
 
         if (!$product instanceof Product) {
@@ -59,10 +63,61 @@ class ProductController extends AbstractController
     }
 
     /**
+     * @Route("/edit/{uuid}", name="update", methods={"get", "post"}, options={"expose"=true})
+     */
+    public function update(
+        ObjectManager $manager,
+        Request $request,
+        Product $product
+    ): Response {
+
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($product);
+            $manager->flush();
+
+            $this->addFlash('success', 'product.edit.updated_successfully');
+            return $this->redirectToRoute('product_product_index');
+        }
+
+        return $this->render('product/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+
+    }
+
+    /**
+     * @Route("/new", name="new", methods={"get", "post"}, options={"expose"=true})
+     */
+    public function new(
+        ObjectManager $manager,
+        Request $request
+    ): Response {
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($product);
+            $manager->flush();
+
+            $this->addFlash('success', 'product.new.updated_successfully');
+            return $this->redirectToRoute('product_product_index');
+        }
+
+        return $this->render('product/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
      * @Route("/upload", name="product_upload", methods={"get", "post"})
      */
-    public function upload(TranslatorInterface $translator, Request $request, ProductService $productService): Response
-    {
+    public function upload(
+        TranslatorInterface $translator,
+        Request $request,
+        ProductService $productService
+    ): Response {
         $form = $this->createForm(UploadProductsType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -78,27 +133,30 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/template", name="template", methods={"get", "post"}, options={"expose"=true})
+     * @Route("/template/{all}", defaults={"all"=false}, name="template", methods={"get", "post"}, options={"expose"=true})
      */
     public function uploadProductsTemplate(
         ProductRepository $productRepo,
         TranslatorInterface $translator,
-        Request $request
+        Request $request,
+        bool $all
     ): Response {
         $template = new Spreadsheet();
         $template->getActiveSheet()->setCellValue('A1', $translator->trans('product.template.code'));
         $template->getActiveSheet()->setCellValue('B1', $translator->trans('product.template.title'));
-        $template->getActiveSheet()->setCellValue('C1', $translator->trans('product.template.quantity'));
+        $template->getActiveSheet()->setCellValue('C1', $translator->trans('product.template.detail'));
+        $template->getActiveSheet()->setCellValue('D1', $translator->trans('product.template.quantity'));
+        $template->getActiveSheet()->setCellValue('E1', $translator->trans('product.template.price'));
 
-        if ($request->get('data')) {
-            $items = $request->get('data');
-            foreach ($items as $key => $item) {
-                $row = $key + 2;
-                $product = $productRepo->findOneBy(['uuid' => $item]);
-                $template->getActiveSheet()->setCellValue("A{$row}", $product->getCode());
-                $template->getActiveSheet()->setCellValue("B{$row}", $product->getTitle());
-                $template->getActiveSheet()->setCellValue("C{$row}", 0);
-            }
+        $products = [];
+        if ($all) {
+            $products = $productRepo->findAll();
+        } else if ($request->get('data')) {
+            $uuids = $request->get('data');
+            $products = $productRepo->findByUuids($uuids);
+        }
+        if (count($products) > 0) {
+            $this->attachCell($template, $products);
         }
 
         $writer = new Xls($template);
@@ -113,6 +171,19 @@ class ProductController extends AbstractController
         $response->headers->set('Cache-Control', 'max-age=0');
 
         return $response;
+    }
+
+    protected function attachCell(Spreadsheet $template, array $products): void
+    {
+        foreach ($products as $key => $product) {
+            $row = $key + 2;
+            $template->getActiveSheet()->setCellValue("A{$row}", $product->getCode());
+            $template->getActiveSheet()->setCellValue("B{$row}", $product->getTitle());
+            $template->getActiveSheet()->setCellValue("C{$row}", $product->getDetail());
+            $template->getActiveSheet()->setCellValue("D{$row}", 0);
+            $template->getActiveSheet()->setCellValue("E{$row}", 0);
+        }
+
     }
 
     /**

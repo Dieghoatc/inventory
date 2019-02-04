@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Product implements Translatable
 {
     public const STATUS_ACTIVE = 1;
+    public const STATUS_INACTIVE = 0;
 
     /**
      * @ORM\Id()
@@ -191,7 +192,7 @@ class Product implements Translatable
     public function setPrice(?float $price): self
     {
         if (null === $price) {
-            $price = 0;
+            $price = 0.0;
         }
 
         $this->price = $price;
@@ -220,7 +221,7 @@ class Product implements Translatable
     public function removeOrderProduct(OrderProduct $orderProduct): self
     {
         if ($this->orderProducts->contains($orderProduct)) {
-            $this->OrderProducts->removeElement($orderProduct);
+            $this->orderProducts->removeElement($orderProduct);
             // set the owning side to null (unless already changed)
             if ($orderProduct->getProduct() === $this) {
                 $orderProduct->setProduct(null);

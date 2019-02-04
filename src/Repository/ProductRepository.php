@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Product;
 use App\Entity\Warehouse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -35,6 +36,16 @@ class ProductRepository extends ServiceEntityRepository
             ->setParameter('warehouse', $warehouse)
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    public function findByUuids(array $uuids): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.uuid in (:uuids)')
+            ->setParameter('uuids', implode(',', $uuids))
+            ->getQuery()
+            ->getResult();
     }
 
     /*

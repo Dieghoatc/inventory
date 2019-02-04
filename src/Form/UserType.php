@@ -45,6 +45,7 @@ class UserType extends AbstractType
                 'ROLE_ADMIN' => 'ROLE_ADMIN',
                 'ROLE_LOADER_INVENTORY' => 'ROLE_LOADER_INVENTORY',
                 'ROLE_WAREHOUSE_ADMIN' => 'ROLE_WAREHOUSE_ADMIN',
+                'ROLE_ORDER_MANAGEMENT' => 'ROLE_ORDER_MANAGEMENT',
             ],
             'attr' => [
                 'class' => 'form-control',

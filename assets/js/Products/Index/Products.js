@@ -156,6 +156,9 @@ class Products extends Component {
       accessor: 'code',
     }, {
       Header: Translator.trans('product.template.description'),
+      accessor: 'detail',
+    }, {
+      Header: Translator.trans('product.template.title'),
       accessor: 'title',
     }, {
       Header: Translator.trans('product.template.quantity'),
@@ -166,6 +169,15 @@ class Products extends Component {
     }, {
       Header: Translator.trans('product.template.warehouse'),
       accessor: 'warehouse.name',
+    }, {
+      Cell: row => (
+        <div>
+          <a href={Routing.generate('product_update', { uuid: row.original.product.uuid })} className="btn btn-sm btn-success">
+            <i className="fas fa-edit" />
+          </a>
+        </div>
+      ),
+      Header: Translator.trans('options'),
     }];
     const checkboxProps = {
       selectAll,
@@ -211,6 +223,9 @@ class Products extends Component {
               <i className="fas fa-archive">&nbsp;</i>
               {Translator.trans('product.index.update_inventory_excel')}
             </button>
+            <a href={Routing.generate('product_new')} className="btn btn-sm btn-success mr-1">
+              {Translator.trans('product.index.create_product')}
+            </a>
           </div>
         </div>
         <hr />

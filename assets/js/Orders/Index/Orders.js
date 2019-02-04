@@ -7,6 +7,12 @@ import moment from 'moment';
 import DetailOrder from './DetailOrder';
 
 
+const changeOrderState = (e) => {
+  const status = e.target.value;
+  const order = e.target.attributes.getNamedItem('data-order-id').value;
+  axios.post(Routing.generate('order_change_status', { order, status }));
+};
+
 class Orders extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +21,14 @@ class Orders extends Component {
       loading: true,
       orders: [],
       orderDetailId: null,
+      orderStates: [
+        { name: Translator.trans('order_statuses.1'), id: 1 },
+        { name: Translator.trans('order_statuses.2'), id: 2 },
+        { name: Translator.trans('order_statuses.3'), id: 3 },
+        { name: Translator.trans('order_statuses.4'), id: 4 },
+        { name: Translator.trans('order_statuses.5'), id: 5 },
+        { name: Translator.trans('order_statuses.6'), id: 6 },
+      ],
     };
 
     this.detail = this.detail.bind(this);
@@ -65,7 +79,7 @@ class Orders extends Component {
 
   render() {
     const {
-      selectAll, orders, warehouses, loading, orderDetailId,
+      selectAll, orders, warehouses, loading, orderDetailId, orderStates,
     } = this.state;
 
     const { toggleSelection, toggleAll, isSelected } = this;
@@ -88,18 +102,13 @@ class Orders extends Component {
       },
       Header: Translator.trans('order.index.source'),
     }, {
-      Cell: (row) => {
-        switch (row.original.status) {
-          case 1:
-            return Translator.trans('order.index.statuses.created');
-          case 2:
-            return Translator.trans('order.index.statuses.invoiced');
-          case 3:
-            return Translator.trans('order.index.statuses.ready_to_send');
-          default:
-            return Translator.trans('order.index.statuses.unknown');
-        }
-      },
+      Cell: row => (
+        <select className="form-control input-xs" onChange={e => changeOrderState(e)} defaultValue={row.original.status} data-order-id={row.original.id}>
+          { orderStates.map(status => (
+            <option value={status.id} key={status.id}>{status.name}</option>
+          ))}
+        </select>
+      ),
       Header: Translator.trans('order.index.status'),
     }, {
       Cell: row => (moment(row.original.created_at).format('DD MMM YYYY')),

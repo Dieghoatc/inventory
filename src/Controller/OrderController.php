@@ -10,6 +10,7 @@ use App\Repository\OrderRepository;
 use App\Repository\WarehouseRepository;
 use App\Services\CommentService;
 use App\Services\OrderService;
+use Doctrine\Common\Persistence\ObjectManager;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -123,19 +124,36 @@ class OrderController extends AbstractController
     ): Response {
         $pdfOptions = new Options();
 
-        $dompdf = new Dompdf($pdfOptions);
+        $orderAsPdf = new Dompdf($pdfOptions);
         $html = $this->renderView('order/pdf.html.twig', [
             'order' => $order,
         ]);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('letter', 'portrait');
-        $dompdf->render();
+        $orderAsPdf->loadHtml($html);
+        $orderAsPdf->setPaper('letter', 'portrait');
+        $orderAsPdf->render();
 
         $response = new Response();
-        $response->setContent($dompdf->output());
+        $response->setContent($orderAsPdf->output());
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'application/pdf');
 
+        return $response;
+    }
+
+    /**
+     * @Route("/edit/status/{order}/{status}", name="change_status", methods={"post"}, options={"expose"=true})
+     */
+    public function changeStatus(
+        Order $order,
+        int $status,
+        ObjectManager $manager
+    ): Response {
+        $order->setStatus($status);
+        $manager->persist($order);
+        $manager->flush();
+
+        $response = new Response(json_encode(['status' => 'ok']));
+        $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
 }

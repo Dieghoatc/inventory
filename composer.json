@@ -6,7 +6,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "dompdf/dompdf": "^0.8.3",
-        "friendsofphp/php-cs-fixer": "^2.13",
         "friendsofsymfony/jsrouting-bundle": "^2.2",
         "friendsofsymfony/user-bundle": "~2.0",
         "php-translation/symfony-bundle": "^0.8.0",
@@ -42,7 +41,8 @@
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*",
         "symfony/web-server-bundle": "*",
-        "phpmd/phpmd" : "@stable"
+        "phpmd/phpmd" : "@stable",
+        "friendsofphp/php-cs-fixer": "^2.13"
     },
     "config": {
         "preferred-install": {
@@ -86,7 +86,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.1.*"
+            "require": "4.2.*"
         }
     }
 }

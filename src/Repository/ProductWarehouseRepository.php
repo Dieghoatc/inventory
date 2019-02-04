@@ -39,6 +39,7 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         foreach ($products as $key => $product) {
             $products[$key]['uuid'] = $product['product']['uuid'];
             $products[$key]['title'] = $product['product']['title'];
+            $products[$key]['detail'] = $product['product']['detail'];
             $products[$key]['code'] = $product['product']['code'];
             $products[$key]['price'] = $product['product']['price'];
         }

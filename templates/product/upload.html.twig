@@ -12,7 +12,12 @@
         <div class="card-body">
             <p>
                 {{ 'product.upload.description'|trans }}
-                <a href="{{ path('product_template') }}" class="btn btn-sm btn-success"><i class="fas fa-download"></i> {{ 'product.upload.donwload_template'|trans }}</a>
+                <a href="{{ path('product_template') }}" class="btn btn-sm btn-success">
+                    <i class="fas fa-download"></i> {{ 'product.upload.donwload_template'|trans }}
+                </a>
+                <a href="{{ path('product_template', { all: true }) }}" class="btn btn-sm btn-success">
+                    <i class="fas fa-download"></i> {{ 'product.upload.donwload_all_products'|trans }}
+                </a>
             </p>
             <div class="form-group">
                 {{ form_label(form.products) }}
