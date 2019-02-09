@@ -28,6 +28,7 @@ class OrderRepository extends ServiceEntityRepository
             ->leftJoin('o.comments', 'co')
             ->where('o.warehouse = :warehouse')
             ->setParameter('warehouse', $warehouse)
+            ->orderBy('o.id', 'DESC')
             ->getQuery()
             ->getArrayResult();
 

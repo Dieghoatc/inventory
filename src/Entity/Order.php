@@ -17,12 +17,19 @@ class Order
     public const SOURCE_WEB = 1;
     public const SOURCE_PHONE = 2;
 
+    //Created
     public const STATUS_CREATED = 1;
+    //Processing
     public const STATUS_PROCESSED = 2;
+    //Processed
+    //public const STATUS_PROCESSING = 2;
     public const STATUS_COMPLETED = 3;
     public const STATUS_PARTIAL = 4;
     public const STATUS_SENT = 5;
     public const STATUS_DELIVERED = 6;
+
+    public const PAYMENT_CREDIT_CARD = 1;
+    public const PAYMENT_PAYPAL = 2;
 
     /**
      * @ORM\Id()
@@ -82,6 +89,16 @@ class Order
      * @ORM\OneToMany(targetEntity="App\Entity\OrderProduct", mappedBy="order")
      */
     private $orderProduct;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $paymentMetod;
 
     public function __construct()
     {
@@ -241,5 +258,29 @@ class Order
     public function getCreatedAtAsIso8601(): string
     {
         return $this->getCreatedAt()->format('c');
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getPaymentMetod(): ?int
+    {
+        return $this->paymentMetod;
+    }
+
+    public function setPaymentMetod(?int $paymentMetod): self
+    {
+        $this->paymentMetod = $paymentMetod;
+
+        return $this;
     }
 }

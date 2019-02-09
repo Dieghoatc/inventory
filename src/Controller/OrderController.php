@@ -12,7 +12,6 @@ use App\Services\CommentService;
 use App\Services\OrderService;
 use Doctrine\Common\Persistence\ObjectManager;
 use Dompdf\Dompdf;
-use Dompdf\Options;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -122,9 +121,7 @@ class OrderController extends AbstractController
     public function pdf(
         Order $order
     ): Response {
-        $pdfOptions = new Options();
-
-        $orderAsPdf = new Dompdf($pdfOptions);
+        $orderAsPdf = new Dompdf();
         $html = $this->renderView('order/pdf.html.twig', [
             'order' => $order,
         ]);

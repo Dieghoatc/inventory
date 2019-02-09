@@ -62,6 +62,8 @@ class OrderService
         $order->setCode($orderData['code']);
         $order->setSource($orderData['source']);
         $order->setStatus($orderData['status']);
+        $order->setComment($orderData['comment']);
+        $order->setPaymentMetod($orderData['paymentMethod']);
         $this->objectManager->persist($order);
 
         if (!array_key_exists('products', $orderData)) {

@@ -9,6 +9,37 @@ const isValidNewOption = (inputValue, selectValue, selectOptions) => (
   !(inputValue.trim().length === 0 || selectOptions.find(option => option.name === inputValue))
 );
 
+const orderStructure = {
+  code: '',
+  status: '',
+  comment: '',
+  customer: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    addresses: [
+      {
+        address: '',
+        zipCode: '',
+        city: {
+          state: {
+            country: {
+            },
+          },
+        },
+      },
+    ],
+  },
+  warehouse: {},
+  products: [
+    {
+      uuid: '',
+      quantity: '',
+    },
+  ],
+};
+
 class CreateOrder extends Component {
   static isCurrentProductFilled(product) {
     return (product.quantity !== '' && product.uuid !== '');
@@ -50,39 +81,15 @@ class CreateOrder extends Component {
         { name: Translator.trans('order_source.1'), id: 1 },
         { name: Translator.trans('order_source.2'), id: 2 },
       ],
+      paymentMethods: [
+        { name: Translator.trans('paytment_methods.1'), id: 1 },
+        { name: Translator.trans('paytment_methods.2'), id: 2 },
+      ],
       countries,
       productsByWarehouse: [],
       states: [],
       cities: [],
-      order: {
-        code: '',
-        status: '',
-        customer: {
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          addresses: [
-            {
-              address: '',
-              zipCode: '',
-              city: {
-                state: {
-                  country: {
-                  },
-                },
-              },
-            },
-          ],
-        },
-        warehouse: {},
-        products: [
-          {
-            uuid: '',
-            quantity: '',
-          },
-        ],
-      },
+      order: orderStructure,
     };
   }
 
@@ -129,10 +136,16 @@ class CreateOrder extends Component {
     order.warehouse = warehouses.find(warehouseItem => (
       Number(warehouseItem.id) === Number(orderId)
     ));
+    this.setState({ order });
+  }
 
-    this.setState({
-      order,
-    });
+  setPaymentMethod(el) {
+    const paymentMethodId = el.target.value;
+    if (paymentMethodId) {
+      const { order } = this.state;
+      order.paymentMethod = Number(paymentMethodId);
+      this.setState({ order });
+    }
   }
 
   setCustomer(customer) {
@@ -140,24 +153,7 @@ class CreateOrder extends Component {
     if (customer) {
       order.customer = customer;
     } else {
-      order.customer = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        addresses: [
-          {
-            address: '',
-            zipCode: '',
-            city: {
-              state: {
-                country: {
-                },
-              },
-            },
-          },
-        ],
-      };
+      order.customer = orderStructure;
     }
 
     this.setOrder(order);
@@ -277,6 +273,7 @@ class CreateOrder extends Component {
       && order.products && order.products.length > 0
       && order.products.some(product => (product.quantity !== '' && product.uuid !== ''))
       && order.source
+      && order.paymentMethod
       && order.status;
   }
 
@@ -294,7 +291,7 @@ class CreateOrder extends Component {
   render() {
     const {
       countries, states, cities, order, warehouses, orderStates, orderSources, productsByWarehouse,
-      customers, sending,
+      customers, sending, paymentMethods,
     } = this.state;
     const { products, customer, code } = order;
     return (
@@ -402,7 +399,7 @@ class CreateOrder extends Component {
             </div>
           </div>
 
-          <div className="form-row">
+          <div className="form-group form-row">
             <div className="col-4">
               <CreatableSelect
                 isClearable
@@ -484,17 +481,42 @@ class CreateOrder extends Component {
             </div>
           </div>
 
+          <div className="form-group">
+            <textarea
+              className="form-control"
+              placeholder={Translator.trans('order.new.comment')}
+              onChange={(e) => {
+                order.comment = e.target.value;
+                this.setOrder(order);
+              }}
+            />
+          </div>
+
         </div>
         <div className="col-sm-6">
           <h4>{Translator.trans('order.new.order_detail')}</h4>
 
           <div className="form-group">
-            <select className="form-control" onChange={e => (this.setWarehouse(e))}>
-              <option>{Translator.trans('order.new.select_warehouse')}</option>
-              { warehouses.map(warehouse => (
-                <option value={warehouse.id} key={warehouse.id}>{warehouse.name}</option>
-              ))}
-            </select>
+            <div className="form-row">
+              <div className="col-6">
+                <select className="form-control" onChange={e => (this.setWarehouse(e))}>
+                  <option>{Translator.trans('order.new.select_warehouse')}</option>
+                  { warehouses.map(warehouse => (
+                    <option value={warehouse.id} key={warehouse.id}>{warehouse.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-6">
+                <select className="form-control" onChange={e => (this.setPaymentMethod(e))}>
+                  <option>{Translator.trans('order.new.select_payment_methods')}</option>
+                  {paymentMethods.map(paymentMethod => (
+                    <option value={paymentMethod.id} key={paymentMethod.id}>
+                      {paymentMethod.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
 
           <div className="form-group">

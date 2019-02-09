@@ -20,11 +20,39 @@
         </div>
     </div>
     <div>
-        <div style="float: left; display: block;">
+        <div style="float: left; display: block; width: 50%">
             <p>
                 <span>{{ 'order.pdf.customer'|trans }}: </span>
                 <span style="font-weight: bold">{{ order.customer.firstName }} {{ order.customer.lastName }}</span>
                 <br />
+                <span>{{ 'order.pdf.email'|trans }}: </span>
+                <span style="font-weight: bold">{{ order.customer.email }}</span>
+                <br />
+                <span>{{ 'order.pdf.phone'|trans }}: </span>
+                <span style="font-weight: bold">{{ order.customer.phone }}</span>
+                <br />
+
+                {% for address in order.customer.addresses %}
+                    <span>{{ 'order.pdf.address'|trans }}: </span>
+                    <span style="font-weight: bold">{{ address.address }}</span>
+                    <br />
+                    <span>{{ 'order.pdf.city'|trans }}: </span>
+                    <span style="font-weight: bold">{{ address.city.name }}</span>
+                    <br />
+                    <span>{{ 'order.pdf.state'|trans }}: </span>
+                    <span style="font-weight: bold">{{ address.city.state.name }}</span>
+                    <br />
+                    <span>{{ 'order.pdf.zipCode'|trans }}: </span>
+                    <span style="font-weight: bold">{{ address.zipCode }}</span>
+                    <br />
+                    <span>{{ 'order.pdf.country'|trans }}: </span>
+                    <span style="font-weight: bold">{{ address.city.state.country.name }}</span>
+                    <br />
+                {% endfor %}
+            </p>
+        </div>
+        <div style="float: left; display: block; width: 50%">
+            <p>
                 <span>{{ 'order.pdf.order_number'|trans }}: </span>
                 <span style="font-weight: bold">{{ order.code }}</span>
                 <br />
@@ -33,11 +61,19 @@
                 <br />
                 <span>{{ 'order.pdf.warehouse'|trans }}: </span>
                 <span style="font-weight: bold">{{ order.warehouse.name }}</span>
+                <br />
+                <span>{{ 'order.pdf.paymentMethod'|trans }}: </span>
+                {% if order.paymentMetod == 1 %}
+                    <span style="font-weight: bold">{{ 'paytment_methods.1'|trans }}</span>
+                {% endif %}
+                {% if order.paymentMetod == 2 %}
+                    <span style="font-weight: bold">{{ 'paytment_methods.2'|trans }}</span>
+                {% endif %}
             </p>
         </div>
     </div>
     <div>
-        <table cellspacing="0" style="width: 100%; margin-top: 110px">
+        <table cellspacing="0" style="width: 100%; margin-top: 180px">
             <thead style="background-color: #eeeeee; border: none;">
                 <tr>
                     <th height="25px" style="width: 15%">Code</th>
@@ -56,5 +92,13 @@
             </tbody>
         </table>
     </div>
+    {% if order.comment %}
+        <div style="padding-top: 15px">
+            <span style="font-style: italic">{{ 'comments'|trans }}:</span>
+            <p>
+                {{ order.comment }}
+            </p>
+        </div>
+    {% endif %}
 </body>
 </html>

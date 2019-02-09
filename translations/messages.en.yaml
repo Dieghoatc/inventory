@@ -13,6 +13,7 @@ products: "Products"
 products_upload: "Upload products"
 product_list: "Product List"
 updated_successfully: "Warehouse updated successfully"
+comments: "Comments"
 product:
   index:
     title: "View products"
@@ -144,6 +145,8 @@ order:
     order_detail: "Order Detail"
     customer_information: "Customer Information"
     select_warehouse: "Select Warehouse"
+    comment: "Comment"
+    select_payment_methods: "Payments Methods"
     select_status: "Select Order Status"
     select_source: "Select Order Source"
     search_customer: "Search Customer"
@@ -151,6 +154,14 @@ order:
     consecutive: "Consecutive"
   pdf:
     order_number: "Order Number"
+    email: "Email"
+    city: "City"
+    state: "State"
+    country: "Country"
+    zipCode: "Zip Code"
+    address: "Address"
+    phone: "Phone"
+    paymentMethod: "Payment Method"
     customer: "Customer"
     created_at: "Date"
     warehouse: "Warehouse"
@@ -185,11 +196,9 @@ security:
     form:
       username: "Username"
       password: "Password"
-order_states:
-  created: 'Created'
-  invoiced: 'Invoiced'
-  ready_to_send: 'Ready to send'
-
+paytment_methods:
+  1: "Credit Card"
+  2: "Paypal"
 order_statuses:
   1: 'Created'
   2: 'Processed'
