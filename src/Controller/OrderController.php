@@ -157,7 +157,7 @@ class OrderController extends AbstractController
 
 
     /**
-     * @Route("/sync/woocomerce", name="change_status", options={"expose"=true})
+     * @Route("/sync", name="sync_orders", options={"expose"=true})
      */
     public function syncRemoteOrders(
         WoocommerceProvider $woocommerceProvider

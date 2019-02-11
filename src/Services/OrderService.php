@@ -15,21 +15,18 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrderService
 {
     /** @var ObjectManager */
     private $objectManager;
-
     /** @var OrderProductRepository */
     private $orderProductRepo;
-
     /** @var WarehouseRepository */
     private $warehouseRepo;
-
     /** @var CustomerService */
     private $customerService;
-
     /** @var ProductService */
     private $productService;
 
@@ -85,7 +82,6 @@ class OrderService
         foreach ($products as $productItem) {
 
             $product = $this->productService->add($productItem);
-
             if (!$product instanceof Product) {
                 throw new \LogicException('The product does not exits');
             }
@@ -94,7 +90,6 @@ class OrderService
             $orderProduct->setOrder($order);
             $orderProduct->setProduct($product);
             $orderProduct->setQuantity($productItem['quantity']);
-
             $this->objectManager->persist($orderProduct);
         }
     }

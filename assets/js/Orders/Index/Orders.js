@@ -18,6 +18,7 @@ class Orders extends Component {
     super(props);
     this.state = {
       warehouses: [],
+      syncOrders: false,
       loading: true,
       orders: [],
       orderDetailId: null,
@@ -33,10 +34,11 @@ class Orders extends Component {
 
     this.detail = this.detail.bind(this);
     this.closeDetailModal = this.closeDetailModal.bind(this);
+    this.syncExternalOrders = this.syncExternalOrders.bind(this);
   }
 
   componentDidMount() {
-    axios.get(Routing.generate('warehouse_all')).then(res => res.data).then(
+    axios.get(Routing.generate('warehouse_all', null)).then(res => res.data).then(
       (result) => {
         if (result.length === 0) {
           throw new Error('The number of warehouses is 0, please add another Warehouse');
@@ -77,9 +79,18 @@ class Orders extends Component {
     });
   }
 
+  syncExternalOrders() {
+    this.setState({ syncOrders: true });
+    axios.post(Routing.generate('order_sync_orders', null)).then(() => {
+      this.setState({ syncOrders: false });
+      window.location.reload();
+    });
+  }
+
   render() {
     const {
       selectAll, orders, warehouses, loading, orderDetailId, orderStates,
+      syncOrders,
     } = this.state;
 
     const { toggleSelection, toggleAll, isSelected } = this;
@@ -156,12 +167,16 @@ class Orders extends Component {
             >
               {Translator.trans('order.index.new')}
             </a>
-            <a
+            <button
+              type="button"
               className="btn btn-success m-1"
-              href={Routing.generate('order_new')}
+              disabled={syncOrders}
+              onClick={this.syncExternalOrders}
             >
               {Translator.trans('order.index.sync_woocomerce_orders')}
-            </a>
+              { ' ' }
+              { syncOrders && <i className="fas fa-spinner fa-pulse" /> }
+            </button>
           </div>
         </div>
         <hr />

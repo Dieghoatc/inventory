@@ -18,22 +18,16 @@ class ProductService
 {
     /** @var $productRepo ProductRepository */
     protected $productRepo;
-
     /** @var $orderProductRepo OrderProductRepository */
     protected $orderProductRepo;
-
     /** @var $productWarehouseRepo ProductWarehouseRepository */
     protected $productWarehouseRepo;
-
     /** @var $warehouseRepo WarehouseRepository */
     protected $warehouseRepo;
-
     /** @var $manager ObjectManager */
     protected $manager;
-
     /** @var $validator ValidatorInterface */
     protected $validator;
-
     /** @var $logService LogService */
     protected $logService;
 
