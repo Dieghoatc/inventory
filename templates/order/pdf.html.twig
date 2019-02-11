@@ -63,10 +63,10 @@
                 <span style="font-weight: bold">{{ order.warehouse.name }}</span>
                 <br />
                 <span>{{ 'order.pdf.paymentMethod'|trans }}: </span>
-                {% if order.paymentMetod == 1 %}
+                {% if order.paymentMethod == 1 %}
                     <span style="font-weight: bold">{{ 'paytment_methods.1'|trans }}</span>
                 {% endif %}
-                {% if order.paymentMetod == 2 %}
+                {% if order.paymentMethod == 2 %}
                     <span style="font-weight: bold">{{ 'paytment_methods.2'|trans }}</span>
                 {% endif %}
             </p>

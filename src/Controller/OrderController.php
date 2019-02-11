@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DataProviders\WoocommerceProvider;
 use App\Entity\Order;
 use App\Entity\Warehouse;
 use App\Repository\CountryRepository;
@@ -148,6 +149,20 @@ class OrderController extends AbstractController
         $order->setStatus($status);
         $manager->persist($order);
         $manager->flush();
+
+        $response = new Response(json_encode(['status' => 'ok']));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+
+    /**
+     * @Route("/sync/woocomerce", name="change_status", options={"expose"=true})
+     */
+    public function syncRemoteOrders(
+        WoocommerceProvider $woocommerceProvider
+    ): Response {
+        $woocommerceProvider->syncOrders($this->getUser());
 
         $response = new Response(json_encode(['status' => 'ok']));
         $response->headers->set('Content-Type', 'application/json');

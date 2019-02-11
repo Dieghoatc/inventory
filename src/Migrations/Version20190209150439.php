@@ -22,7 +22,7 @@ final class Version20190209150439 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE `order` ADD comment LONGTEXT DEFAULT NULL, ADD payment_metod INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE `order` ADD comment LONGTEXT DEFAULT NULL, ADD payment_method INT DEFAULT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +30,6 @@ final class Version20190209150439 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE `order` DROP comment, DROP payment_metod');
+        $this->addSql('ALTER TABLE `order` DROP comment, DROP payment_method');
     }
 }

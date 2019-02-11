@@ -8,7 +8,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 
 class WarehouseTypeTest extends TypeTestCase
 {
-    public function testSomething()
+    public function testCreateWarehouse(): void
     {
         $formData = [
             'name' => 'TEST-WAREHOUSE-01',
@@ -18,8 +18,10 @@ class WarehouseTypeTest extends TypeTestCase
 
         $warehouse = new Warehouse();
         $warehouse->setName('TEST-WAREHOUSE-01');
+
         $form->submit($formData);
+
         $this->assertTrue($form->isSynchronized());
-        $this->assertSame($warehouse, $objectToCompare);
+        $this->assertEquals($warehouse, $objectToCompare);
     }
 }

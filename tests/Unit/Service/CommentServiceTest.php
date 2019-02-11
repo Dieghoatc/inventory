@@ -44,6 +44,8 @@ class CommentServiceTest extends WebTestCase
 
         $orderItem = [
             'code' => 'UNIT-TEST-CODE02',
+            'comment' => 'EMPTY TEST ORDER COMMENT',
+            'paymentMethod' => Order::PAYMENT_CREDIT_CARD,
             'status' => Order::STATUS_CREATED,
             'source' => Order::SOURCE_WEB,
             'warehouse' => [

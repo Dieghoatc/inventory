@@ -98,8 +98,11 @@ class Order
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $paymentMetod;
+    private $paymentMethod;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         if (null === $this->getCreatedAt()) {
@@ -252,12 +255,15 @@ class Order
      */
     public function updateModifiedDatetime(): void
     {
-        $this->setModified(new \DateTime());
+        $this->setModifiedAt(new \DateTime());
     }
 
     public function getCreatedAtAsIso8601(): string
     {
-        return $this->getCreatedAt()->format('c');
+        if ($this->getCreatedAt() instanceof \DateTime) {
+            return $this->getCreatedAt()->format('c');
+        }
+        return '';
     }
 
     public function getComment(): ?string
@@ -272,14 +278,14 @@ class Order
         return $this;
     }
 
-    public function getPaymentMetod(): ?int
+    public function getPaymentMethod(): ?int
     {
-        return $this->paymentMetod;
+        return $this->paymentMethod;
     }
 
-    public function setPaymentMetod(?int $paymentMetod): self
+    public function setPaymentMethod(?int $paymentMethod): self
     {
-        $this->paymentMetod = $paymentMetod;
+        $this->paymentMethod = $paymentMethod;
 
         return $this;
     }

@@ -208,7 +208,7 @@ class Products extends Component {
         <div className="row">
           <div className="col-md-6">
             <button
-              className={selection.length > 0 ? 'btn btn-sm btn-success mr-1' : 'btn btn-sm btn-success mr-1 disabled'}
+              className={selection.length > 0 ? 'btn btn-sm btn-success m-1' : 'btn btn-sm btn-success m-1 disabled'}
               onClick={e => this.selected(e)}
               type="button"
             >
@@ -216,14 +216,14 @@ class Products extends Component {
               {Translator.trans('product.index.move_between_warehouses')}
             </button>
             <button
-              className={selection.length > 0 ? 'btn btn-sm btn-success mr-1' : 'btn btn-sm btn-success mr-1 disabled'}
+              className={selection.length > 0 ? 'btn btn-sm btn-success m-1' : 'btn btn-sm btn-success m-1 disabled'}
               onClick={e => this.downloadExcel(e)}
               type="button"
             >
               <i className="fas fa-archive">&nbsp;</i>
               {Translator.trans('product.index.update_inventory_excel')}
             </button>
-            <a href={Routing.generate('product_new')} className="btn btn-sm btn-success mr-1">
+            <a href={Routing.generate('product_new')} className="btn btn-sm btn-success m-1">
               {Translator.trans('product.index.create_product')}
             </a>
           </div>

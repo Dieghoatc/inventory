@@ -24,28 +24,26 @@ class CountryRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->select('c,s,ci')
             ->innerJoin('c.states', 's')
-            ->innerJoin('s.cities', 'ci')
+            ->leftJoin('s.cities', 'ci')
             ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getArrayResult();
     }
 
-//    /**
-//     * @return Country[] Returns an array of Country objects
-//     */
-    /*
-    public function findByExampleField($value)
+    public function findOneByIdOrName(int $id = null, string $name = null): ?Country
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $query = $this->createQueryBuilder('c');
+        if ($id !== null) {
+            $query->where('c.id = :id')
+                ->setParameter('id', $id);
+        }
+        if ($name !== null) {
+            $query->where('c.name = :name')
+                ->setParameter('name', $name);
+        }
+
+        return $query->getQuery()->getOneOrNullResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Country

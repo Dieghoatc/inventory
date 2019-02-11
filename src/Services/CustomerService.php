@@ -68,19 +68,17 @@ class CustomerService
 
     public function findOrCreateCity(array $cityData): City
     {
-        if (!array_key_exists('id', $cityData)) {
+        if (!array_key_exists('id', $cityData) && !array_key_exists('name', $cityData)) {
             throw new \InvalidArgumentException('Missing city ID?');
         }
 
-        if (null !== $cityData['id']) {
-            $city = $this->cityRepo->find($cityData['id']);
+        $city = $this->cityRepo->findOneByIdOrName(
+            $cityData['id'] ?? null,
+            $cityData['name'] ?? null
+        );
 
-            if (!$city instanceof City) {
-                throw new \InvalidArgumentException('This state not was found.');
-            }
-        } else {
+        if (!$city instanceof City) {
             $state = $this->findOrCreateState($cityData['state']);
-
             $city = new City();
             $city->setState($state);
             $city->setName($cityData['name']);
@@ -93,17 +91,16 @@ class CustomerService
 
     public function findOrCreateState(array $stateData): State
     {
-        if (!array_key_exists('id', $stateData)) {
+        if (!array_key_exists('id', $stateData) && !array_key_exists('name', $stateData) ) {
             throw new \InvalidArgumentException('Missing state ID?');
         }
 
-        if (null !== $stateData['id']) {
-            $state = $this->stateRepo->find($stateData['id']);
+        $state = $this->stateRepo->findOneByIdOrName(
+            $stateData['id'] ?? null,
+            $stateData['name'] ?? null
+        );
 
-            if (!$state instanceof State) {
-                throw new \InvalidArgumentException('This state not was found.');
-            }
-        } else {
+        if (!$state instanceof State) {
             $country = $this->findOrCreateCountry($stateData['country']);
 
             $state = new State();
@@ -113,21 +110,22 @@ class CustomerService
             $this->objectManager->flush();
         }
 
+
         return $state;
     }
 
     public function findOrCreateCountry(array $countryData): Country
     {
-        if (!array_key_exists('id', $countryData)) {
+        if (!array_key_exists('id', $countryData) && !array_key_exists('name', $countryData)) {
             throw new \InvalidArgumentException('Missing country ID?');
         }
 
-        if (null !== $countryData['id']) {
-            $country = $this->countryRepo->find($countryData['id']);
-            if (!$country instanceof Country) {
-                throw new \InvalidArgumentException('This country not was found.');
-            }
-        } else {
+        $country = $this->countryRepo->findOneByIdOrName(
+            $countryData['id'] ?? null,
+            $countryData['name'] ?? null
+        );
+
+        if (!$country instanceof Country) {
             $country = new Country();
             $country->setName($countryData['name']);
             $this->objectManager->persist($country);

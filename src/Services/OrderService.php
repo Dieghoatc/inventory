@@ -18,33 +18,33 @@ use Symfony\Component\Serializer\Serializer;
 
 class OrderService
 {
-    /** @var $objectManager ObjectManager */
+    /** @var ObjectManager */
     private $objectManager;
 
-    /** @var $productRepo ProductRepository */
-    private $productRepo;
-
-    /** @var $orderProductRepo OrderProductRepository */
+    /** @var OrderProductRepository */
     private $orderProductRepo;
 
-    /** @var $warehouseRepo WarehouseRepository */
+    /** @var WarehouseRepository */
     private $warehouseRepo;
 
-    /** @var $customerService CustomerService */
+    /** @var CustomerService */
     private $customerService;
+
+    /** @var ProductService */
+    private $productService;
 
     public function __construct(
         ObjectManager $objectManager,
-        ProductRepository $productRepo,
         OrderProductRepository $orderProductRepo,
         WarehouseRepository $warehouseRepo,
-        CustomerService $customerService
+        CustomerService $customerService,
+        ProductService $productService
     ) {
         $this->objectManager = $objectManager;
-        $this->productRepo = $productRepo;
         $this->orderProductRepo = $orderProductRepo;
         $this->warehouseRepo = $warehouseRepo;
         $this->customerService = $customerService;
+        $this->productService = $productService;
     }
 
     public function add(array $orderData, User $user): array
@@ -63,7 +63,7 @@ class OrderService
         $order->setSource($orderData['source']);
         $order->setStatus($orderData['status']);
         $order->setComment($orderData['comment']);
-        $order->setPaymentMetod($orderData['paymentMethod']);
+        $order->setPaymentMethod($orderData['paymentMethod']);
         $this->objectManager->persist($order);
 
         if (!array_key_exists('products', $orderData)) {
@@ -77,18 +77,19 @@ class OrderService
         }
 
         $this->objectManager->flush();
-
         return $this->getOrder($order);
     }
 
     public function attachProducts(Order $order, array $products): void
     {
         foreach ($products as $productItem) {
-            $product = $this->productRepo->findOneBy(['uuid' => $productItem['uuid']]);
+
+            $product = $this->productService->add($productItem);
 
             if (!$product instanceof Product) {
                 throw new \LogicException('The product does not exits');
             }
+
             $orderProduct = new OrderProduct();
             $orderProduct->setOrder($order);
             $orderProduct->setProduct($product);
@@ -120,6 +121,8 @@ class OrderService
             'createdAtAsIso8601',
             'status',
             'source',
+            'paymentMethod',
+            'comment',
             'warehouse' => [
                 'id',
                 'name',

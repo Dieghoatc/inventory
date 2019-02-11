@@ -34,6 +34,11 @@ class State
      */
     private $cities;
 
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $code;
+
     public function __construct()
     {
         $this->cities = new ArrayCollection();
@@ -95,6 +100,18 @@ class State
                 $city->setState(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

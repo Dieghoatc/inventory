@@ -22,8 +22,8 @@ class ProductServiceTest extends WebTestCase
     public function createProduct(
         Warehouse $warehouse = null,
         string $code = 'CODE-TEST-01',
-        int $quantity = 100): Product
-    {
+        int $quantity = 100
+    ): Product {
         /** @var $productService ProductService */
         $productService = $this->client->getContainer()->get(ProductService::class);
 
@@ -91,7 +91,7 @@ class ProductServiceTest extends WebTestCase
         $warehouseDestination = $this->getWarehouse('Usa');
 
         // Create product
-        $product = $this->createProduct($warehouseSource);
+        $product = $this->createProduct($warehouseSource, 'TEST-MOVE-01');
 
         $dataPrepared = [
             ['uuid' => $product->getUuid(), 'quantity' => '40'],
@@ -114,7 +114,7 @@ class ProductServiceTest extends WebTestCase
         $warehouseSource = $this->getWarehouse();
         $warehouseDestination = $this->getWarehouse('Usa');
 
-        $productToWork = $this->createProduct(null, 'CODE-TEST-02');
+        $productToWork = $this->createProduct(null, 'CODE-TEST-99');
 
         $dataPrepared = [
             ['uuid' => $productToWork->getUuid(), 'quantity' => '50'],

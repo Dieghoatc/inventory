@@ -156,6 +156,12 @@ class Orders extends Component {
             >
               {Translator.trans('order.index.new')}
             </a>
+            <a
+              className="btn btn-success m-1"
+              href={Routing.generate('order_new')}
+            >
+              {Translator.trans('order.index.sync_woocomerce_orders')}
+            </a>
           </div>
         </div>
         <hr />

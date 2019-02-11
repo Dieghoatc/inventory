@@ -268,4 +268,39 @@ class ProductService
         $this->manager->flush();
         $this->addProductsToInventory($products, $warehouse);
     }
+
+    public function add(array $productData, Warehouse $warehouse = null): Product
+    {
+        if (!array_key_exists('uuid', $productData) && !array_key_exists('code', $productData)) {
+            throw new \HttpInvalidParamException('Either UUID or code was not provided');
+        }
+
+        if (array_key_exists('uuid', $productData)) {
+            $product = $this->productRepo->findOneBy(['uuid' => $productData['uuid']]);
+        } else {
+            $product = $this->productRepo->findOneBy(['code' => $productData['code']]);
+        }
+
+        if (!$product instanceof Product) {
+            $product = new Product();
+            $product->setCode($productData['code']);
+            $product->setTitle($productData['code']);
+            $product->setPrice(0);
+            $product->setStatus(Product::STATUS_ACTIVE);
+
+            if ($warehouse) {
+                $productWarehouse = new ProductWarehouse();
+                $productWarehouse->setProduct($product);
+                $productWarehouse->setStatus(ProductWarehouse::STATUS_CONFIRMED);
+                $productWarehouse->addQuantity(0);
+                $productWarehouse->setWarehouse($warehouse);
+                $product->addProductWarehouse($productWarehouse);
+                $this->manager->persist($productWarehouse);
+            }
+
+            $this->manager->persist($product);
+        }
+
+        return $product;
+    }
 }
