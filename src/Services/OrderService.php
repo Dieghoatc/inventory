@@ -144,4 +144,18 @@ class OrderService
             'products' => $this->orderProductRepo->allProductsByOrder($order),
         ];
     }
+
+    public function deleteOrder(Order $order): void
+    {
+        foreach ($order->getOrderProducts() as $orderProduct) {
+            $this->objectManager->remove($orderProduct);
+        }
+
+        foreach ($order->getComments() as $comment) {
+            $this->objectManager->remove($comment);
+        }
+
+        $this->objectManager->remove($order);
+        $this->objectManager->flush();
+    }
 }

@@ -282,9 +282,8 @@ class CreateOrder extends Component {
     this.setState({
       sending: true,
     });
-    axios.post(Routing.generate('order_create'), order).then((response) => {
-      const destinationUrl = response.data.route;
-      window.location.href = destinationUrl;
+    axios.post(Routing.generate('order_create', null), order).then((response) => {
+      window.location.href = response.data.route;
     });
   }
 
