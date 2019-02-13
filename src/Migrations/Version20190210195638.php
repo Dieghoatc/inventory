@@ -43,12 +43,22 @@ final class Version20190210195638 extends AbstractMigration implements Container
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
         /** @var $defaultUsaCountry Country */
         $defaultUsaCountry = $entityManager->getRepository(Country::class)->findOneBy(['name' => 'USA']);
+
+        if(!$defaultUsaCountry instanceof Country) {
+            $defaultUsaCountry = new Country();
+        }
+
         $defaultUsaCountry->setName('United States');
         $defaultUsaCountry->setCode('US');
         $entityManager->persist($defaultUsaCountry);
 
         /** @var $florida State */
         $florida = $entityManager->getRepository(State::class)->findOneBy(['name' => 'Florida']);
+        if(!$florida instanceof State) {
+            $florida = new State();
+            $florida->setName('Florida');
+            $florida->setCountry($defaultUsaCountry);
+        }
         $florida->setCode('FL');
         $entityManager->persist($florida);
         $entityManager->flush();

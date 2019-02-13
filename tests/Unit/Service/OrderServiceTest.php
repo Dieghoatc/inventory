@@ -8,8 +8,8 @@ use App\Entity\Product;
 use App\Entity\User;
 use App\Entity\Warehouse;
 use App\Services\OrderService;
+use App\Tests\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class OrderServiceTest extends WebTestCase
 {

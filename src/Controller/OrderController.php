@@ -168,4 +168,18 @@ class OrderController extends AbstractController
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
+    /**
+     * @Route("/delete", name="delete", options={"expose"=true}, methods={"get"})
+     */
+    public function remove(
+        OrderRepository $orderRepo,
+        OrderService $orderService
+    ): Response {
+        $orders = $orderRepo->findAll();
+
+        foreach ($orders as $order) {
+            $orderService->deleteOrder($order);
+        }
+    }
 }

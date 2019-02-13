@@ -23,10 +23,16 @@ class StateRepository extends ServiceEntityRepository
     public function findOneByIdOrName(int $id = null, string $name = null): ?State
     {
         $query = $this->createQueryBuilder('s');
-        $query->where('s.name = :name')->setParameter('name', $name);
 
         if ($id !== null) {
             $query->where('s.id = :id')->setParameter('id', $id);
+        }
+
+        if($name !== null) {
+            $query
+                ->where('s.name = :name')
+                ->orWhere('s.code = :name')
+                ->setParameter('name', $name);
         }
 
         return $query->getQuery()->getOneOrNullResult();

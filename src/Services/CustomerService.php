@@ -102,9 +102,9 @@ class CustomerService
 
         if (!$state instanceof State) {
             $country = $this->findOrCreateCountry($stateData['country']);
-
             $state = new State();
             $state->setName($stateData['name']);
+            $state->setCode($stateData['name']);
             $state->setCountry($country);
             $this->objectManager->persist($state);
             $this->objectManager->flush();
@@ -166,7 +166,4 @@ class CustomerService
         $this->objectManager->flush();
     }
 
-    public function findOrCreate(array $customerData): Customer
-    {
-    }
 }
