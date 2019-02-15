@@ -36,12 +36,12 @@ class CountryRepository extends ServiceEntityRepository
         if ($id !== null) {
             $query->where('c.id = :id')
                 ->setParameter('id', $id);
-        }
-        if ($name !== null) {
+        } else if ($name !== null) {
             $query
                 ->where('c.name = :name')
-                ->orWhere('c.code = :name')
-                ->setParameter('name', $name);
+                ->orWhere('c.code = :code')
+                ->setParameter('name', $name)
+                ->setParameter('code', $name);
         }
 
         return $query->getQuery()->getOneOrNullResult();
