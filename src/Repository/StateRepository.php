@@ -26,13 +26,12 @@ class StateRepository extends ServiceEntityRepository
 
         if ($id !== null) {
             $query->where('s.id = :id')->setParameter('id', $id);
-        }
-
-        if($name !== null) {
+        } else if ($name !== null) {
             $query
                 ->where('s.name = :name')
-                ->orWhere('s.code = :name')
-                ->setParameter('name', $name);
+                ->orWhere('s.code = :code')
+                ->setParameter('name', $name)
+                ->setParameter('code', $name);
         }
 
         return $query->getQuery()->getOneOrNullResult();

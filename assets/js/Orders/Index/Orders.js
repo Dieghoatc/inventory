@@ -122,7 +122,7 @@ class Orders extends Component {
       ),
       Header: Translator.trans('order.index.status'),
     }, {
-      Cell: row => (moment(row.original.created_at).format('DD MMM YYYY')),
+      Cell: row => (moment(row.original.createdAt.date).format('DD MMM YYYY')),
       Header: Translator.trans('order.index.date'),
     }, {
       Cell: row => (
@@ -163,7 +163,7 @@ class Orders extends Component {
           <div className="col-md-6">
             <a
               className="btn btn-success"
-              href={Routing.generate('order_new')}
+              href={Routing.generate('order_new', null)}
             >
               {Translator.trans('order.index.new')}
             </a>
