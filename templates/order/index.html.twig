@@ -8,7 +8,12 @@
             {{ 'order.index.title'|trans }}
         </div>
         <div class="card-body">
-            <div id="react-component"></div>
+            <div id="index-orders"
+                 data-token="{{ csrf_token('delete-order') }}"
+                 data-can-delete="{{ is_granted('ROLE_CAN_DELETE_ORDERS') }}"
+                 data-can-add="{{ is_granted('ROLE_CAN_CREATE_ORDERS') }}"
+            >
+            </div>
         </div>
     </div>
 {% endblock %}

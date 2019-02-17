@@ -67,6 +67,12 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             ->getRepository(Order::class)->find($id);
     }
 
+    public function getOrderByCode(string $code): ?Order
+    {
+        return $this->client->getContainer()->get('doctrine')
+            ->getRepository(Order::class)->find($code);
+    }
+
     public function createCustomer(array $data = []): Customer
     {
         $city = $this->getCityByName('West Palm Beach');

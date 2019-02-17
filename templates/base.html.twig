@@ -39,7 +39,7 @@
                 <!-- Sidebar -->
                 <ul class="sidebar navbar-nav">
 
-                    {% if is_granted('ROLE_CAN_MANAGE_INVENTORY') %}
+                    {% if is_granted('ROLE_MANAGE_INVENTORY') %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-fw fa-folder"></i>
@@ -54,7 +54,7 @@
                     </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_CAN_MANAGE_WAREHOUSES') %}
+                    {% if is_granted('ROLE_MANAGE_WAREHOUSES') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('warehouse_warehouse_index') }}">
                             <i class="fas fa-fw fa-table"></i>
@@ -63,7 +63,7 @@
                     </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_CAN_MANAGE_USERS') %}
+                    {% if is_granted('ROLE_MANAGE_USERS') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('user_index') }}">
                             <i class="fas fa-fw fa-users"></i>
@@ -72,7 +72,7 @@
                     </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_CAN_MANAGE_ORDERS') %}
+                    {% if is_granted('ROLE_UPDATE_ORDERS') %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('order_index') }}">
                                 <i class="fas fa-fw fa-paperclip"></i>

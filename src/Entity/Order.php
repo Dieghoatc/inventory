@@ -22,7 +22,6 @@ class Order
     //Processing
     public const STATUS_PROCESSED = 2;
     //Processed
-    //public const STATUS_PROCESSING = 2;
     public const STATUS_COMPLETED = 3;
     public const STATUS_PARTIAL = 4;
     public const STATUS_SENT = 5;
@@ -101,6 +100,11 @@ class Order
     private $paymentMethod;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderStatus", mappedBy="order")
+     */
+    private $orderStatuses;
+
+    /**
      * @throws \Exception
      */
     public function __construct()
@@ -110,6 +114,7 @@ class Order
         }
         $this->comments = new ArrayCollection();
         $this->orderProduct = new ArrayCollection();
+        $this->orderStatuses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -286,6 +291,37 @@ class Order
     public function setPaymentMethod(?int $paymentMethod): self
     {
         $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrderStatus[]
+     */
+    public function getOrderStatuses(): Collection
+    {
+        return $this->orderStatuses;
+    }
+
+    public function addOrderStatus(OrderStatus $orderStatus): self
+    {
+        if (!$this->orderStatuses->contains($orderStatus)) {
+            $this->orderStatuses[] = $orderStatus;
+            $orderStatus->setOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderStatus(OrderStatus $orderStatus): self
+    {
+        if ($this->orderStatuses->contains($orderStatus)) {
+            $this->orderStatuses->removeElement($orderStatus);
+            // set the owning side to null (unless already changed)
+            if ($orderStatus->getOrder() === $this) {
+                $orderStatus->setOrder(null);
+            }
+        }
 
         return $this;
     }

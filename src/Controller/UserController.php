@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Model\UserManager;
+use FOS\UserBundle\Model\UserManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +23,9 @@ class UserController extends AbstractController
      * @Route("/", name="index")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function index(UserRepository $userRepo): Response
-    {
+    public function index(
+        UserRepository $userRepo
+    ): Response {
         $users = $userRepo->findAll();
 
         return $this->render('user/index.html.twig', [
@@ -33,17 +37,17 @@ class UserController extends AbstractController
      * @Route("/new", name="user_new")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function new(Request $request): Response
-    {
-        $user = new User();
+    public function new(
+        Request $request,
+        UserManagerInterface $userManager
+    ): Response {
+        $user = $userManager->createUser();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+            $user->setPlainPassword($user->getPassword());
+            $userManager->updateUser($user);
 
             $this->addFlash('success', 'updated_successfully');
 
@@ -59,15 +63,18 @@ class UserController extends AbstractController
      * @Route("/edit/{user}", name="user_edit")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function edit(Request $request, User $user): Response
-    {
+    public function edit(
+        Request $request,
+        UserManagerInterface $userManager,
+        User $user
+    ): Response {
+        $user = $userManager->findUserByUsername($user->getUsername());
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
 
+            $user->setPlainPassword($user->getPassword());
+            $userManager->updateUser($user);
             $this->addFlash('success', 'updated_successfully');
 
             return $this->redirectToRoute('user_index');

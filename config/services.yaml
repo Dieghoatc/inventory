@@ -5,6 +5,11 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    test: 'en'
+    woocommerce:
+      url: '%env(WOO_COMMERCE_URL)%'
+      api_key: '%env(WOO_COMMERCE_API_KEY)%'
+      api_secret: '%env(WOO_COMMERCE_API_SECRET)%'
 
 services:
     # default configuration for services in *this* file
@@ -34,3 +39,15 @@ services:
         class: Gedmo\SoftDeleteable\SoftDeleteableListener
         tags:
         - { name: doctrine.event_subscriber, connection: default }
+
+    order.listener.post.persist:
+      class: 'App\EventListener\OrderListener'
+      arguments: ['@doctrine.orm.entity_manager']
+      tags:
+        - { name: doctrine.event_listener, entity: App\Entity\Order, event: postPersist, priority: 1 }
+
+    order.listener.post.update:
+      class: 'App\EventListener\OrderListener'
+      arguments: ['@doctrine.orm.entity_manager']
+      tags:
+        - { name: doctrine.event_listener, entity: App\Entity\Order, event: postUpdate, priority: 1 }

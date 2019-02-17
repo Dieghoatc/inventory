@@ -9,13 +9,11 @@ use App\Entity\Product;
 use App\Entity\User;
 use App\Entity\Warehouse;
 use App\Repository\OrderProductRepository;
-use App\Repository\ProductRepository;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrderService
 {

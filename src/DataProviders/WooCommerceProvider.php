@@ -4,16 +4,17 @@ namespace App\DataProviders;
 
 use App\Entity\Order;
 use App\Entity\User;
+use App\Entity\Warehouse;
 use App\Repository\OrderRepository;
 use App\Repository\WarehouseRepository;
 use App\Services\OrderService;
 use Automattic\WooCommerce\Client;
 
-class WoocommerceProvider
+class WooCommerceProvider
 {
 
     /** @var Client */
-    private $woocomerce;
+    private $wooCommerce;
     /** @var OrderService */
     private $orderService;
     /** @var WarehouseRepository */
@@ -28,7 +29,7 @@ class WoocommerceProvider
     )
     {
         $this->orderService = $orderService;
-        $this->woocomerce = new Client(
+        $this->wooCommerce = new Client(
             'http://www.klassicfab.com/',
             'ck_7947cf0291280c8a0f53534e51f7e6d8b6f98689',
             'cs_84b8a40f572a92ceb37398ea5559f26b1c3baf6d',
@@ -42,13 +43,17 @@ class WoocommerceProvider
 
     protected function getOrders(): array
     {
-        return $this->woocomerce->get('orders');
+        return $this->wooCommerce->get('orders');
     }
 
-    protected function getCustomer(int $id): ?object
+    protected function getCustomer(int $id): ?array
     {
         if ($id !== 0) {
-            return $this->woocomerce->get("customers/{$id}");
+            if(!$this->wooCommerce instanceof Client) {
+                throw new \InvalidArgumentException('WooCommerce Client not found.');
+            }
+
+            return $this->wooCommerce->get("customers/{$id}");
         }
         return null;
     }
@@ -102,6 +107,11 @@ class WoocommerceProvider
     {
         $orders = $this->getOrders();
         $warehouse = $this->warehouseRepo->findOneBy(['name' => 'Colombia']);
+
+        if (!$warehouse instanceof Warehouse) {
+            throw new \InvalidArgumentException('Warehouse was not found');
+        }
+
         foreach ($orders as $order) {
             $orderExist = $this->orderRepo->findOneBy(['code' => $order->id]);
             if ($orderExist instanceof Order) {

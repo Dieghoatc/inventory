@@ -1,3 +1,4 @@
+confirm: "Confirm"
 welcome: "Welcome"
 submit: "Submit"
 edit: "Edit"
@@ -130,6 +131,8 @@ order:
     order_comments: 'Comments'
     new: "Create a Order"
     download_order: "Download"
+    delete_order: "Delete Order"
+    confirm_delete_order: "Are you sure that you want to delete this order?"
   new:
     title: "Create a new order"
     first_name: "First Name"
@@ -166,6 +169,11 @@ order:
     customer: "Customer"
     created_at: "Date"
     warehouse: "Warehouse"
+  xls:
+    date: "Date"
+    productCode: "Product Code"
+    quantity: "Quantity"
+    filename: "order"
 warehouses: "Warehouses"
 warehouse:
   index:

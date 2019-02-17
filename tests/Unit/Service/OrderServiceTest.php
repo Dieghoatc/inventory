@@ -27,21 +27,11 @@ class OrderServiceTest extends WebTestCase
         /** @var $orderService OrderService */
         $orderService = $this->client->getContainer()->get(OrderService::class);
         // Customer taken from CustomerFixture
-        /** @var $customer Customer */
-        $customer = $this->client->getContainer()->get('doctrine')
-            ->getRepository(Customer::class)->findOneBy(['email' => 'jose.perez@example.com']);
+        $customer = $this->getCustomerByEmail('jose.perez@example.com');
+        $warehouse = $this->getWarehouseByName('Usa');
 
-        /** @var $warehouse Warehouse */
-        $warehouse = $this->client->getContainer()->get('doctrine')
-            ->getRepository(Warehouse::class)->findOneBy(['name' => 'Usa']);
-
-        /** @var $productA Product */
-        $productA = $this->client->getContainer()->get('doctrine')
-            ->getRepository(Product::class)->findOneBy(['code' => 'KF-01']);
-
-        /** @var $productB Product */
-        $productB = $this->client->getContainer()->get('doctrine')
-            ->getRepository(Product::class)->findOneBy(['code' => 'KF-02']);
+        $productA = $this->createProduct($warehouse, 'ADD-NEW-KF-01');
+        $productB = $this->createProduct($warehouse, 'ADD-NEW-KF-02');
 
         $orderItem = [
             'code' => 'UNIT-TEST-CODE01',
@@ -75,13 +65,35 @@ class OrderServiceTest extends WebTestCase
             ],
         ];
 
-        $user = $this->client->getContainer()->get('doctrine')
-            ->getRepository(User::class)->findOneBy(['username' => 'sbarbosa115']);
-
+        $user = $this->getUserByEmail('sbarbosa115@gmail.com');
         $orderCreated = $orderService->add($orderItem, $user);
+
         $this->assertArrayHasKey('order', $orderCreated);
         $this->assertArrayHasKey('customer', $orderCreated['order']);
         $this->assertArrayHasKey('comments', $orderCreated['order']);
         $this->assertArrayHasKey('warehouse', $orderCreated['order']);
+        $this->assertCount(2, $orderCreated['products']);
+        $this->assertCount(2, $orderCreated['order']['comments']);
+    }
+
+    public function testRemoveOrder(): void
+    {
+        $codeToTest = 'TEST-TO-REMOVE-0001';
+        /** @var $orderService OrderService */
+        $orderService = $this->client->getContainer()->get(OrderService::class);
+        $order = $this->createOrder(['code' => $codeToTest]);
+        $this->assertInstanceOf(Order::class, $order);
+
+        $orderService->deleteOrder($order);
+
+        $order = $this->getOrderByCode($codeToTest);
+        $this->assertNull($order);
+    }
+
+    public function testStatus(): void
+    {
+        $codeToTest = 'TEST-TO-STATUS-0001';
+        $order = $this->createOrder(['code' => $codeToTest]);
+        $this->assertCount(1, $order->getOrderStatuses());
     }
 }
