@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { first } from 'lodash';
 import ReactTable from 'react-table';
+import PropTypes from 'prop-types';
 import moment from 'moment';
+import ConfirmModal from '../../Widgets/ConfirmModal';
 import DetailOrder from './DetailOrder';
-
 
 const changeOrderState = (e) => {
   const status = e.target.value;
@@ -13,12 +14,28 @@ const changeOrderState = (e) => {
   axios.post(Routing.generate('order_change_status', { order, status }));
 };
 
+const deleteOrder = (order, token, callback) => {
+  axios.delete(Routing.generate('order_delete', null), { data: { order: order.id, token } })
+    .then(() => {
+      if (typeof callback === 'function') {
+        callback();
+      }
+    });
+};
+
 class Orders extends Component {
   constructor(props) {
     super(props);
+
+    const canAdd = (props.canAdd !== '');
+    const canDelete = (props.canDelete !== '');
+
     this.state = {
+      canAdd,
+      canDelete,
       warehouses: [],
       syncOrders: false,
+      orderToDelete: false,
       loading: true,
       orders: [],
       orderDetailId: null,
@@ -89,10 +106,10 @@ class Orders extends Component {
 
   render() {
     const {
-      selectAll, orders, warehouses, loading, orderDetailId, orderStates,
-      syncOrders,
+      selectAll, orders, warehouses, loading, orderDetailId, orderStates, orderToDelete,
+      syncOrders, canAdd, canDelete,
     } = this.state;
-
+    const { token } = this.props;
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
       Header: Translator.trans('order.index.customer'),
@@ -134,6 +151,18 @@ class Orders extends Component {
           <a href={Routing.generate('order_pdf', { order: row.original.id })} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
             <i className="fas fa-file-pdf" />
           </a>
+          { ' ' }
+          <a href={Routing.generate('order_xls', { order: row.original.id })} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
+            <i className="fas fa-file-excel" />
+          </a>
+          { ' ' }
+          { canDelete
+            && (
+              <button type="button" className="btn btn-sm btn-danger" onClick={() => this.setState({ orderToDelete: row.original })}>
+                <i className="fas fa-trash" />
+              </button>
+            )
+          }
         </div>
       ),
       Header: Translator.trans('order.index.options'),
@@ -147,6 +176,18 @@ class Orders extends Component {
     };
     return (
       <div>
+        { orderToDelete
+          && (
+          <ConfirmModal
+            visible={orderToDelete !== false}
+            onOk={() => deleteOrder(orderToDelete, token, () => (
+              window.location.reload()
+            ))}
+            onCancel={() => this.setState({ orderToDelete: false })}
+          >
+            <h4>{Translator.trans('order.index.confirm_delete_order')}</h4>
+          </ConfirmModal>
+          )}
         <div className="row">
           <div className="col-md-6">
             <select className="form-control" onChange={e => this.loadOrders(e.target.value)}>
@@ -161,12 +202,16 @@ class Orders extends Component {
             </select>
           </div>
           <div className="col-md-6">
-            <a
-              className="btn btn-success"
-              href={Routing.generate('order_new', null)}
-            >
-              {Translator.trans('order.index.new')}
-            </a>
+            {
+              canAdd && (
+                <a
+                  className="btn btn-success"
+                  href={Routing.generate('order_new', null)}
+                >
+                  {Translator.trans('order.index.new')}
+                </a>
+              )
+            }
             <button
               type="button"
               className="btn btn-success m-1"
@@ -206,3 +251,9 @@ class Orders extends Component {
 }
 
 export default Orders;
+
+Orders.propTypes = {
+  token: PropTypes.string.isRequired,
+  canAdd: PropTypes.string.isRequired,
+  canDelete: PropTypes.string.isRequired,
+};
