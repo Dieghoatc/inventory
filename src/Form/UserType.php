@@ -45,9 +45,8 @@ class UserType extends AbstractType
                 'ROLE_ADMIN' => 'ROLE_ADMIN',
                 'ROLE_MANAGE_INVENTORY' => 'ROLE_MANAGE_INVENTORY',
                 'ROLE_MANAGE_ORDERS' => 'ROLE_MANAGE_ORDERS',
-                'ROLE_CAN_READ_ORDERS' => 'ROLE_CAN_READ_ORDERS',
+                'ROLE_UPDATE_ORDERS' => 'ROLE_UPDATE_ORDERS',
                 'ROLE_MANAGE_USERS' => 'ROLE_MANAGE_USERS',
-                'ROLE_CAN_READ_USERS' => 'ROLE_CAN_READ_USERS',
                 'ROLE_MANAGE_WAREHOUSES' => 'ROLE_MANAGE_WAREHOUSES',
             ],
             'attr' => [
