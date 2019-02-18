@@ -215,8 +215,8 @@ class OrderController extends AbstractController
             throw new \InvalidArgumentException('Order was not found.');
         }
 
-        $orderService->deleteOrder($order);
         $logService->add('Order',"Order {$order->getCode()} was deleted");
+        $orderService->deleteOrder($order);
 
         return new JsonResponse(['status' => 'ok']);
     }
