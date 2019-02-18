@@ -133,6 +133,7 @@ order:
     download_order: "Download"
     delete_order: "Delete Order"
     confirm_delete_order: "Are you sure that you want to delete this order?"
+    confirm_change_state_to_sent: "When you change the state of an Order to sent, that action goes to update the inventory, Are you sure?"
   new:
     title: "Create a new order"
     first_name: "First Name"

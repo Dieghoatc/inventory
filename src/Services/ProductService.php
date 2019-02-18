@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Entity\Order;
+use App\Entity\OrderProduct;
 use App\Entity\Product;
 use App\Entity\ProductWarehouse;
 use App\Entity\Warehouse;
@@ -207,10 +209,10 @@ class ProductService
         $this->manager->flush();
     }
 
-    public function removeProductsFromInventory(array $items, Warehouse $warehouse): void
+    public function removeProductsFromInventory(array $productsData, Warehouse $warehouse): void
     {
-        foreach ($items as $item) {
-            $queryFilter = $this->getQueryFilter($item);
+        foreach ($productsData as $productData) {
+            $queryFilter = $this->getQueryFilter($productData);
             $product = $this->productRepo->findOneBy($queryFilter);
 
             if (!$product instanceof Product) {
@@ -224,12 +226,12 @@ class ProductService
                 throw new \LogicException('Error trying to get the product warehouse.');
             }
 
-            if ($productDestination->getQuantity() < $item['quantity']) {
+            if ($productDestination->getQuantity() < $productData['quantity']) {
                 throw new \LogicException('The quantity to delete must be equal or less than the stored one.');
             }
 
             if ($productDestination instanceof ProductWarehouse) {
-                $productDestination->subQuantity($item['quantity']);
+                $productDestination->subQuantity($productData['quantity']);
                 $this->manager->persist($productDestination);
             }
         }
@@ -296,5 +298,26 @@ class ProductService
         }
 
         return $product;
+    }
+
+    public function crossOrderAgainstInventory(
+        Order $order
+    ): void {
+        $products = [];
+
+        foreach ($order->getOrderProducts() as $orderProduct) {
+
+            if (!$orderProduct->getProduct() instanceof Product) {
+                throw new \LogicException('This product was not found');
+            }
+
+            /** @var $orderProduct OrderProduct */
+            $products[] = [
+              'uuid' => $orderProduct->getProduct()->getUuid(),
+              'quantity' => $orderProduct->getQuantity()
+            ];
+        }
+
+        $this->removeProductsFromInventory($products, $order->getWarehouse());
     }
 }

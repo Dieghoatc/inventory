@@ -325,4 +325,15 @@ class Order
 
         return $this;
     }
+
+
+    public function addOrderProduct(OrderProduct $orderProduct): self
+    {
+        if (!$this->orderProduct->contains($orderProduct)) {
+            $this->orderProduct[] = $orderProduct;
+            $orderProduct->setOrder($this);
+        }
+
+        return $this;
+    }
 }

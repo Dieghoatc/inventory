@@ -36,6 +36,7 @@ class OrderController extends AbstractController
 {
     /**
      * @Route("/", name="index")
+     * @IsGranted("ROLE_UPDATE_ORDERS")
      */
     public function index(): Response
     {

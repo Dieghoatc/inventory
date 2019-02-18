@@ -96,4 +96,54 @@ class OrderServiceTest extends WebTestCase
         $order = $this->createOrder(['code' => $codeToTest]);
         $this->assertCount(1, $order->getOrderStatuses());
     }
+
+    public function testUpdateStatusTwoTimes(): void
+    {
+        $codeToTest = 'TEST-TO-STATUS-99881';
+        $order = $this->createOrder(['code' => $codeToTest]);
+
+        $order->setStatus(Order::STATUS_PROCESSED);
+
+        $manager = $this->client->getContainer()->get('doctrine')->getManager();
+        $manager->persist($order);
+        $manager->flush();
+
+
+        $this->assertCount(2, $order->getOrderStatuses());
+    }
+
+    public function testOrderMarkAsCompletedSuccess(): void
+    {
+        $initialQuantity = 100;
+        $warehouse = $this->getWarehouseByName('Colombia');
+        $productA = $this->createProduct($warehouse, 'TEST-COMPLETE-ORDER-A', $initialQuantity);
+        $productB = $this->createProduct($warehouse, 'TEST-COMPLETE-ORDER-B', $initialQuantity);
+
+        $orderData = [
+            'code' => 'UNIT-TEST-COMPLETE-001514',
+            'products' => [
+                [
+                    'uuid' => $productA->getUuid(),
+                    'quantity' => 25,
+                ],
+                [
+                    'uuid' => $productB->getUuid(),
+                    'quantity' => 75,
+                ],
+            ],
+        ];
+        $order = $this->createOrder($orderData);
+
+        //Status that trigger the warehouse discount
+        $order->setStatus(Order::STATUS_SENT);
+        $manager = $this->client->getContainer()->get('doctrine')->getManager();
+        $manager->persist($order);
+        $manager->flush();
+
+        $productAOnWarehouse = $this->getProductWarehouse($productA, $warehouse);
+        $productBOnWarehouse = $this->getProductWarehouse($productB, $warehouse);
+
+        $this->assertEquals(75, $productAOnWarehouse->getQuantity());
+        $this->assertEquals(25, $productBOnWarehouse->getQuantity());
+    }
 }

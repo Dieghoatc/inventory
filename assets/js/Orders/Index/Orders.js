@@ -8,10 +8,18 @@ import moment from 'moment';
 import ConfirmModal from '../../Widgets/ConfirmModal';
 import DetailOrder from './DetailOrder';
 
-const changeOrderState = (e) => {
-  const status = e.target.value;
-  const order = e.target.attributes.getNamedItem('data-order-id').value;
-  axios.post(Routing.generate('order_change_status', { order, status }));
+const ORDER_STATE_SENT = 5;
+
+const changeOrderState = (order, status, callback) => {
+  axios.post(Routing.generate('order_change_status', { order, status })).then(() => {
+    if (typeof callback === 'function') {
+      callback();
+    }
+  }).catch(() => {
+    if (typeof callback === 'function') {
+      callback();
+    }
+  });
 };
 
 const deleteOrder = (order, token, callback) => {
@@ -29,16 +37,19 @@ class Orders extends Component {
 
     const canAdd = (props.canAdd !== '');
     const canDelete = (props.canDelete !== '');
+    const canSync = (props.canSync !== '');
 
     this.state = {
       canAdd,
       canDelete,
+      canSync,
       warehouses: [],
       syncOrders: false,
       orderToDelete: false,
       loading: true,
       orders: [],
       orderDetailId: null,
+      confirmSent: false,
       orderStates: [
         { name: Translator.trans('order_statuses.1'), id: 1 },
         { name: Translator.trans('order_statuses.2'), id: 2 },
@@ -107,7 +118,7 @@ class Orders extends Component {
   render() {
     const {
       selectAll, orders, warehouses, loading, orderDetailId, orderStates, orderToDelete,
-      syncOrders, canAdd, canDelete,
+      syncOrders, canAdd, canDelete, canSync, confirmSent,
     } = this.state;
     const { token } = this.props;
     const { toggleSelection, toggleAll, isSelected } = this;
@@ -131,7 +142,26 @@ class Orders extends Component {
       Header: Translator.trans('order.index.source'),
     }, {
       Cell: row => (
-        <select className="form-control input-xs" onChange={e => changeOrderState(e)} defaultValue={row.original.status} data-order-id={row.original.id}>
+        <select
+          className="form-control input-xs"
+          onChange={(e) => {
+            const status = e.target.value;
+            const order = e.target.attributes.getNamedItem('data-order-id').value;
+            const closeConfirmSentModal = () => {
+              this.setState({ confirmSent: false });
+            };
+
+            if (Number(status) === ORDER_STATE_SENT) {
+              this.setState({
+                confirmSent: () => (changeOrderState(order, status, closeConfirmSentModal)),
+              });
+            } else {
+              changeOrderState(order, status, closeConfirmSentModal);
+            }
+          }}
+          defaultValue={row.original.status}
+          data-order-id={row.original.id}
+        >
           { orderStates.map(status => (
             <option value={status.id} key={status.id}>{status.name}</option>
           ))}
@@ -187,7 +217,19 @@ class Orders extends Component {
           >
             <h4>{Translator.trans('order.index.confirm_delete_order')}</h4>
           </ConfirmModal>
-          )}
+          )
+        }
+        { confirmSent
+        && (
+          <ConfirmModal
+            visible={confirmSent !== false}
+            onOk={confirmSent}
+            onCancel={() => this.setState({ confirmSent: false })}
+          >
+            <h4>{Translator.trans('order.index.confirm_change_state_to_sent')}</h4>
+          </ConfirmModal>
+        )
+        }
         <div className="row">
           <div className="col-md-6">
             <select className="form-control" onChange={e => this.loadOrders(e.target.value)}>
@@ -212,16 +254,20 @@ class Orders extends Component {
                 </a>
               )
             }
-            <button
-              type="button"
-              className="btn btn-success m-1"
-              disabled={syncOrders}
-              onClick={this.syncExternalOrders}
-            >
-              {Translator.trans('order.index.sync_woocomerce_orders')}
-              { ' ' }
-              { syncOrders && <i className="fas fa-spinner fa-pulse" /> }
-            </button>
+            {
+              canSync && (
+                <button
+                  type="button"
+                  className="btn btn-success m-1"
+                  disabled={syncOrders}
+                  onClick={this.syncExternalOrders}
+                >
+                  {Translator.trans('order.index.sync_woocomerce_orders')}
+                  { ' ' }
+                  { syncOrders && <i className="fas fa-spinner fa-pulse" /> }
+                </button>
+              )
+            }
           </div>
         </div>
         <hr />
@@ -256,4 +302,5 @@ Orders.propTypes = {
   token: PropTypes.string.isRequired,
   canAdd: PropTypes.string.isRequired,
   canDelete: PropTypes.string.isRequired,
+  canSync: PropTypes.string.isRequired,
 };

@@ -88,6 +88,7 @@ class OrderService
             $orderProduct->setOrder($order);
             $orderProduct->setProduct($product);
             $orderProduct->setQuantity($productItem['quantity']);
+            $order->addOrderProduct($orderProduct);
             $this->objectManager->persist($orderProduct);
         }
     }

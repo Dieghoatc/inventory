@@ -12,6 +12,7 @@
                  data-token="{{ csrf_token('delete-order') }}"
                  data-can-delete="{{ is_granted('ROLE_CAN_DELETE_ORDERS') }}"
                  data-can-add="{{ is_granted('ROLE_CAN_CREATE_ORDERS') }}"
+                 data-can-sync="{{ is_granted('ROLE_CAN_SYNC_ORDERS') }}"
             >
             </div>
         </div>

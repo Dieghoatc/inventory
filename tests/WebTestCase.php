@@ -6,6 +6,7 @@ use App\Entity\City;
 use App\Entity\Customer;
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\ProductWarehouse;
 use App\Entity\User;
 use App\Entity\Warehouse;
 use App\Services\CustomerService;
@@ -71,6 +72,17 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
     {
         return $this->client->getContainer()->get('doctrine')
             ->getRepository(Order::class)->find($code);
+    }
+
+    public function getProductWarehouse(Product $product, Warehouse $warehouse): ?ProductWarehouse
+    {
+        return $this->client->getContainer()->get('doctrine')
+            ->getRepository(ProductWarehouse::class)->findOneBy(
+                [
+                    'product' => $product,
+                    'warehouse' => $warehouse
+                ]
+            );
     }
 
     public function createCustomer(array $data = []): Customer

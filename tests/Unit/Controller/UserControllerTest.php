@@ -21,5 +21,24 @@ class UserControllerTest extends UserWebTestCase
     {
         yield ['GET', '/admin/user/'];
         yield ['GET', '/admin/user/new'];
+        yield ['GET', '/admin/user/edit/1'];
+    }
+
+    public function testCorrectRolesForUpdateOrderRoleOnIndex(): void
+    {
+        $this->logIn(['ROLE_MANAGE_USERS']);
+
+        $crawler = $this->client->request('GET', '/admin/user/');
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(1, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
+    }
+
+    public function testCorrectRolesForAdminForOnIndex(): void
+    {
+        $this->logIn();
+
+        $crawler = $this->client->request('GET', '/admin/user/');
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(4, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
     }
 }

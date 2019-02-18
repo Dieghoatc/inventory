@@ -4,6 +4,8 @@ namespace App\EventListener;
 
 use App\Entity\Order;
 use App\Entity\OrderStatus;
+use App\Services\OrderService;
+use App\Services\ProductService;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -12,10 +14,15 @@ class OrderListener
 
     /** @var EntityManagerInterface */
     protected $manager;
+    /** @var OrderService */
+    protected $productService;
 
-    public function __construct(EntityManagerInterface $manager)
-    {
+    public function __construct(
+        EntityManagerInterface $manager,
+        ProductService $productService
+    ) {
         $this->manager = $manager;
+        $this->productService = $productService;
     }
 
 
@@ -33,6 +40,11 @@ class OrderListener
         $order = $event->getObject();
         if($order instanceof Order) {
             $this->addOrderStatus($order);
+
+            if($order->getStatus() === Order::STATUS_SENT) {
+                $this->orderSent($order);
+            }
+
         }
     }
 
@@ -45,6 +57,11 @@ class OrderListener
 
         $this->manager->persist($orderStatus);
         $this->manager->flush();
+    }
+
+    protected function orderSent(Order $order): void
+    {
+        $this->productService->crossOrderAgainstInventory($order);
     }
 
 }

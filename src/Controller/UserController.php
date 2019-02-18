@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Model\UserManager;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,12 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/user", name="user_")
+ * @IsGranted("ROLE_MANAGE_USERS")
  */
 class UserController extends AbstractController
 {
     /**
      * @Route("/", name="index")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function index(
         UserRepository $userRepo
@@ -35,7 +33,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/new", name="user_new")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function new(
         Request $request,
@@ -61,7 +58,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/edit/{user}", name="user_edit")
-     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(
         Request $request,
