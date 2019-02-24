@@ -32,7 +32,6 @@ class WooCommerceProvider
     {
         $wooCommerceConnectionConfig = $params->get('woo_commerce');
 
-
         if(!is_array($wooCommerceConnectionConfig)) {
             throw new \InvalidArgumentException('Woo commerce configuration was not found.');
         }
@@ -40,8 +39,8 @@ class WooCommerceProvider
         $this->orderService = $orderService;
         $this->wooCommerce = new Client(
             $wooCommerceConnectionConfig['url'],
-            $wooCommerceConnectionConfig['customer_key'],
-            $wooCommerceConnectionConfig['customer_secret'],
+            $wooCommerceConnectionConfig['api_key'],
+            $wooCommerceConnectionConfig['api_secret'],
             [
                 'version' => 'wc/v3',
             ]
