@@ -32,7 +32,8 @@ class WooCommerceProvider
     {
         $wooCommerceConnectionConfig = $params->get('woo_commerce');
 
-        if(is_array($wooCommerceConnectionConfig)) {
+
+        if(!is_array($wooCommerceConnectionConfig)) {
             throw new \InvalidArgumentException('Woo commerce configuration was not found.');
         }
 
