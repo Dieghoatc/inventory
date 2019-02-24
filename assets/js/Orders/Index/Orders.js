@@ -58,11 +58,13 @@ class Orders extends Component {
         { name: Translator.trans('order_statuses.5'), id: 5 },
         { name: Translator.trans('order_statuses.6'), id: 6 },
       ],
+      dropdownFilter: [],
     };
 
     this.detail = this.detail.bind(this);
     this.closeDetailModal = this.closeDetailModal.bind(this);
     this.syncExternalOrders = this.syncExternalOrders.bind(this);
+    this.onFilteredDropdownStatus = this.onFilteredDropdownStatus.bind(this);
   }
 
   componentDidMount() {
@@ -79,6 +81,31 @@ class Orders extends Component {
         this.loadOrders(warehouse.id);
       },
     );
+  }
+
+  onFilteredDropdownStatus(value, accessor) {
+    const { dropdownFilter } = this.state;
+    let insertNewFilter = 1;
+
+    if (dropdownFilter.length) {
+      dropdownFilter.forEach((filter, i) => {
+        console.log(filter, i, value)
+        if (filter.id === accessor) {
+          if (value === '' || !value.length) {
+            dropdownFilter.splice(i, 1);
+          } else {
+            filter.value = value[0];
+          }
+          insertNewFilter = 0;
+        }
+      });
+    }
+
+    if (insertNewFilter) {
+      dropdownFilter.push({ id: accessor, value });
+    }
+
+    this.setState({ dropdownFilter });
   }
 
   loadOrders(warehouse) {
@@ -125,9 +152,25 @@ class Orders extends Component {
     const columns = [{
       Header: Translator.trans('order.index.customer'),
       Cell: row => `${row.original.customer.firstName} ${row.original.customer.lastName} [${row.original.customer.email}]`,
+      filterMethod: (filter, row) => {
+        const rowData = row._original;
+        return (
+          String(rowData.customer.firstName.toLowerCase()).startsWith(filter.value.toLowerCase())
+          || String(rowData.customer.lastName.toLowerCase()).startsWith(filter.value.toLowerCase())
+          || String(rowData.customer.email.toLowerCase()).startsWith(filter.value.toLowerCase())
+        );
+      },
+
     }, {
       Header: Translator.trans('order.index.code'),
       accessor: 'code',
+      filterMethod: (filter, row) => {
+        const id = filter.pivotId || filter.id;
+        return (
+          row[id] !== undefined
+            ? String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase()) : true
+        );
+      },
     }, {
       Cell: (row) => {
         switch (row.original.source) {
@@ -140,6 +183,8 @@ class Orders extends Component {
         }
       },
       Header: Translator.trans('order.index.source'),
+      accessor: 'source',
+      filterable: false,
     }, {
       Cell: row => (
         <select
@@ -168,9 +213,16 @@ class Orders extends Component {
         </select>
       ),
       Header: Translator.trans('order.index.status'),
+      accessor: 'status',
+      filterMethod: (filter, row) => {
+        const rowData = row._original;
+        return Number(rowData.status) === Number(filter.value);
+      },
+      filterable: false,
     }, {
       Cell: row => (moment(row.original.createdAt.date).format('DD MMM YYYY')),
       Header: Translator.trans('order.index.date'),
+      filterable: false,
     }, {
       Cell: row => (
         <div>
@@ -196,6 +248,7 @@ class Orders extends Component {
         </div>
       ),
       Header: Translator.trans('order.index.options'),
+      filterable: false,
     }];
     const checkboxProps = {
       selectAll,
@@ -273,13 +326,6 @@ class Orders extends Component {
         <hr />
         <ReactTable
           data={orders}
-          defaultFilterMethod={(filter, row) => {
-            const id = filter.pivotId || filter.id;
-            return (
-              row[id] !== undefined
-                ? String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase()) : true
-            );
-          }}
           columns={columns}
           loading={loading}
           defaultPageSize={10}

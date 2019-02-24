@@ -6,7 +6,7 @@
 parameters:
     locale: 'en'
     test: 'en'
-    woocommerce:
+    woo_commerce:
       url: '%env(WOO_COMMERCE_URL)%'
       api_key: '%env(WOO_COMMERCE_API_KEY)%'
       api_secret: '%env(WOO_COMMERCE_API_SECRET)%'

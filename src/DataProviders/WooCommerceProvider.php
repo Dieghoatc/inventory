@@ -9,6 +9,7 @@ use App\Repository\OrderRepository;
 use App\Repository\WarehouseRepository;
 use App\Services\OrderService;
 use Automattic\WooCommerce\Client;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class WooCommerceProvider
 {
@@ -25,14 +26,21 @@ class WooCommerceProvider
     public function __construct(
         OrderService $orderService,
         WarehouseRepository $warehouseRepo,
-        OrderRepository $orderRepo
+        OrderRepository $orderRepo,
+        ParameterBagInterface $params
     )
     {
+        $wooCommerceConnectionConfig = $params->get('woo_commerce');
+
+        if(is_array($wooCommerceConnectionConfig)) {
+            throw new \InvalidArgumentException('Woo commerce configuration was not found.');
+        }
+
         $this->orderService = $orderService;
         $this->wooCommerce = new Client(
-            'http://www.klassicfab.com/',
-            'ck_7947cf0291280c8a0f53534e51f7e6d8b6f98689',
-            'cs_84b8a40f572a92ceb37398ea5559f26b1c3baf6d',
+            $wooCommerceConnectionConfig['url'],
+            $wooCommerceConnectionConfig['customer_key'],
+            $wooCommerceConnectionConfig['customer_secret'],
             [
                 'version' => 'wc/v3',
             ]
@@ -43,7 +51,7 @@ class WooCommerceProvider
 
     protected function getOrders(): array
     {
-        return $this->wooCommerce->get('orders');
+        return $this->wooCommerce->get('orders', ['status' => 'completed', 'per_page' => 20]);
     }
 
     protected function getCustomer(int $id): ?array

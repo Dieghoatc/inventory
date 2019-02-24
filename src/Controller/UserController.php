@@ -5,12 +5,15 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/user", name="user_")
@@ -36,17 +39,20 @@ class UserController extends AbstractController
      */
     public function new(
         Request $request,
-        UserManagerInterface $userManager
+        TranslatorInterface $translator,
+        UserPasswordEncoderInterface $passwordEncoder,
+        ObjectManager $manager
     ): Response {
-        $user = $userManager->createUser();
+        $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user->setPlainPassword($user->getPassword());
-            $userManager->updateUser($user);
+            $user->setPassword($passwordEncoder->encodePassword($user,$form->get('password')->getData()));
+            $manager->persist($user);
+            $manager->flush();
 
-            $this->addFlash('success', 'updated_successfully');
+            $this->addFlash('success', $translator->trans('user.messages.created_successfully'));
 
             return $this->redirectToRoute('user_index');
         }
@@ -61,17 +67,20 @@ class UserController extends AbstractController
      */
     public function edit(
         Request $request,
-        UserManagerInterface $userManager,
+        TranslatorInterface $translator,
+        UserPasswordEncoderInterface $passwordEncoder,
+        ObjectManager $manager,
         User $user
     ): Response {
-        $user = $userManager->findUserByUsername($user->getUsername());
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user->setPlainPassword($user->getPassword());
-            $userManager->updateUser($user);
-            $this->addFlash('success', 'updated_successfully');
+            $user->setPassword($passwordEncoder->encodePassword($user,$form->get('password')->getData()));
+            $manager->persist($user);
+            $manager->flush();
+
+            $this->addFlash('success', $translator->trans('user.messages.updated_successfully'));
 
             return $this->redirectToRoute('user_index');
         }
