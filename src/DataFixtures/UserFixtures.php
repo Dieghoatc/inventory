@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
             $user->setName($item['name']);
             $user->setEmail($item['email']);
             $user->setUsername($item['username']);
-            $user->setPlainPassword($item['password']);
+            $user->setPassword($item['password']);
             $user->setRoles($item['roles']);
             $user->setEnabled(1);
             $manager->persist($user);

@@ -1,6 +1,10 @@
 security:
   encoders:
-    FOS\UserBundle\Model\UserInterface: bcrypt
+    App\Entity\User: bcrypt
+
+  providers:
+      database_users:
+        entity: { class: App\Entity\User, property: username }
 
   role_hierarchy:
     ROLE_SUPER_ADMIN:
@@ -43,21 +47,27 @@ security:
       - ROLE_CAN_DELETE_WAREHOUSES
       - ROLE_USER
 
-  providers:
-    fos_userbundle:
-      id: fos_user.user_provider.username
-
   firewalls:
     main:
       pattern: ^/
       form_login:
-        provider: fos_userbundle
+        login_path: app_login
+        check_path: app_login
         csrf_token_generator: security.csrf.token_manager
-      logout:       true
+        default_target_path: product_product_index
+
+      logout:
+        path:   app_logout
+        target: app_login
       anonymous:    true
+      guard:
+          authenticators:
+              - App\Security\CustomAuthenticator
+      remember_me:
+        secret:   '%kernel.secret%'
+        lifetime: 604800 # 1 week in seconds
+        path:     /admin
 
   access_control:
-  - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-  - { path: ^/register, role: ROLE_ADMIN }
-  - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+  - { path: ^/admin/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
   - { path: ^/admin/, role: [ROLE_USER] }

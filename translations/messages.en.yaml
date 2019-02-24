@@ -184,6 +184,9 @@ warehouse:
   form:
     name: "Name"
 user:
+  messages:
+    updated_successfully: "The user was updated successfully."
+    created_successfully: "The user was created successfully."
   index:
     title: "View Users"
     name: "Name"
@@ -206,6 +209,7 @@ security:
     form:
       username: "Username"
       password: "Password"
+      log_in: "Log In"
 paytment_methods:
   1: "Credit Card"
   2: "Paypal"
@@ -216,6 +220,7 @@ order_statuses:
   4: 'Partial'
   5: 'Sent'
   6: 'Delivered'
+  all: 'All States'
 
 order_source:
   1: 'Web'

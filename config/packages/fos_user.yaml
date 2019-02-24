@@ -1,9 +1,0 @@
-fos_user:
-  db_driver: orm # other valid values are 'mongodb' and 'couchdb'
-  firewall_name: main
-  user_class: App\Entity\User
-  from_email:
-    address: no-reply@example.com
-    sender_name: Not Reply
-  service:
-    user_manager: fos_user.user_manager.default
