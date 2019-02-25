@@ -51,7 +51,7 @@ class WooCommerceProvider
 
     protected function getOrders(): array
     {
-        return $this->wooCommerce->get('orders', ['status' => 'completed', 'per_page' => 20]);
+        return $this->wooCommerce->get('orders', ['status' => 'processing', 'per_page' => 20]);
     }
 
     protected function getCustomer(int $id): ?array
