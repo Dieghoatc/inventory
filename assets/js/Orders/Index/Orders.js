@@ -127,15 +127,12 @@ class Orders extends Component {
       accessor: 'code',
       filterable: false,
       width: 65,
-      Cell: row => {
-        console.log(row)
-        return (
-          <button type="button" className="btn btn-sm btn-success">
-            {`${row.original.comments.length} `}
-            <i className="fas fa-comments" />
-          </button>
-        )
-      },
+      Cell: row => (
+        <button type="button" className="btn btn-sm btn-success">
+          {`${row.original.comments.length} `}
+          <i className="fas fa-comments" />
+        </button>
+      ),
     }, {
       Header: Translator.trans('order.index.customer'),
       Cell: row => `${row.original.customer.firstName} ${row.original.customer.lastName} [${row.original.customer.email}]`,
