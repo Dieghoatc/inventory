@@ -72,4 +72,43 @@ class OrderControllerTest extends UserWebTestCase
         $this->assertEquals(4, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
     }
 
+    public function testAddEditAndRemoveAnOrder(): void
+    {
+        $orderCode = 'CREATED_USING_A_CONTROLLER_01';
+        $this->logIn(['ROLE_UPDATE_ORDERS']);
+        $originalOrder = $this->createOrderStructure([
+            'code' => $orderCode,
+        ]);
+
+        $this->client->request('POST', '/admin/order/create', [], [], [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+        ], json_encode($originalOrder));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $lastOrder = $this->getLastAddedOrder();
+
+        $productD = $this->createProduct(null, 'ADD-NEW-EDIT-KF-D');
+        $originalOrder['products'][0]['quantity'] = 11;
+        unset($originalOrder['products'][2]);
+        $originalOrder['products'][] = [
+            'uuid' => $productD->getUuid(),
+            'quantity' => 40,
+        ];
+
+        $this->client->request('POST', '/admin/order/update/' . $lastOrder->getId(), [], [], [
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+        ], json_encode($originalOrder));
+
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/admin/order/detail/' . $lastOrder->getId());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        $detailOrder = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals(11, $detailOrder['products'][0]['quantity']);
+        $this->assertEquals(20, $detailOrder['products'][1]['quantity']);
+        $this->assertEquals(40, $detailOrder['products'][2]['quantity']);
+    }
+
 }

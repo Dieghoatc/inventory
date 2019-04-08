@@ -3,7 +3,7 @@
 namespace App\Tests\Unit\Utils;
 
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 

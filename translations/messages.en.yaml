@@ -65,6 +65,8 @@ product:
     price: "Price"
     detail: "Detail"
     no_available_product: "Product quantity is 0"
+  xls:
+    filename: "file-upload-template"
   update:
     bar-code:
       title: "Barcode Reader"
@@ -101,6 +103,7 @@ product:
       warehouse: "Warehouse"
 order:
   index:
+    comments: "This order has comments"
     sync_woocomerce_orders: "Sync Orders"
     title: "View Orders"
     code: "Order #"
@@ -114,6 +117,7 @@ order:
     city: "City"
     state: "State"
     country: "Country"
+    edit_order: "Edit this order"
     sources:
       web: 'Web'
       phone: 'Phone'
@@ -152,11 +156,13 @@ order:
     select_warehouse: "Select Warehouse"
     comment: "Comment"
     select_payment_methods: "Payments Methods"
-    select_status: "Select Order Status"
+    select_status: "Select Order Status (All)"
     select_source: "Select Order Source"
     search_customer: "Search Customer"
     quantity: "Quantity"
     consecutive: "Consecutive"
+  edit:
+    title: "Editing Order"
   pdf:
     order_number: "Order Number"
     email: "Email"
@@ -229,3 +235,6 @@ order_source:
 product_statuses:
   0: "Inactive"
   1: "Active"
+
+create: "Create"
+update: "Update"

@@ -11,11 +11,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class OrderListener
 {
-
     /** @var EntityManagerInterface */
-    protected $manager;
+    private $manager;
     /** @var OrderService */
-    protected $productService;
+    private $productService;
 
     public function __construct(
         EntityManagerInterface $manager,

@@ -16,6 +16,11 @@ use App\Services\LogService;
 use App\Services\OrderService;
 use Doctrine\Common\Persistence\ObjectManager;
 use Dompdf\Dompdf;
+use InvalidArgumentException;
+use function is_array;
+use LogicException;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTime;
+use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,7 +40,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 class OrderController extends AbstractController
 {
     /**
-     * @Route("/", name="index")
+     * @Route("/", name="index", options={"expose"=true})
      * @IsGranted("ROLE_UPDATE_ORDERS")
      */
     public function index(): Response
@@ -53,6 +58,7 @@ class OrderController extends AbstractController
         CustomerRepository $customerRepo
     ): Response {
         return $this->render('order/new.html.twig', [
+            'url' => $this->generateUrl('order_create'),
             'locations' => $countryRepo->findAllAsArray(),
             'warehouses' => $warehouseRepo->findAllAsArray(),
             'customers' => $customerRepo->findAllAsArray(),
@@ -60,7 +66,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/create", name="create", options={"expose"=true})
+     * @Route("/create", name="create", methods={"post"})
      * @IsGranted("ROLE_UPDATE_ORDERS")
      */
     public function create(
@@ -72,6 +78,49 @@ class OrderController extends AbstractController
         $order = $orderService->add($orderData, $this->getUser());
 
         $logService->add('Order','Order created', $order);
+
+        $response = new Response();
+        $response->setContent(json_encode(['status' => 'ok', 'route' => $this->generateUrl('order_index')]));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * @Route("/edit/{order}", name="edit", options={"expose"=true})
+     * @IsGranted("ROLE_UPDATE_ORDERS")
+     */
+    public function edit(
+        CountryRepository $countryRepo,
+        WarehouseRepository $warehouseRepo,
+        CustomerRepository $customerRepo,
+        OrderService $orderService,
+        Order $order
+    ): Response {
+        return $this->render('order/edit.html.twig', [
+            'url' => $this->generateUrl('order_update', [
+                'order' => $order->getId()
+            ]),
+            'order' => $orderService->getOrderAsArray($order),
+            'locations' => $countryRepo->findAllAsArray(),
+            'warehouses' => $warehouseRepo->findAllAsArray(),
+            'customers' => $customerRepo->findAllAsArray(),
+        ]);
+    }
+
+    /**
+     * @Route("/update/{order}", methods={"post"}, name="update")
+     * @IsGranted("ROLE_UPDATE_ORDERS")
+     */
+    public function update(
+        Request $request,
+        OrderService $orderService,
+        LogService $logService,
+        Order $order
+    ): Response {
+        $orderData = json_decode($request->getContent(), true);
+        $orderService->update($order, $orderData);
+
+        $logService->add('Order','Order updated', $orderData);
 
         $response = new Response();
         $response->setContent(json_encode(['status' => 'ok', 'route' => $this->generateUrl('order_index')]));
@@ -102,7 +151,7 @@ class OrderController extends AbstractController
         Order $order,
         OrderService $orderService
     ): Response {
-        $result = $orderService->getOrder($order);
+        $result = $orderService->getOrderAsArray($order);
         $response = new Response(json_encode($result));
         $response->headers->set('Content-Type', 'application/json');
 
@@ -120,8 +169,8 @@ class OrderController extends AbstractController
         $user = $this->getUser();
         $content = json_decode($request->getContent(), true);
 
-        if (!\is_array($content)) {
-            throw new \LogicException('Invalid content request format.');
+        if (!is_array($content)) {
+            throw new LogicException('Invalid content request format.');
         }
 
         $commentService->syncComments($content['comments'], $user, $order);
@@ -203,16 +252,16 @@ class OrderController extends AbstractController
         ]]);
 
         if ($validator->validate($data, $constraint)->count() > 0) {
-            throw new \LogicException('Malformed request.');
+            throw new LogicException('Malformed request.');
         }
 
         if (!$this->isCsrfTokenValid('delete-order', $data['token'])) {
-            throw new \LogicException('Token does not math with the expected one.');
+            throw new LogicException('Token does not math with the expected one.');
         }
 
         $order = $orderRepo->find($data['order']);
         if(!$order instanceof Order) {
-            throw new \InvalidArgumentException('Order was not found.');
+            throw new InvalidArgumentException('Order was not found.');
         }
 
         $logService->add('Order',"Order {$order->getCode()} was deleted");
@@ -223,6 +272,7 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/xls/{order}", name="xls", methods={"get"}, options={"expose"=true})
+     * @throws Exception
      */
     public function uploadProductsTemplate(
         Order $order,
@@ -237,8 +287,12 @@ class OrderController extends AbstractController
         $line = 2;
         foreach ($products as $product) {
             if(!$product->getProduct() instanceof Product) {
-                throw new \InvalidArgumentException('Product not found.');
+                throw new InvalidArgumentException('Product not found.');
             }
+            if(!$order->getCreatedAt() instanceof DateTime) {
+                throw new InvalidArgumentException('Datetime is missing.');
+            }
+
             /** @var $product OrderProduct */
             $template->getActiveSheet()->setCellValue("A{$line}", $order->getCreatedAt()->format('Y-m-d'));
             $template->getActiveSheet()->setCellValue("B{$line}", $product->getProduct()->getCode());
@@ -248,7 +302,7 @@ class OrderController extends AbstractController
 
         $writer = new Xls($template);
         $response = new StreamedResponse(
-            function () use ($writer) {
+            static function () use ($writer) {
                 $writer->save('php://output');
             }
         );

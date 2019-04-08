@@ -23,7 +23,7 @@ class OrderRepository extends ServiceEntityRepository
     public function findByWarehouse(Warehouse $warehouse): array
     {
         $products = $this->createQueryBuilder('o')
-            ->select('o,cu')
+            ->select('o,cu,co')
             ->innerJoin('o.customer', 'cu')
             ->leftJoin('o.comments', 'co')
             ->where('o.warehouse = :warehouse')

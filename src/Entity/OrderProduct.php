@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OrderProductRepository")
@@ -22,7 +23,7 @@ class OrderProduct
     private $quantity;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="orderProduct")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="orderProducts")
      */
     private $product;
 
@@ -70,5 +71,13 @@ class OrderProduct
         $this->order = $order;
 
         return $this;
+    }
+
+    public function getUuid(): string
+    {
+        if (!$this->product instanceof product) {
+            throw new InvalidParameterException('Product required is missing');
+        }
+        return $this->product->getUuid();
     }
 }

@@ -68,12 +68,11 @@ class OrderServiceTest extends WebTestCase
         $user = $this->getUserByEmail('sbarbosa115@gmail.com');
         $orderCreated = $orderService->add($orderItem, $user);
 
-        $this->assertArrayHasKey('order', $orderCreated);
-        $this->assertArrayHasKey('customer', $orderCreated['order']);
-        $this->assertArrayHasKey('comments', $orderCreated['order']);
-        $this->assertArrayHasKey('warehouse', $orderCreated['order']);
+        $this->assertArrayHasKey('customer', $orderCreated);
+        $this->assertArrayHasKey('comments', $orderCreated);
+        $this->assertArrayHasKey('warehouse', $orderCreated);
         $this->assertCount(2, $orderCreated['products']);
-        $this->assertCount(2, $orderCreated['order']['comments']);
+        $this->assertCount(2, $orderCreated['comments']);
     }
 
     public function testRemoveOrder(): void
@@ -145,5 +144,73 @@ class OrderServiceTest extends WebTestCase
 
         $this->assertEquals(75, $productAOnWarehouse->getQuantity());
         $this->assertEquals(25, $productBOnWarehouse->getQuantity());
+    }
+
+    public function testCreateOrderThenUpdateIt(): void
+    {
+        $caseOrderCode = 'UNIT-TEST-NEW-EDIT-CASE-CODE01';
+        /** @var $orderService OrderService */
+        $orderService = $this->client->getContainer()->get(OrderService::class);
+        // Customer taken from CustomerFixture
+        $customer = $this->getCustomerByEmail('jose.perez@example.com');
+        $warehouse = $this->getWarehouseByName('Usa');
+
+        $productA = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-A');
+        $productB = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-B');
+        $productC = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-C');
+
+        $orderData = [
+            'code' => $caseOrderCode,
+            'comment' => 'ORDER_COMMENT_WHEN_IT_WAS_CREATED',
+            'warehouse' => [
+                'id' => $warehouse->getId(),
+            ],
+            'customer' => [
+                'id' => $customer->getId(),
+            ],
+            'products' => [
+                [
+                    'uuid' => $productA->getUuid(),
+                    'quantity' => 10,
+                ],
+                [
+                    'uuid' => $productB->getUuid(),
+                    'quantity' => 20,
+                ],
+                [
+                    'uuid' => $productC->getUuid(),
+                    'quantity' => 30,
+                ],
+            ],
+            'comments' => [
+                [
+                    'content' => 'PHP Unit test comment A.',
+                ],
+                [
+                    'content' => 'PHP Unit test comment B.',
+                ],
+            ],
+        ];
+
+        $orderAsEntity = $this->createOrder($orderData);
+        $order = $orderService->getOrderAsArray($orderAsEntity);
+        $this->assertArrayHasKey('products', $order);
+        $productD = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-D');
+
+        $order['products'][0]['quantity'] = 11;
+        unset($order['products'][2]);
+        $order['products'][] = [
+            'uuid' => $productD->getUuid(),
+            'quantity' => 40,
+        ];
+
+        $orderService->update($orderAsEntity, $order);
+        $orderUpdate = $this->getOrderByCode($caseOrderCode);
+
+        $this->assertCount(3, $orderUpdate->getProducts());
+        $this->assertTrue($orderUpdate->isProductInOrder($productA));
+        $this->assertTrue($orderUpdate->isProductInOrder($productB));
+        $this->assertTrue($orderUpdate->isProductInOrder($productD));
+        $this->assertFalse($orderUpdate->isProductInOrder($productC));
     }
 }

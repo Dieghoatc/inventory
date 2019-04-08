@@ -13,6 +13,8 @@ const orderStructure = {
   code: '',
   status: '',
   comment: '',
+  paymentMethod: '',
+  source: '',
   customer: {
     firstName: '',
     lastName: '',
@@ -24,8 +26,7 @@ const orderStructure = {
         zipCode: '',
         city: {
           state: {
-            country: {
-            },
+            country: {},
           },
         },
       },
@@ -40,13 +41,16 @@ const orderStructure = {
   ],
 };
 
-class CreateOrder extends Component {
+const STATE_CREATING_ORDER = 'new';
+const STATE_EDITING_ORDER = 'edit';
+
+class ManageOrder extends Component {
   static isCurrentProductFilled(product) {
     return (product.quantity !== '' && product.uuid !== '');
   }
 
-  static isAnyCustomerSelected(customer) {
-    return (customer.id !== undefined && customer.id !== null);
+  static isSomeProductFilled(products) {
+    return products.some(productItem => (this.isCurrentProductFilled(productItem)));
   }
 
   constructor(props) {
@@ -64,6 +68,15 @@ class CreateOrder extends Component {
       country.label = country.name;
       return country;
     });
+
+    let mode = STATE_EDITING_ORDER;
+    let { order } = props;
+    if (Object.keys(order).length === 0) {
+      order = orderStructure;
+      mode = STATE_CREATING_ORDER;
+    }
+
+    const { actionUrl } = this.props;
 
     this.state = {
       sending: false,
@@ -89,8 +102,18 @@ class CreateOrder extends Component {
       productsByWarehouse: [],
       states: [],
       cities: [],
-      order: orderStructure,
+      order,
+      mode,
+      actionUrl,
     };
+  }
+
+  componentWillMount() {
+    const { mode, order } = this.state;
+    if (mode === STATE_EDITING_ORDER) {
+      this.getProductsByWarehouse(order.warehouse.id);
+      this.setWarehouse(order.warehouse.id);
+    }
   }
 
   setOrder(order) {
@@ -110,7 +133,7 @@ class CreateOrder extends Component {
     }
   }
 
-  setOrderState(el) {
+  setOrderStatus(el) {
     const stateId = el.target.value;
     if (stateId) {
       const { order } = this.state;
@@ -129,12 +152,16 @@ class CreateOrder extends Component {
     });
   }
 
-  setWarehouse(el) {
-    const orderId = el.target.value;
-    this.getProductsByWarehouse(el);
+  setWarehouseHandler(el) {
+    const warehouseId = el.target.value;
+    this.getProductsByWarehouse(warehouseId);
+    this.setWarehouse(warehouseId);
+  }
+
+  setWarehouse(warehouseId) {
     const { warehouses, order } = this.state;
     order.warehouse = warehouses.find(warehouseItem => (
-      Number(warehouseItem.id) === Number(orderId)
+      Number(warehouseItem.id) === Number(warehouseId)
     ));
     this.setState({ order });
   }
@@ -159,21 +186,18 @@ class CreateOrder extends Component {
     this.setOrder(order);
   }
 
-  getProductsByWarehouse(el) {
-    const warehouseId = el.target.value;
-    if (warehouseId) {
-      axios.get(Routing.generate('product_all', { warehouse: warehouseId }))
-        .then((response) => {
-          const productsByWarehouse = response.data.map((product) => {
-            product.value = product.uuid;
-            product.label = `${product.title} (${product.code})`;
-            return product;
-          });
-          this.setState({
-            productsByWarehouse,
-          });
+  getProductsByWarehouse(warehouseId) {
+    axios.get(Routing.generate('product_all', { warehouse: warehouseId }))
+      .then((response) => {
+        const productsByWarehouse = response.data.map((product) => {
+          product.value = product.uuid;
+          product.label = `${product.title} (${product.code})`;
+          return product;
         });
-    }
+        this.setState({
+          productsByWarehouse,
+        });
+      });
   }
 
   getCountry() {
@@ -211,6 +235,15 @@ class CreateOrder extends Component {
       && customer.addresses[0].city.name
     ) {
       return customer.addresses[0].city;
+    }
+    return '';
+  }
+
+  getDefaultWarehouseId() {
+    const { order } = this.state;
+    const { warehouse } = order;
+    if (Object.keys(warehouse).length > 0) {
+      return warehouse.id;
     }
     return '';
   }
@@ -278,11 +311,11 @@ class CreateOrder extends Component {
   }
 
   saveOrder() {
-    const { order } = this.state;
+    const { order, actionUrl } = this.state;
     this.setState({
       sending: true,
     });
-    axios.post(Routing.generate('order_create', null), order).then((response) => {
+    axios.post(actionUrl, order).then((response) => {
       window.location.href = response.data.route;
     });
   }
@@ -290,9 +323,12 @@ class CreateOrder extends Component {
   render() {
     const {
       countries, states, cities, order, warehouses, orderStates, orderSources, productsByWarehouse,
-      customers, sending, paymentMethods,
+      customers, sending, paymentMethods, mode,
     } = this.state;
-    const { products, customer, code } = order;
+    const {
+      products, customer, code, paymentMethod, source, status,
+    } = order;
+
     return (
       <div className="row">
         <div className="col-sm-6">
@@ -498,7 +534,12 @@ class CreateOrder extends Component {
           <div className="form-group">
             <div className="form-row">
               <div className="col-6">
-                <select className="form-control" onChange={e => (this.setWarehouse(e))}>
+                <select
+                  className="form-control"
+                  onChange={e => (this.setWarehouseHandler(e))}
+                  value={this.getDefaultWarehouseId()}
+                  disabled={ManageOrder.isSomeProductFilled(products)}
+                >
                   <option>{Translator.trans('order.new.select_warehouse')}</option>
                   { warehouses.map(warehouse => (
                     <option value={warehouse.id} key={warehouse.id}>{warehouse.name}</option>
@@ -506,11 +547,11 @@ class CreateOrder extends Component {
                 </select>
               </div>
               <div className="col-6">
-                <select className="form-control" onChange={e => (this.setPaymentMethod(e))}>
+                <select className="form-control" onChange={e => (this.setPaymentMethod(e))} value={paymentMethod}>
                   <option>{Translator.trans('order.new.select_payment_methods')}</option>
-                  {paymentMethods.map(paymentMethod => (
-                    <option value={paymentMethod.id} key={paymentMethod.id}>
-                      {paymentMethod.name}
+                  {paymentMethods.map(paymentMethodItem => (
+                    <option value={paymentMethodItem.id} key={paymentMethodItem.id}>
+                      {paymentMethodItem.name}
                     </option>
                   ))}
                 </select>
@@ -533,18 +574,22 @@ class CreateOrder extends Component {
                 />
               </div>
               <div className="col-4">
-                <select className="form-control" onChange={e => this.setOrderSource(e)}>
+                <select className="form-control" onChange={e => this.setOrderSource(e)} value={source}>
                   <option>{Translator.trans('order.new.select_source')}</option>
-                  { orderSources.map(source => (
-                    <option value={source.id} key={source.id}>{source.name}</option>
+                  { orderSources.map(orderSourceItem => (
+                    <option value={orderSourceItem.id} key={orderSourceItem.id}>
+                      {orderSourceItem.name}
+                    </option>
                   ))}
                 </select>
               </div>
               <div className="col-4">
-                <select className="form-control" onChange={e => this.setOrderState(e)}>
+                <select className="form-control" onChange={e => this.setOrderStatus(e)} value={status}>
                   <option>{Translator.trans('order.new.select_status')}</option>
-                  { orderStates.map(status => (
-                    <option value={status.id} key={status.id}>{status.name}</option>
+                  { orderStates.map(orderStatusItem => (
+                    <option value={orderStatusItem.id} key={orderStatusItem.id}>
+                      {orderStatusItem.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -581,7 +626,7 @@ class CreateOrder extends Component {
                   </div>
                   <div className="col-2">
                     {((index + 1) === products.length
-                      && CreateOrder.isCurrentProductFilled(product)) && (
+                      && ManageOrder.isCurrentProductFilled(product)) && (
                       <button type="button" className="btn btn-success" onClick={() => this.addEmptyProduct()}>
                         <i className="fas fa-plus-circle" />
                       </button>
@@ -597,30 +642,36 @@ class CreateOrder extends Component {
               </div>
             ))}
           </div>
-          {
-            this.orderValidation()
-            && (
-              <div className="col-sm-12">
+          <div className="col-sm-12">
+            {
+              this.orderValidation()
+              && (
                 <button type="button" className="btn btn-success" onClick={() => this.saveOrder()} disabled={sending}>
                   <i className="fas fa-save" />
-                  { ' ' }
-                  {Translator.trans('submit')}
-                  { ' ' }
+                  { mode === STATE_CREATING_ORDER && ` ${Translator.trans('create')} ` }
+                  { mode === STATE_EDITING_ORDER && ` ${Translator.trans('update')} ` }
                   { sending && <i className="fas fa-spinner fa-pulse" /> }
                 </button>
-              </div>
-            )
-          }
+              )
+            }
+            { ' ' }
+            <a href={Routing.generate('order_index', null)} className="btn btn-danger" title={Translator.trans('cancel')}>
+              <i className="fas fa-times-circle" />
+              {` ${Translator.trans('cancel')} `}
+            </a>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-export default CreateOrder;
+export default ManageOrder;
 
-CreateOrder.propTypes = {
+ManageOrder.propTypes = {
   locations: PropTypes.instanceOf(Array).isRequired,
   warehouses: PropTypes.instanceOf(Array).isRequired,
   customers: PropTypes.instanceOf(Array).isRequired,
+  order: PropTypes.shape({}).isRequired,
+  actionUrl: PropTypes.string.isRequired,
 };

@@ -29,7 +29,7 @@ class Comment
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Order", inversedBy="comment")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Order", inversedBy="comments")
      */
     private $order;
 

@@ -12,6 +12,7 @@ use App\Entity\Warehouse;
 use App\Services\CustomerService;
 use App\Services\OrderService;
 use App\Services\ProductService;
+use Doctrine\Common\Collections\Collection;
 
 class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
@@ -71,7 +72,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
     public function getOrderByCode(string $code): ?Order
     {
         return $this->client->getContainer()->get('doctrine')
-            ->getRepository(Order::class)->find($code);
+            ->getRepository(Order::class)->findOneBy(['code' => $code]);
     }
 
     public function getProductWarehouse(Product $product, Warehouse $warehouse): ?ProductWarehouse
@@ -117,13 +118,15 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             ->getRepository(User::class)->findOneBy(['email' => $email]);
     }
 
-    public function createOrder(array $data): Order
-    {
+    public function createOrderStructure(
+        array $orderData = []
+    ): array {
         $warehouse = $this->getWarehouseByName('Colombia');
         $customer = $this->createCustomer();
         $productA = $this->createProduct($warehouse, 'TEST-CREATE-PRODUCT-A');
         $productB = $this->createProduct($warehouse, 'TEST-CREATE-PRODUCT-B');
-        $orderData = [
+
+        $defaultOrderData = [
             'code' => 'UNIT-TEST-CODE01',
             'comment' => 'EMPTY TEST ORDER COMMENT',
             'paymentMethod' => Order::PAYMENT_CREDIT_CARD,
@@ -155,11 +158,37 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             ],
         ];
 
-        $mergedOrderData = array_replace($orderData, $data);
+        return array_replace($defaultOrderData, $orderData);
+    }
+
+    public function createOrder(array $orderData): Order
+    {
         /** @var $orderService OrderService */
         $orderService = $this->client->getContainer()->get(OrderService::class);
         $user = $this->getUserByEmail('sbarbosa115@gmail.com');
+        $mergedOrderData = $this->createOrderStructure($orderData);
         $orderCreated = $orderService->add($mergedOrderData, $user);
-        return $this->getOrderById($orderCreated['order']['id']);
+        return $this->getOrderById($orderCreated['id']);
+    }
+
+    public function createOrderAndGetItAsArray(array $orderData = []): array
+    {
+        $orderService = $this->client->getContainer()->get(OrderService::class);
+        $user = $this->getUserByEmail('sbarbosa115@gmail.com');
+        $mergedOrderData = $this->createOrderStructure($orderData);
+        return $orderService->add($mergedOrderData, $user);
+    }
+
+    public function getAllOrders(): array
+    {
+        return $this->client->getContainer()->get('doctrine')
+            ->getRepository(Order::class)->findAll();
+    }
+
+    public function getLastAddedOrder(): Order
+    {
+        $orders = $this->getAllOrders();
+        /** @var $lastOrder Order */
+        return $orders[count($orders) - 1];
     }
 }
