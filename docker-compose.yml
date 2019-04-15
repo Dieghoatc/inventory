@@ -1,22 +1,19 @@
 version: '3'
 services:
   web:
-    tty: true
     build: .
     volumes:
       - .:/var/www/html:delegated
     environment:
-      - DEBUG=true
+      - VIRTUAL_HOST=inventory.local
+      - VIRTUAL_PORT=80
+      - HTTPS_METHOD=noredirect
     command: >
       sh -c '
-        /etc/init.d/nginx start
-        /etc/init.d/php7.2-fpm start
-        rm -rf var/cache/dev var/sessions/dev var/logs/dev
-        rm -rf var/cache/prod var/sessions/prod var/logs/prod
+        /etc/init.d/nginx start && /etc/init.d/php7.2-fpm start
         composer install
         sleep 5
-        chmod 777 -R var/cache var/sessions var/logs var/data
-        mkdir -p web/uploads
+        composer deploy-application
         php bin/console --no-interaction doctrine:migrations:migrate
         php bin/console doctrine:schema:update --force
         bin/console fos:js-routing:dump --format=json --target=public/js/fos_js_routes.json
@@ -24,8 +21,7 @@ services:
         chmod 777 -R var/data/inventory.sqlite
         supervisord
       '
-    ports:
-      - 80:80
+    container_name: inventory_web
   db:
     image: mysql:5.7
     volumes:
@@ -40,3 +36,9 @@ services:
     - web
     ports:
       - 3306:3306
+    container_name: inventory_db
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
