@@ -32,7 +32,7 @@ class Products extends Component {
   }
 
   componentDidMount() {
-    axios.get(Routing.generate('warehouse_all')).then(res => res.data).then(
+    axios.get(Routing.generate('warehouse_all', null)).then(res => res.data).then(
       (result) => {
         if (result.length <= 0) {
           throw new Error('The number of warehouses is 0, please add another Warehouse');
@@ -97,7 +97,7 @@ class Products extends Component {
 
   downloadExcel() {
     const { selection } = this.state;
-    axios.get(Routing.generate('product_template'), {
+    axios.get(Routing.generate('product_template', null), {
       params: {
         data: selection,
       },
@@ -223,7 +223,7 @@ class Products extends Component {
               <i className="fas fa-archive">&nbsp;</i>
               {Translator.trans('product.index.update_inventory_excel')}
             </button>
-            <a href={Routing.generate('product_new')} className="btn btn-sm btn-success m-1">
+            <a href={Routing.generate('product_new', null)} className="btn btn-sm btn-success m-1">
               {Translator.trans('product.index.create_product')}
             </a>
           </div>

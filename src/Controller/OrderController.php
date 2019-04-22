@@ -218,7 +218,7 @@ class OrderController extends AbstractController
         $manager->flush();
 
         $logService->add('Order',"Order {$order->getCode()} status was changed.");
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
 
@@ -231,7 +231,7 @@ class OrderController extends AbstractController
     ): Response {
         $woocommerceProvider->syncOrders($this->getUser());
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
     /**
@@ -267,7 +267,7 @@ class OrderController extends AbstractController
         $logService->add('Order',"Order {$order->getCode()} was deleted");
         $orderService->deleteOrder($order);
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
     /**

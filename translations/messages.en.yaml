@@ -6,6 +6,7 @@ move: "Move"
 moving: "Moving"
 close: "Close"
 cancel: "Cancel"
+save: "Save"
 options: "Options"
 upload: "Upload"
 load: "Load"
@@ -227,6 +228,28 @@ order_statuses:
   5: 'Sent'
   6: 'Delivered'
   all: 'All States'
+
+customer:
+  index:
+    title: 'Customers'
+    email: 'Email'
+    phone: 'Phone'
+    name: 'Name'
+    address: 'Address'
+    edit_this: 'Edit this customer'
+    options: 'Options'
+  edit:
+    title: 'Edit customer'
+    name: 'Name'
+    last_name: 'Last Name'
+    email: 'Email'
+    phone: 'Phone'
+    address: 'Address'
+    zip_code: 'Zip Code'
+    state: 'State'
+    city: 'City'
+    country: 'Country'
+
 
 order_source:
   1: 'Web'

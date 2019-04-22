@@ -144,7 +144,6 @@ class View extends Component {
     });
   }
 
-
   addProductFocus(input) {
     input.focus();
   }

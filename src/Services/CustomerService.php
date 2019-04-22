@@ -13,6 +13,11 @@ use App\Repository\CustomerAddressRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\StateRepository;
 use Doctrine\Common\Persistence\ObjectManager;
+use InvalidArgumentException;
+use LogicException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class CustomerService
 {
@@ -49,7 +54,7 @@ class CustomerService
         if (array_key_exists('id', $customerData)) {
             $customer = $this->customerRepo->find($customerData['id']);
             if (!$customer instanceof Customer) {
-                throw new \LogicException('Customer not found');
+                throw new LogicException('Customer not found');
             }
         } else {
             $customer = new Customer();
@@ -69,7 +74,7 @@ class CustomerService
     public function findOrCreateCity(array $cityData): City
     {
         if (!array_key_exists('id', $cityData) && !array_key_exists('name', $cityData)) {
-            throw new \InvalidArgumentException('Missing city ID?');
+            throw new InvalidArgumentException('Missing city ID?');
         }
 
         $city = $this->cityRepo->findOneByIdOrName(
@@ -92,7 +97,7 @@ class CustomerService
     public function findOrCreateState(array $stateData): State
     {
         if (!array_key_exists('id', $stateData) && !array_key_exists('name', $stateData) ) {
-            throw new \InvalidArgumentException('Missing state ID?');
+            throw new InvalidArgumentException('Missing state ID?');
         }
 
         $state = $this->stateRepo->findOneByIdOrName(
@@ -117,7 +122,7 @@ class CustomerService
     public function findOrCreateCountry(array $countryData): Country
     {
         if (!array_key_exists('id', $countryData) && !array_key_exists('name', $countryData)) {
-            throw new \InvalidArgumentException('Missing country ID?');
+            throw new InvalidArgumentException('Missing country ID?');
         }
 
         $country = $this->countryRepo->findOneByIdOrName(
@@ -147,7 +152,7 @@ class CustomerService
             $city = $this->findOrCreateCity($addressData['city']);
 
             if (!$city instanceof City) {
-                throw new \LogicException('This city was not found.');
+                throw new LogicException('This city was not found.');
             }
 
             $customerAddress->setAddress($addressData['address']);
@@ -160,10 +165,61 @@ class CustomerService
             $this->objectManager->persist($customer);
 
             if (!$customer instanceof Customer) {
-                throw new \LogicException('Customer not found');
+                throw new LogicException('Customer not found');
             }
         }
         $this->objectManager->flush();
+    }
+
+    public function getCustomerArrayTemplate(): array
+    {
+        return [
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'phone',
+            'addresses' => [
+                'zipCode', 'address', 'city' => [
+                    'id', 'name', 'state' => [
+                        'id', 'name', 'code', 'country' => [
+                            'id', 'name'
+                        ]
+                    ]
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @return Customer[]
+     */
+    public function getCustomers(): array
+    {
+        return $this->customerRepo->findAll();
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    private function serializeCustomer(Customer $customer = null, array $customers = null): array
+    {
+        $entityOrCollection = $customer;
+        if ($customers !== null) {
+            $entityOrCollection = $customers;
+        }
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        return $serializer->normalize($entityOrCollection, 'array', ['attributes' => $this->getCustomerArrayTemplate()]);
+    }
+
+    public function getCustomersAsArray(): array
+    {
+        return $this->serializeCustomer(null, $this->getCustomers());
+    }
+
+    public function getCustomerAsArray(Customer $customer): array
+    {
+        return $this->serializeCustomer($customer);
     }
 
 }

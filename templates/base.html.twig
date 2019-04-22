@@ -80,6 +80,15 @@
                             </a>
                         </li>
                     {% endif %}
+
+                    {% if is_granted('ROLE_UPDATE_ORDERS') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('customer_index') }}">
+                                <i class="fas fa-fw fa-user-alt"></i>
+                                <span>{{ 'customer.index.title'|trans }}</span>
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
 
                 <div id="content-wrapper">
