@@ -56,19 +56,42 @@ class CustomerService
             if (!$customer instanceof Customer) {
                 throw new LogicException('Customer not found');
             }
+            $customer = $this->update($customerData, $customer);
         } else {
-            $customer = new Customer();
-            $customer->setEmail($customerData['email']);
-            $customer->setFirstName($customerData['firstName']);
-            $customer->setLastName($customerData['lastName']);
-            $customer->setPhone($customerData['phone']);
-            $this->attachAddresses($customer, $customerData['addresses']);
-
-            $this->objectManager->persist($customer);
-            $this->objectManager->flush();
+            $customer = $this->add($customerData);
         }
 
         return $customer;
+    }
+
+    public function add(
+        array $customerData
+    ): Customer {
+        $customer = new Customer();
+        $this->setCustomerData($customerData, $customer);
+        return $customer;
+    }
+
+    public function update(
+        array $customerData,
+        Customer $customer
+    ): Customer {
+        $this->setCustomerData($customerData, $customer);
+        return $customer;
+    }
+
+    public function setCustomerData(
+        array $customerData,
+        Customer $customer
+    ): void {
+        $customer->setEmail($customerData['email']);
+        $customer->setFirstName($customerData['firstName']);
+        $customer->setLastName($customerData['lastName']);
+        $customer->setPhone($customerData['phone']);
+        $this->attachAddresses($customer, $customerData['addresses']);
+
+        $this->objectManager->persist($customer);
+        $this->objectManager->flush();
     }
 
     public function findOrCreateCity(array $cityData): City
@@ -143,14 +166,13 @@ class CustomerService
     public function attachAddresses(Customer $customer, array $addresses): void
     {
         foreach ($addresses as $addressData) {
+            $customerAddress = new CustomerAddress();
+
             if (array_key_exists('id', $addressData)) {
                 $customerAddress = $this->customerAddressRepo->find($addressData['id']);
-            } else {
-                $customerAddress = new CustomerAddress();
             }
 
             $city = $this->findOrCreateCity($addressData['city']);
-
             if (!$city instanceof City) {
                 throw new LogicException('This city was not found.');
             }
@@ -168,6 +190,7 @@ class CustomerService
                 throw new LogicException('Customer not found');
             }
         }
+
         $this->objectManager->flush();
     }
 
@@ -180,7 +203,7 @@ class CustomerService
             'email',
             'phone',
             'addresses' => [
-                'zipCode', 'address', 'city' => [
+                'id', 'zipCode', 'address', 'city' => [
                     'id', 'name', 'state' => [
                         'id', 'name', 'code', 'country' => [
                             'id', 'name'
@@ -220,6 +243,17 @@ class CustomerService
     public function getCustomerAsArray(Customer $customer): array
     {
         return $this->serializeCustomer($customer);
+    }
+
+    public function getCustomerById(int $customerId): Customer
+    {
+        $customer = $this->customerRepo->find($customerId);
+
+        if(!$customer instanceof Customer) {
+            throw new InvalidArgumentException('Invalid exception');
+        }
+
+        return $customer;
     }
 
 }

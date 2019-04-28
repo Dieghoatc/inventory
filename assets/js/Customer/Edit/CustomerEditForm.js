@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/lib/Creatable';
 import LocationManager from '../../Services/LocationManager';
+import axios from 'axios';
 
 const isValidNewOption = (inputValue, selectValue, selectOptions) => (
   !(inputValue.trim().length === 0 || selectOptions.find(option => option.name === inputValue))
@@ -16,19 +17,63 @@ class CustomerEditForm extends Component {
     this.LocationManager = new LocationManager(locations);
     this.state = {
       customer,
+      loading: false,
     };
+
+    this.addNewAddressHandler = this.addNewAddressHandler.bind(this);
+    this.submitFormHandler = this.submitFormHandler.bind(this);
+  }
+
+  addNewAddressHandler() {
+    const { customer } = this.state;
+    customer.addresses.push(
+      LocationManager.createEmptyAddress(),
+    );
+
+    this.setState({ customer });
+  }
+
+  removeAddressHandler(addressKeyToRemove) {
+    const { customer } = this.state;
+    const addressesFiltered = customer.addresses
+      .filter((address, addressKey) => (addressKey !== addressKeyToRemove));
+
+    customer.addresses = addressesFiltered;
+    this.setState({ customer });
+  }
+
+  toggleLoading() {
+    const { loading } = this.state;
+    this.setState({ loading: !loading });
+  }
+
+  submitFormHandler() {
+    const { customer } = this.state;
+    this.toggleLoading();
+    axios.post(Routing.generate('customer_update', { customer: customer.id }), customer).then(() => {
+      window.location.href = Routing.generate('customer_index', null);
+    });
   }
 
   render() {
-    const { customer } = this.state;
+    const { customer, loading } = this.state;
     const addresses = customer.addresses.map((address, addressKey) => (
-      <div key={`customer-${address.id}`}>
+      <div key={`addresses-${addressKey}`}>
         <hr />
         <div className="form-row">
           <div className="col-md-1 text-center">
-            <a className="btn btn-success" href="#" role="button">
+            <button type="button" className="btn btn-success" onClick={this.addNewAddressHandler}>
               <i className="fas fa-plus" />
-            </a>
+            </button>
+            {' '}
+            {
+              addressKey !== 0
+              && (
+                <button type="button" className="btn btn-danger" onClick={() => (this.removeAddressHandler(addressKey))}>
+                  <i className="fas fa-minus-circle" />
+                </button>
+              )
+            }
           </div>
           <div className="form-group col-md-5">
             <label htmlFor="name" className="required">
@@ -70,7 +115,6 @@ class CustomerEditForm extends Component {
               {Translator.trans('customer.edit.country')}
             </label>
             <CreatableSelect
-              isClearable
               isValidNewOption={isValidNewOption}
               getOptionLabel={option => option.name}
               getOptionValue={option => option.id}
@@ -79,12 +123,22 @@ class CustomerEditForm extends Component {
                 id: null,
                 name: optionLabel,
               })}
-              value={this.LocationManager.getCountryById(address.city.state.country.id)}
+              defaultValue={this.LocationManager.getCountryById(
+                address.city.state.country.id,
+                address.city.state.country.name,
+              )}
+              value={this.LocationManager.getCountryById(
+                address.city.state.country.id,
+                address.city.state.country.name,
+              )}
               options={this.LocationManager.getCountries()}
               onChange={(e) => {
                 const city = {};
                 city.state = {};
-                city.state.country = this.LocationManager.getCountryById(e.id);
+                city.state.country = {};
+                if (e) {
+                  city.state.country = this.LocationManager.getCountryById(e.id, e.name);
+                }
                 customer.addresses[addressKey].city = city;
                 this.setState({ customer });
               }}
@@ -95,7 +149,6 @@ class CustomerEditForm extends Component {
               {Translator.trans('customer.edit.state')}
             </label>
             <CreatableSelect
-              isClearable
               isValidNewOption={isValidNewOption}
               getOptionLabel={option => option.name}
               getOptionValue={option => option.id}
@@ -104,12 +157,23 @@ class CustomerEditForm extends Component {
                 id: null,
                 name: optionLabel,
               })}
-              value={this.LocationManager.getStateById(address.city.state.id)}
+              defaultValue={this.LocationManager.getStateById(
+                address.city.state.id,
+                address.city.state.name,
+              )}
+              value={this.LocationManager.getStateById(
+                address.city.state.id,
+                address.city.state.name,
+              )}
               options={this.LocationManager.getStatesByCountryId(address.city.state.country.id)}
               onChange={(e) => {
                 const city = {};
-                city.state = this.LocationManager.getStateById(e.id);
-                city.state.country = this.LocationManager.getCountryByStateId(e.id);
+                if (e) {
+                  city.state = this.LocationManager.getStateById(e.id, e.name);
+                } else {
+                  city.state = {};
+                }
+                city.state.country = address.city.state.country;
                 customer.addresses[addressKey].city = city;
                 this.setState({ customer });
               }}
@@ -124,7 +188,6 @@ class CustomerEditForm extends Component {
             </label>
 
             <CreatableSelect
-              isClearable
               isValidNewOption={isValidNewOption}
               getOptionLabel={option => option.name}
               getOptionValue={option => option.id}
@@ -133,13 +196,22 @@ class CustomerEditForm extends Component {
                 id: null,
                 name: optionLabel,
               })}
-              value={this.LocationManager.getCityById(address.city.id)}
+              value={this.LocationManager.getCityById(
+                address.city.id,
+                address.city.name,
+              )}
               options={this.LocationManager.getCitiesByState(address.city.state.id)}
               onChange={(e) => {
-                const city = this.LocationManager.getCityById(e.id);
-                city.state = this.LocationManager.getStateByCityId(e.id);
-                city.state.country = this.LocationManager.getCountryByCityId(e.id);
-                customer.addresses[addressKey].city = city;
+                if (e) {
+                  const city = this.LocationManager.getCityById(e.id, e.name);
+                  city.state = address.city.state;
+                  city.state.country = address.city.state.country;
+                  customer.addresses[addressKey].city = city;
+                } else {
+                  customer.addresses[addressKey].city = {
+                    state: { country: { } },
+                  };
+                }
                 this.setState({ customer });
               }}
             />
@@ -233,7 +305,13 @@ class CustomerEditForm extends Component {
             </a>
           </div>
           <div className="form-group col-md-6">
-            <a className="btn btn-success btn-block" href="#" role="button">{Translator.trans('save')}</a>
+            <button
+              className={loading ? 'btn btn-success btn-block disabled' : 'btn btn-success btn-block'}
+              type="button"
+              onClick={this.submitFormHandler}
+            >
+              {Translator.trans('save')}
+            </button>
           </div>
         </div>
       </div>

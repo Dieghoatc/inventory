@@ -3,6 +3,30 @@ export default class LocationManager {
     this.locations = locations;
   }
 
+  static createEmptyAddress() {
+    return {
+      city: {
+        state: {
+          country: {},
+        },
+      },
+    };
+  }
+
+  static createEmptySelectObject(data) {
+    return Object.assign({
+      id: null,
+      name: 'Empty Country',
+    }, data);
+  }
+
+  static isDefined(variableToCheck) {
+    if (variableToCheck === undefined || variableToCheck === null) {
+      return false;
+    }
+    return true;
+  }
+
   getCountries() {
     return this.locations.map(country => country);
   }
@@ -31,33 +55,24 @@ export default class LocationManager {
       .flatMap(state => state.cities);
   }
 
-  getCountryByCityId(cityId) {
-    return this.locations.find(country => (country.states.find(
-      state => (state.cities.find(city => (Number(city.id) === Number(cityId)))),
-    )));
-  }
-
-  getCountryByStateId(stateId) {
-    return this.locations.find(country => (country.states.find(
-      state => (state.id === Number(stateId)),
-    )));
-  }
-
-  getStateByCityId(cityId) {
-    return this.getStates().find(state => (state.cities.some(
-      city => (city.id === Number(cityId)),
-    )));
-  }
-
-  getCountryById(countryId) {
+  getCountryById(countryId, newCountryName) {
+    if (!LocationManager.isDefined(countryId)) {
+      return LocationManager.createEmptySelectObject({ name: newCountryName });
+    }
     return this.locations.find(country => country.id === Number(countryId));
   }
 
-  getStateById(stateId) {
+  getStateById(stateId, newStateName) {
+    if (!LocationManager.isDefined(stateId)) {
+      return LocationManager.createEmptySelectObject({ name: newStateName });
+    }
     return this.getStates().find(state => (state.id === Number(stateId)));
   }
 
-  getCityById(cityId) {
+  getCityById(cityId, newCityName) {
+    if (!LocationManager.isDefined(cityId)) {
+      return LocationManager.createEmptySelectObject({ name: newCityName });
+    }
     return this.getCities().find(city => (city.id === Number(cityId)));
   }
 }

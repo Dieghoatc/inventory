@@ -4,6 +4,7 @@ services:
     build: .
     volumes:
       - .:/var/www/html:delegated
+      - ./Docker/php/xdebug.ini:/etc/php/7.2/cli/conf.d/20-xdebug.ini:delegated
     environment:
       - VIRTUAL_HOST=inventory.local
       - VIRTUAL_PORT=80

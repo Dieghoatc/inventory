@@ -39,7 +39,7 @@ class OrderService
         $this->productService = $productService;
     }
 
-    private function setCommonOrderFields(Order $order, array $orderData): void
+    private function setCustomerData(Order $order, array $orderData): void
     {
         $customer = $this->customerService->addOrUpdate($orderData['customer']);
 
@@ -146,7 +146,7 @@ class OrderService
     public function add(array $orderData, User $user): array
     {
         $order = new Order();
-        $this->setCommonOrderFields($order, $orderData);
+        $this->setCustomerData($order, $orderData);
 
         if (!array_key_exists('products', $orderData)) {
             throw new LogicException('The order must have products.');
@@ -167,7 +167,7 @@ class OrderService
      */
     public function update(Order $order, array $newOrderData): array
     {
-        $this->setCommonOrderFields($order, $newOrderData);
+        $this->setCustomerData($order, $newOrderData);
         $this->syncProducts($order, $newOrderData['products']);
 
         $this->objectManager->persist($order);

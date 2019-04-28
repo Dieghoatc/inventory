@@ -69,7 +69,7 @@ class OrderControllerTest extends UserWebTestCase
         $this->assertEquals('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-sync'));
         $this->assertEquals('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-add'));
 
-        $this->assertEquals(4, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
+        $this->assertEquals(5, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
     }
 
     public function testAddEditAndRemoveAnOrder(): void

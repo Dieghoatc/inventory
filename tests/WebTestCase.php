@@ -137,6 +137,11 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             ],
             'customer' => [
                 'id' => $customer->getId(),
+                'email' => 'jose.perez@example.com',
+                'firstName' => 'Jose',
+                'lastName' => 'Perez',
+                'phone' => '+57 3002825566',
+                'addresses' => []
             ],
             'products' => [
                 [
@@ -158,7 +163,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             ],
         ];
 
-        return array_replace($defaultOrderData, $orderData);
+        return array_replace_recursive($defaultOrderData, $orderData);
     }
 
     public function createOrder(array $orderData): Order

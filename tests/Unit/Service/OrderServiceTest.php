@@ -66,7 +66,7 @@ class OrderServiceTest extends WebTestCase
         ];
 
         $user = $this->getUserByEmail('sbarbosa115@gmail.com');
-        $orderCreated = $orderService->add($orderItem, $user);
+        $orderCreated = $orderService->add($this->createOrderStructure($orderItem), $user);
 
         $this->assertArrayHasKey('customer', $orderCreated);
         $this->assertArrayHasKey('comments', $orderCreated);
@@ -158,6 +158,7 @@ class OrderServiceTest extends WebTestCase
         $productA = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-A');
         $productB = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-B');
         $productC = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-C');
+
 
         $orderData = [
             'code' => $caseOrderCode,
