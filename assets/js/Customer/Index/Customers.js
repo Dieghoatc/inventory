@@ -1,56 +1,124 @@
 import 'react-table/react-table.css';
-import React from 'react';
+import React, { Component } from 'react';
 import ReactTable from 'react-table';
+import axios from 'axios';
 import PropTypes from 'prop-types';
+import ConfirmModal from '../../Widgets/ConfirmModal';
 
-const Customers = (props) => {
-  const { customers } = props;
-  const columns = [
-    {
-      Header: Translator.trans('customer.index.name'),
-      Cell: row => `${row.original.firstName} ${row.original.lastName}`,
-      filterMethod: (filter, row) => {
-        const rowData = row._original;
-        return (
-          String(rowData.firstName.toLowerCase()).startsWith(filter.value.toLowerCase())
+const deleteCustomerHandler = (customer, token, callback) => {
+  axios.delete(Routing.generate('customer_delete', null), { data: { customer: customer.id, token } })
+    .then(() => {
+      if (typeof callback === 'function') {
+        callback();
+      }
+    });
+}
+
+class Customers extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      toggleOpenModalConfirmDeleteCustomer: false,
+    };
+
+    this.toggleModalConfirmDeleteCustomer = this.toggleModalConfirmDeleteCustomer.bind(this);
+  }
+
+  toggleModalConfirmDeleteCustomer() {
+    const { toggleOpenModalConfirmDeleteCustomer } = this.state;
+    this.setState({
+      toggleOpenModalConfirmDeleteCustomer: !toggleOpenModalConfirmDeleteCustomer,
+    });
+  }
+
+  render() {
+    const { customers, token } = this.props;
+    const { toggleOpenModalConfirmDeleteCustomer } = this.state;
+    const columns = [
+      {
+        Header: Translator.trans('customer.index.name'),
+        Cell: row => `${row.original.firstName} ${row.original.lastName}`,
+        filterMethod: (filter, row) => {
+          const rowData = row._original;
+          return (
+            String(rowData.firstName.toLowerCase()).startsWith(filter.value.toLowerCase())
             || String(rowData.lastName.toLowerCase()).startsWith(filter.value.toLowerCase())
-        );
+          );
+        },
       },
-    },
-    {
-      Header: Translator.trans('customer.index.email'),
-      accessor: 'email',
-    },
-    {
-      Header: Translator.trans('customer.index.phone'),
-      accessor: 'phone',
-    },
-    {
-      Cell: row => (
-        <div>
-          <a href={Routing.generate('customer_edit', { customer: row.original.id })} className="btn btn-sm btn-success" title={Translator.trans('customer.index.edit_this')}>
-            <i className="fas fa-pencil-alt" />
-          </a>
+      {
+        Header: Translator.trans('customer.index.email'),
+        accessor: 'email',
+      },
+      {
+        Header: Translator.trans('customer.index.phone'),
+        accessor: 'phone',
+      },
+      {
+        Cell: row => (
+          <div>
+            <a
+              href={Routing.generate('customer_edit', { customer: row.original.id })}
+              className="btn btn-sm btn-success"
+              title={Translator.trans('customer.index.edit_this')}
+            >
+              <i className="fas fa-pencil-alt" />
+            </a>
+            {' '}
+            <button
+              className="btn btn-sm btn-danger"
+              title={Translator.trans('customer.index.delete')}
+              type="button"
+              onClick={() => this.toggleModalConfirmDeleteCustomer()}
+            >
+              <i className="fas fa-times-circle" />
+            </button>
+          </div>
+        ),
+        Header: Translator.trans('customer.index.options'),
+        filterable: false,
+      },
+    ];
+    return (
+      <div>
+        <div className="row">
+          <div className="col-md-6">
+            <a className="btn btn-success" href={Routing.generate('customer_new', null)}>
+              {Translator.trans('customer.index.create_customer')}
+            </a>
+          </div>
         </div>
-      ),
-      Header: Translator.trans('customer.index.options'),
-      filterable: false,
-    },
-  ];
-  return (
-    <div>
-      <ReactTable
-        filterable
-        data={customers}
-        columns={columns}
-        className="-striped -highlight"
-      />
-    </div>
-  );
-};
+        <hr />
+        <ReactTable
+          filterable
+          data={customers}
+          columns={columns}
+          className="-striped -highlight"
+        />
+
+        {toggleOpenModalConfirmDeleteCustomer
+        && (
+        <ConfirmModal
+          visible
+          onOk={() => this.toggleModalConfirmDeleteCustomer()}
+          onCancel={() => deleteCustomerHandler(
+            customers,
+            token,
+            this.toggleModalConfirmDeleteCustomer(),
+          )}
+        >
+          <h4>{Translator.trans('customer.index.confirm_delete_customer')}</h4>
+        </ConfirmModal>
+        )}
+      </div>
+    );
+  }
+}
 
 export default Customers;
 
 Customers.propTypes = {
   customers: PropTypes.instanceOf(Array).isRequired,
+  token: PropTypes.string.isRequired,
 };

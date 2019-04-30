@@ -76,8 +76,25 @@ class OrderControllerTest extends UserWebTestCase
     {
         $orderCode = 'CREATED_USING_A_CONTROLLER_01';
         $this->logIn(['ROLE_UPDATE_ORDERS']);
+        $productA = $this->createProduct(null, 'ADD-NEW-EDIT-KF-A');
+        $productB = $this->createProduct(null, 'ADD-NEW-EDIT-KF-B');
+        $productC = $this->createProduct(null, 'ADD-NEW-EDIT-KF-C');
         $originalOrder = $this->createOrderStructure([
             'code' => $orderCode,
+            'products' => [
+                [
+                    'uuid' => $productA->getUuid(),
+                    'quantity' => 10,
+                ],
+                [
+                    'uuid' => $productB->getUuid(),
+                    'quantity' => 20,
+                ],
+                [
+                    'uuid' => $productC->getUuid(),
+                    'quantity' => 30,
+                ],
+            ],
         ]);
 
         $this->client->request('POST', '/admin/order/create', [], [], [
@@ -90,7 +107,7 @@ class OrderControllerTest extends UserWebTestCase
 
         $productD = $this->createProduct(null, 'ADD-NEW-EDIT-KF-D');
         $originalOrder['products'][0]['quantity'] = 11;
-        unset($originalOrder['products'][2]);
+        unset($originalOrder['products'][1]);
         $originalOrder['products'][] = [
             'uuid' => $productD->getUuid(),
             'quantity' => 40,
@@ -107,8 +124,7 @@ class OrderControllerTest extends UserWebTestCase
 
         $detailOrder = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(11, $detailOrder['products'][0]['quantity']);
-        $this->assertEquals(20, $detailOrder['products'][1]['quantity']);
-        $this->assertEquals(40, $detailOrder['products'][2]['quantity']);
+        $this->assertEquals(40, $detailOrder['products'][1]['quantity']);
     }
 
 }

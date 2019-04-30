@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -68,6 +69,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/create", name="create", methods={"post"})
      * @IsGranted("ROLE_UPDATE_ORDERS")
+     * @throws ExceptionInterface
      */
     public function create(
         Request $request,
@@ -88,6 +90,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/edit/{order}", name="edit", options={"expose"=true})
      * @IsGranted("ROLE_UPDATE_ORDERS")
+     * @throws ExceptionInterface
      */
     public function edit(
         CountryRepository $countryRepo,
@@ -110,6 +113,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/update/{order}", methods={"post"}, name="update")
      * @IsGranted("ROLE_UPDATE_ORDERS")
+     * @throws ExceptionInterface
      */
     public function update(
         Request $request,
@@ -146,6 +150,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/detail/{order}", name="detail", options={"expose"=true}, methods={"get"})
      * @IsGranted("ROLE_CAN_READ_ORDERS")
+     * @throws ExceptionInterface
      */
     public function detail(
         Order $order,

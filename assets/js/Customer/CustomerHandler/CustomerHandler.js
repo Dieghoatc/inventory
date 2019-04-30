@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import CreatableSelect from 'react-select/lib/Creatable';
 import LocationManager from '../../Services/LocationManager';
-import axios from 'axios';
 
 const isValidNewOption = (inputValue, selectValue, selectOptions) => (
   !(inputValue.trim().length === 0 || selectOptions.find(option => option.name === inputValue))
 );
 
-
-class CustomerEditForm extends Component {
+class CustomerHandler extends Component {
   constructor(props) {
     super(props);
 
@@ -35,10 +34,9 @@ class CustomerEditForm extends Component {
 
   removeAddressHandler(addressKeyToRemove) {
     const { customer } = this.state;
-    const addressesFiltered = customer.addresses
+    customer.addresses = customer.addresses
       .filter((address, addressKey) => (addressKey !== addressKeyToRemove));
 
-    customer.addresses = addressesFiltered;
     this.setState({ customer });
   }
 
@@ -50,7 +48,7 @@ class CustomerEditForm extends Component {
   submitFormHandler() {
     const { customer } = this.state;
     this.toggleLoading();
-    axios.post(Routing.generate('customer_update', { customer: customer.id }), customer).then(() => {
+    axios.post(Routing.generate('customer_update', null), customer).then(() => {
       window.location.href = Routing.generate('customer_index', null);
     });
   }
@@ -58,6 +56,7 @@ class CustomerEditForm extends Component {
   render() {
     const { customer, loading } = this.state;
     const addresses = customer.addresses.map((address, addressKey) => (
+      // eslint-disable-next-line react/no-array-index-key
       <div key={`addresses-${addressKey}`}>
         <hr />
         <div className="form-row">
@@ -319,9 +318,9 @@ class CustomerEditForm extends Component {
   }
 }
 
-export default CustomerEditForm;
+export default CustomerHandler;
 
-CustomerEditForm.propTypes = {
+CustomerHandler.propTypes = {
   customer: PropTypes.shape({}).isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
 };

@@ -11,6 +11,7 @@
             <div
                 id="index-customer"
                 data-customers="{{ customers|json_encode }}"
+                data-token="{{ csrf_token('delete-customer') }}"
             ></div>
         </div>
     </div>

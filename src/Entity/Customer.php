@@ -49,7 +49,7 @@ class Customer
     private $request;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CustomerAddress", mappedBy="customer")
+     * @ORM\OneToMany(targetEntity="App\Entity\CustomerAddress", mappedBy="customer",  cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $addresses;
 

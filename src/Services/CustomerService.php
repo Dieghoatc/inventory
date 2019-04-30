@@ -88,9 +88,15 @@ class CustomerService
         $customer->setFirstName($customerData['firstName']);
         $customer->setLastName($customerData['lastName']);
         $customer->setPhone($customerData['phone']);
-        $this->attachAddresses($customer, $customerData['addresses']);
+        $this->syncAddresses($customer, $customerData['addresses']);
 
         $this->objectManager->persist($customer);
+        $this->objectManager->flush();
+    }
+
+    public function delete(Customer $customer): void
+    {
+        $this->objectManager->remove($customer);
         $this->objectManager->flush();
     }
 
@@ -163,8 +169,20 @@ class CustomerService
         return $country;
     }
 
-    public function attachAddresses(Customer $customer, array $addresses): void
+    public function syncAddresses(Customer $customer, array $addresses): void
     {
+        foreach ($customer->getAddresses() as $address) {
+            $someFound = array_filter($addresses, static function($addressItem) use ($address) {
+                return array_key_exists('id', $addressItem) && (int) $addressItem['id'] === $address->getId();
+            });
+
+            if (count($someFound) === 0) {
+                $customer->removeAddress($address);
+            }
+        }
+
+        $this->objectManager->persist($customer);
+
         foreach ($addresses as $addressData) {
             $customerAddress = new CustomerAddress();
 

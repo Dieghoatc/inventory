@@ -1,4 +1,4 @@
-confirm: "Confirm"
+confirm: "Confirm Action"
 welcome: "Welcome"
 submit: "Submit"
 edit: "Edit"
@@ -238,6 +238,9 @@ customer:
     address: 'Address'
     edit_this: 'Edit this customer'
     options: 'Options'
+    create_customer: 'Create Customer'
+    delete: 'Delete Customer'
+    confirm_delete_customer: 'Are you sure to delete this Customer?'
   edit:
     title: 'Edit customer'
     name: 'Name'

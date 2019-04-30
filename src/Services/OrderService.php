@@ -70,11 +70,16 @@ class OrderService
             });
 
             if (count($someFound) === 0) {
-               $order->removeOrderProduct($orderProduct);
+                $order->removeOrderProduct($orderProduct);
             }
         }
 
+        $uniqueProductsUuid = [];
         foreach ($orderProductsData as $productData) {
+            if (in_array($productData['uuid'], $uniqueProductsUuid, true)) {
+                continue;
+            }
+
             $product = $this->productService->add($productData);
 
             if(!$product instanceof Product) {
@@ -91,8 +96,10 @@ class OrderService
                 $orderProduct->setQuantity($productData['quantity']);
             }
             $this->objectManager->persist($orderProduct);
+            $uniqueProductsUuid[] = $productData['uuid'];
         }
 
+        $this->objectManager->persist($order);
         $this->objectManager->flush();
     }
 
@@ -125,11 +132,11 @@ class OrderService
             'comment',
             'warehouse' => ['id', 'name'],
             'customer' => ['email', 'firstName', 'lastName', 'phone', 'addresses' => [
-                'address', 'zipCode', 'city' => [
-                    'name',
-                    'state' => [
-                        'name',
-                        'country' => ['name'],
+                'id', 'address', 'zipCode', 'city' => [
+                    'id','name', 'state' => [
+                        'id', 'name', 'country' => [
+                            'id', 'name'
+                        ],
                     ],
                 ],
             ]],

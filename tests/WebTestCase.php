@@ -86,30 +86,33 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             );
     }
 
-    public function createCustomer(array $data = []): Customer
+    public function createCustomerStructure(array $customerData = []): array
     {
         $city = $this->getCityByName('West Palm Beach');
-        $customerData = [
-          'firstName' => 'TEST FIRST NAME',
-          'lastName' => 'TEST LAST NAME',
-          'phone' => '99999999',
-          'email' => 'test@example.com',
-          'addresses' => [
-              [
-                  'city' => [
-                      'name' => $city->getName(),
-                      'id' => $city->getId()
-                  ],
-                  'address' => 'TEST ADDRESS',
-                  'zipCode' => '99999',
-              ]
-          ]
-        ];
 
-        $mergedCustomerData = array_replace($customerData, $data);
+        return array_replace_recursive([
+            'firstName' => 'TEST FIRST NAME',
+            'lastName' => 'TEST LAST NAME',
+            'phone' => '99999999',
+            'email' => 'test@example.com',
+            'addresses' => [
+                [
+                    'city' => [
+                        'name' => $city->getName(),
+                        'id' => $city->getId()
+                    ],
+                    'address' => 'TEST ADDRESS',
+                    'zipCode' => '99999',
+                ]
+            ]
+        ], $customerData);
+    }
+
+    public function createCustomer(array $customerData = []): Customer
+    {
         /** @var $customerService CustomerService */
         $customerService = $this->client->getContainer()->get(CustomerService::class);
-        return $customerService->addOrUpdate($mergedCustomerData);
+        return $customerService->addOrUpdate($this->createCustomerStructure($customerData));
     }
 
     public function getUserByEmail(string $email): User
@@ -195,5 +198,11 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $orders = $this->getAllOrders();
         /** @var $lastOrder Order */
         return $orders[count($orders) - 1];
+    }
+
+    public function getCustomerById(int $customerId): Customer
+    {
+        return $this->client->getContainer()->get('doctrine')
+            ->getRepository(Customer::class)->find($customerId);
     }
 }

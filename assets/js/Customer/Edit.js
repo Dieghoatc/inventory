@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import CustomerEditForm from './Edit/CustomerEditForm';
+import Edit from './Edit/Edit';
 
 const container = document.getElementById('edit-customer');
-ReactDOM.render(<CustomerEditForm
+ReactDOM.render(<Edit
   customer={JSON.parse(container.dataset.customer)}
   locations={JSON.parse(container.dataset.locations)}
 />, container);

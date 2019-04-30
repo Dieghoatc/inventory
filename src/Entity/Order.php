@@ -89,7 +89,7 @@ class Order
     private $modifiedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderProduct", mappedBy="order")
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderProduct", mappedBy="order", cascade={"persist", "remove"})
      */
     private $orderProduct;
 
