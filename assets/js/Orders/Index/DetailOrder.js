@@ -23,15 +23,21 @@ class DetailOrder extends Component {
       .then((response) => {
         this.setState({
           products: response.data.products,
-          order: response.data.order,
-          comments: response.data.order.comments,
+          order: response.data,
+          comments: response.data.comments,
         });
       });
   }
 
+  getDefaultAddress() {
+    const { order } = this.state;
+    const { customer } = order;
+    const { addresses } = customer;
+    return addresses[0];
+  }
+
   deleteComment(id) {
     const { comments } = this.state;
-    console.log(comments.filter(comment => (comment.id !== id)));
     this.syncComments(
       comments.filter(comment => (comment.id !== id)),
     );
@@ -167,7 +173,7 @@ class DetailOrder extends Component {
                   { ':' }
                   <strong>
                     { ' ' }
-                    { moment(order.customer.createdAtAsIso8601).format('MMMM D, YYYY') }
+                    { moment(order.createdAtAsString, ['YYYY-MM-DD HH:mm:ss']).format('MMMM D, YYYY') }
                   </strong>
                 </span>
               </div>
@@ -177,7 +183,7 @@ class DetailOrder extends Component {
                   { ':' }
                   <strong>
                     { ' ' }
-                    { order.customer.defaultAddress.address }
+                    { this.getDefaultAddress().address }
                   </strong>
                 </span>
                 { ' ' }
@@ -186,7 +192,7 @@ class DetailOrder extends Component {
                   { ':' }
                   <strong>
                     { ' ' }
-                    { order.customer.defaultAddress.zipCode }
+                    { this.getDefaultAddress().zipCode }
                   </strong>
                 </span>
               </div>
@@ -196,7 +202,7 @@ class DetailOrder extends Component {
                   { ':' }
                   <strong>
                     { ' ' }
-                    { order.customer.defaultAddress.city.name }
+                    { this.getDefaultAddress().city.name }
                   </strong>
                 </span>
                 { ' ' }
@@ -205,7 +211,7 @@ class DetailOrder extends Component {
                   { ':' }
                   <strong>
                     { ' ' }
-                    { order.customer.defaultAddress.city.state.name }
+                    { this.getDefaultAddress().city.state.name }
                   </strong>
                 </span>
                 { ' ' }
@@ -214,7 +220,7 @@ class DetailOrder extends Component {
                   { ':' }
                   <strong>
                     { ' ' }
-                    { order.customer.defaultAddress.city.state.country.name }
+                    { this.getDefaultAddress().city.state.country.name }
                   </strong>
                 </span>
               </div>

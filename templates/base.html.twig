@@ -2,7 +2,7 @@
 <html lang="{{ app.request.locale|split('_')[0] }}">
     <head>
         <meta charset="UTF-8">
-        <title>Invetory 1.0 | {% block title %}{% endblock %}</title>
+        <title>Inventory 1.0 | {% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         {% block stylesheets %}{% endblock %}
@@ -77,6 +77,15 @@
                             <a class="nav-link" href="{{ path('order_index') }}">
                                 <i class="fas fa-fw fa-paperclip"></i>
                                 <span>{{ 'order.index.title'|trans }}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_MANAGE_CUSTOMERS') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('customer_index') }}">
+                                <i class="fas fa-fw fa-user-alt"></i>
+                                <span>{{ 'customer.index.title'|trans }}</span>
                             </a>
                         </li>
                     {% endif %}

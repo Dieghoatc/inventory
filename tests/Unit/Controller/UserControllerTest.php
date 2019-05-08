@@ -39,6 +39,6 @@ class UserControllerTest extends UserWebTestCase
 
         $crawler = $this->client->request('GET', '/admin/user/');
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(4, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
+        $this->assertEquals(5, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
     }
 }

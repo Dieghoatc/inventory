@@ -58,13 +58,11 @@ class Orders extends Component {
         { name: Translator.trans('order_statuses.5'), id: 5 },
         { name: Translator.trans('order_statuses.6'), id: 6 },
       ],
-      dropdownFilter: [],
     };
 
     this.detail = this.detail.bind(this);
     this.closeDetailModal = this.closeDetailModal.bind(this);
     this.syncExternalOrders = this.syncExternalOrders.bind(this);
-    this.onFilteredDropdownStatus = this.onFilteredDropdownStatus.bind(this);
   }
 
   componentDidMount() {
@@ -81,31 +79,6 @@ class Orders extends Component {
         this.loadOrders(warehouse.id);
       },
     );
-  }
-
-  onFilteredDropdownStatus(value, accessor) {
-    const { dropdownFilter } = this.state;
-    let insertNewFilter = 1;
-
-    if (dropdownFilter.length) {
-      dropdownFilter.forEach((filter, i) => {
-        console.log(filter, i, value)
-        if (filter.id === accessor) {
-          if (value === '' || !value.length) {
-            dropdownFilter.splice(i, 1);
-          } else {
-            filter.value = value[0];
-          }
-          insertNewFilter = 0;
-        }
-      });
-    }
-
-    if (insertNewFilter) {
-      dropdownFilter.push({ id: accessor, value });
-    }
-
-    this.setState({ dropdownFilter });
   }
 
   loadOrders(warehouse) {
@@ -150,6 +123,17 @@ class Orders extends Component {
     const { token } = this.props;
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
+      Header: '',
+      accessor: 'code',
+      filterable: false,
+      width: 65,
+      Cell: row => (
+        <button type="button" className="btn btn-sm btn-success">
+          {`${row.original.comments.length} `}
+          <i className="fas fa-comments" />
+        </button>
+      ),
+    }, {
       Header: Translator.trans('order.index.customer'),
       Cell: row => `${row.original.customer.firstName} ${row.original.customer.lastName} [${row.original.customer.email}]`,
       filterMethod: (filter, row) => {
@@ -160,7 +144,6 @@ class Orders extends Component {
           || String(rowData.customer.email.toLowerCase()).startsWith(filter.value.toLowerCase())
         );
       },
-
     }, {
       Header: Translator.trans('order.index.code'),
       accessor: 'code',
@@ -188,7 +171,7 @@ class Orders extends Component {
     }, {
       Cell: row => (
         <select
-          className="form-control input-xs"
+          className="form-control form-control-sm"
           onChange={(e) => {
             const status = e.target.value;
             const order = e.target.attributes.getNamedItem('data-order-id').value;
@@ -204,7 +187,7 @@ class Orders extends Component {
               changeOrderState(order, status, closeConfirmSentModal);
             }
           }}
-          defaultValue={row.original.status}
+          value={row.original.status}
           data-order-id={row.original.id}
         >
           { orderStates.map(status => (
@@ -214,11 +197,27 @@ class Orders extends Component {
       ),
       Header: Translator.trans('order.index.status'),
       accessor: 'status',
+      id: 'status',
       filterMethod: (filter, row) => {
-        const rowData = row._original;
-        return Number(rowData.status) === Number(filter.value);
+        if (filter.value === '') {
+          return true;
+        }
+        return Number(row[filter.id]) === Number(filter.value);
       },
-      filterable: false,
+      Filter: ({ filter, onChange }) => (
+        <select
+          onChange={event => onChange(event.target.value)}
+          className="form-control input-xs"
+          value={filter ? filter.value : ''}
+        >
+          <option value="">{Translator.trans('order.new.select_status')}</option>
+          {orderStates.map(orderStatusItem => (
+            <option value={orderStatusItem.id} key={orderStatusItem.id}>
+              {orderStatusItem.name}
+            </option>
+          ))}
+        </select>
+      ),
     }, {
       Cell: row => (moment(row.original.createdAt.date).format('DD MMM YYYY')),
       Header: Translator.trans('order.index.date'),
@@ -229,6 +228,10 @@ class Orders extends Component {
           <button type="button" className="btn btn-sm btn-success" onClick={() => this.detail(row.original.id)}>
             {Translator.trans('order.index.detail')}
           </button>
+          { ' ' }
+          <a href={Routing.generate('order_edit', { order: row.original.id })} className="btn btn-sm btn-success" rel="noopener noreferrer" title={Translator.trans('order.index.edit_order')}>
+            <i className="fas fa-pencil-alt" />
+          </a>
           { ' ' }
           <a href={Routing.generate('order_pdf', { order: row.original.id })} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
             <i className="fas fa-file-pdf" />

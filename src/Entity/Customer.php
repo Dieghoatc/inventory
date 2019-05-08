@@ -7,10 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @UniqueEntity("email")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=true)
  */
 class Customer
 {
@@ -49,9 +51,14 @@ class Customer
     private $request;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CustomerAddress", mappedBy="customer")
+     * @ORM\OneToMany(targetEntity="App\Entity\CustomerAddress", mappedBy="customer",  cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $addresses;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     public function __construct()
     {
@@ -146,6 +153,16 @@ class Customer
     public function getFullName(): string
     {
         return "{$this->firstName } {$this->lastName }";
+    }
+
+    /**
+     * Returns deletedAt.
+     *
+     * @return \DateTime
+     */
+    public function getDeletedAt(): ?\DateTime
+    {
+        return $this->deletedAt;
     }
 
     /**

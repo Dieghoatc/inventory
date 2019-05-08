@@ -218,10 +218,6 @@ class Product
     {
         if ($this->orderProducts->contains($orderProduct)) {
             $this->orderProducts->removeElement($orderProduct);
-            // set the owning side to null (unless already changed)
-            if ($orderProduct->getProduct() === $this) {
-                $orderProduct->setProduct(null);
-            }
         }
 
         return $this;

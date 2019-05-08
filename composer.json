@@ -81,6 +81,15 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "deploy-application": [
+          "php bin/console cache:clear",
+          "yarn"
+        ],
+        "deploy-application-prod": [
+          "php bin/console cache:clear",
+          "yarn",
+          "yarn run production"
         ]
     },
     "conflict": {

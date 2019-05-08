@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
+use InvalidArgumentException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OrderRepository")
@@ -55,7 +59,7 @@ class Order
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Warehouse", inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)comments
+     * @ORM\JoinColumn(nullable=false)
      */
     private $warehouse;
 
@@ -85,7 +89,7 @@ class Order
     private $modifiedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderProduct", mappedBy="order")
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderProduct", mappedBy="order", cascade={"persist", "remove"})
      */
     private $orderProduct;
 
@@ -100,17 +104,17 @@ class Order
     private $paymentMethod;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\OrderStatus", mappedBy="order")
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderStatus", mappedBy="order", cascade={"persist"})
      */
     private $orderStatuses;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {
         if (null === $this->getCreatedAt()) {
-            $this->setCreatedAt(new \DateTime());
+            $this->setCreatedAt(new DateTime());
         }
         $this->comments = new ArrayCollection();
         $this->orderProduct = new ArrayCollection();
@@ -218,36 +222,36 @@ class Order
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeInterface
+    public function getDeletedAt(): ?DateTimeInterface
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    public function setDeletedAt(?DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getModifiedAt(): ?\DateTimeInterface
+    public function getModifiedAt(): ?DateTimeInterface
     {
         return $this->modifiedAt;
     }
 
-    public function setModifiedAt(?\DateTimeInterface $modifiedAt): self
+    public function setModifiedAt(?DateTimeInterface $modifiedAt): self
     {
         $this->modifiedAt = $modifiedAt;
 
@@ -260,15 +264,15 @@ class Order
      */
     public function updateModifiedDatetime(): void
     {
-        $this->setModifiedAt(new \DateTime());
+        $this->setModifiedAt(new DateTime());
     }
 
-    public function getCreatedAtAsIso8601(): string
+    public function getCreatedAtAsString(): string
     {
-        if ($this->getCreatedAt() instanceof \DateTime) {
-            return $this->getCreatedAt()->format('c');
+        if (!$this->getCreatedAt() instanceof DateTime) {
+            throw new InvalidArgumentException('Datetime on order is mandatory.');
         }
-        return '';
+        return $this->getCreatedAt()->format('Y-m-d H:i:s');
     }
 
     public function getComment(): ?string
@@ -335,5 +339,31 @@ class Order
         }
 
         return $this;
+    }
+
+    public function getProducts(): Collection
+    {
+        return $this->orderProduct;
+    }
+
+    public function removeOrderProduct(OrderProduct $orderProduct): self
+    {
+        if ($this->orderProduct->contains($orderProduct)) {
+            $orderProduct->getProduct()->removeOrderProduct($orderProduct);
+            $this->orderProduct->removeElement($orderProduct);
+        }
+
+        return $this;
+    }
+
+    public function isProductInOrder(Product $product): bool
+    {
+        /** @var $productInOrder OrderProduct */
+        foreach ($this->orderProduct as $productInOrder) {
+            if($product->getUuid() === $productInOrder->getUuid()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

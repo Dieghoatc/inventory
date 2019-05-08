@@ -8,10 +8,11 @@ use App\Entity\OrderProduct;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Entity\Warehouse;
-use App\Repository\OrderProductRepository;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use InvalidArgumentException;
+use LogicException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -19,8 +20,6 @@ class OrderService
 {
     /** @var ObjectManager */
     private $objectManager;
-    /** @var OrderProductRepository */
-    private $orderProductRepo;
     /** @var WarehouseRepository */
     private $warehouseRepo;
     /** @var CustomerService */
@@ -30,26 +29,23 @@ class OrderService
 
     public function __construct(
         ObjectManager $objectManager,
-        OrderProductRepository $orderProductRepo,
         WarehouseRepository $warehouseRepo,
         CustomerService $customerService,
         ProductService $productService
     ) {
         $this->objectManager = $objectManager;
-        $this->orderProductRepo = $orderProductRepo;
         $this->warehouseRepo = $warehouseRepo;
         $this->customerService = $customerService;
         $this->productService = $productService;
     }
 
-    public function add(array $orderData, User $user): array
+    private function setCustomerData(Order $order, array $orderData): void
     {
-        $order = new Order();
         $customer = $this->customerService->addOrUpdate($orderData['customer']);
 
         $warehouse = $this->warehouseRepo->find($orderData['warehouse']['id']);
         if (!$warehouse instanceof Warehouse) {
-            throw new \LogicException('Warehouse not found');
+            throw new LogicException('Warehouse not found');
         }
 
         $order->setCustomer($customer);
@@ -60,40 +56,54 @@ class OrderService
         $order->setComment($orderData['comment']);
         $order->setPaymentMethod($orderData['paymentMethod']);
         $this->objectManager->persist($order);
-
-        if (!array_key_exists('products', $orderData)) {
-            throw new \LogicException('The order must have products.');
-        }
-
-        $this->attachProducts($order, $orderData['products']);
-
-        if (array_key_exists('comments', $orderData)) {
-            $this->attachComments($order, $user, $orderData['comments']);
-        }
-
-        $this->objectManager->flush();
-        return $this->getOrder($order);
     }
 
-    public function attachProducts(Order $order, array $products): void
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function syncProducts(Order $order, array $orderProductsData): void
     {
-        foreach ($products as $productItem) {
+        /** @var $orderProduct OrderProduct */
+        foreach ($order->getProducts() as $orderProduct) {
+            $someFound = array_filter($orderProductsData, static function($productData) use ($orderProduct) {
+                return $productData['uuid'] === $orderProduct->getUuid();
+            });
 
-            $product = $this->productService->add($productItem);
-            if (!$product instanceof Product) {
-                throw new \LogicException('The product does not exits');
+            if (count($someFound) === 0) {
+                $order->removeOrderProduct($orderProduct);
+            }
+        }
+
+        $uniqueProductsUuid = [];
+        foreach ($orderProductsData as $productData) {
+            if (in_array($productData['uuid'], $uniqueProductsUuid, true)) {
+                continue;
             }
 
-            $orderProduct = new OrderProduct();
-            $orderProduct->setOrder($order);
-            $orderProduct->setProduct($product);
-            $orderProduct->setQuantity($productItem['quantity']);
-            $order->addOrderProduct($orderProduct);
+            $product = $this->productService->add($productData);
+
+            if(!$product instanceof Product) {
+                throw new InvalidArgumentException('This product does not exist.');
+            }
+
+            if (!$order->isProductInOrder($product)) {
+                $orderProduct = new OrderProduct();
+                $orderProduct->setOrder($order);
+                $orderProduct->setProduct($product);
+                $orderProduct->setQuantity($productData['quantity']);
+                $order->addOrderProduct($orderProduct);
+            } else {
+                $orderProduct->setQuantity($productData['quantity']);
+            }
             $this->objectManager->persist($orderProduct);
+            $uniqueProductsUuid[] = $productData['uuid'];
         }
+
+        $this->objectManager->persist($order);
+        $this->objectManager->flush();
     }
 
-    public function attachComments(Order $order, User $user, array $comments): void
+    private function attachComments(Order $order, User $user, array $comments): void
     {
         foreach ($comments as $commentItem) {
             $comment = new Comment();
@@ -106,42 +116,70 @@ class OrderService
         }
     }
 
-    public function getOrder(Order $order): array
+    /**
+     * @throws ExceptionInterface
+     */
+    public function getOrderAsArray(Order $order): array
     {
-        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-        $data = $serializer->normalize($order, 'json', ['attributes' => [
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        return $serializer->normalize($order, 'array', ['attributes' => [
             'id',
             'code',
-            'createdAtAsIso8601',
             'status',
             'source',
+            'createdAtAsString',
             'paymentMethod',
             'comment',
-            'warehouse' => [
-                'id',
-                'name',
-            ],
-            'customer' => ['email', 'firstName', 'lastName', 'defaultAddress' => [
-                'address', 'zipCode', 'city' => [
-                    'name',
-                    'state' => [
-                        'name',
-                        'country' => [
-                            'name',
+            'warehouse' => ['id', 'name'],
+            'customer' => ['email', 'firstName', 'lastName', 'phone', 'addresses' => [
+                'id', 'address', 'zipCode', 'city' => [
+                    'id','name', 'state' => [
+                        'id', 'name', 'country' => [
+                            'id', 'name'
                         ],
                     ],
                 ],
             ]],
-            'comments' => [
-                'id',
-                'content',
-            ],
+            'comments' => ['id', 'content'],
+            'products' =>['quantity', 'uuid', 'product' => [
+                'title', 'detail', 'code'
+            ]],
         ]]);
+    }
 
-        return [
-            'order' => $data,
-            'products' => $this->orderProductRepo->allProductsByOrder($order),
-        ];
+    /**
+     * @throws ExceptionInterface
+     */
+    public function add(array $orderData, User $user): array
+    {
+        $order = new Order();
+        $this->setCustomerData($order, $orderData);
+
+        if (!array_key_exists('products', $orderData)) {
+            throw new LogicException('The order must have products.');
+        }
+
+        $this->syncProducts($order, $orderData['products']);
+
+        if (array_key_exists('comments', $orderData)) {
+            $this->attachComments($order, $user, $orderData['comments']);
+        }
+
+        $this->objectManager->flush();
+        return $this->getOrderAsArray($order);
+    }
+
+    /**
+     * @throws ExceptionInterface
+     */
+    public function update(Order $order, array $newOrderData): array
+    {
+        $this->setCustomerData($order, $newOrderData);
+        $this->syncProducts($order, $newOrderData['products']);
+
+        $this->objectManager->persist($order);
+        $this->objectManager->flush();
+        return $this->getOrderAsArray($order);
     }
 
     public function deleteOrder(Order $order): void

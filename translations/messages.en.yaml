@@ -1,4 +1,4 @@
-confirm: "Confirm"
+confirm: "Confirm Action"
 welcome: "Welcome"
 submit: "Submit"
 edit: "Edit"
@@ -6,6 +6,7 @@ move: "Move"
 moving: "Moving"
 close: "Close"
 cancel: "Cancel"
+save: "Save"
 options: "Options"
 upload: "Upload"
 load: "Load"
@@ -65,6 +66,8 @@ product:
     price: "Price"
     detail: "Detail"
     no_available_product: "Product quantity is 0"
+  xls:
+    filename: "file-upload-template"
   update:
     bar-code:
       title: "Barcode Reader"
@@ -101,6 +104,7 @@ product:
       warehouse: "Warehouse"
 order:
   index:
+    comments: "This order has comments"
     sync_woocomerce_orders: "Sync Orders"
     title: "View Orders"
     code: "Order #"
@@ -114,6 +118,7 @@ order:
     city: "City"
     state: "State"
     country: "Country"
+    edit_order: "Edit this order"
     sources:
       web: 'Web'
       phone: 'Phone'
@@ -152,11 +157,13 @@ order:
     select_warehouse: "Select Warehouse"
     comment: "Comment"
     select_payment_methods: "Payments Methods"
-    select_status: "Select Order Status"
+    select_status: "Select Order Status (All)"
     select_source: "Select Order Source"
     search_customer: "Search Customer"
     quantity: "Quantity"
     consecutive: "Consecutive"
+  edit:
+    title: "Editing Order"
   pdf:
     order_number: "Order Number"
     email: "Email"
@@ -222,6 +229,33 @@ order_statuses:
   6: 'Delivered'
   all: 'All States'
 
+customer:
+  index:
+    title: 'Customers'
+    email: 'Email'
+    phone: 'Phone'
+    name: 'Name'
+    address: 'Address'
+    edit_this: 'Edit this customer'
+    options: 'Options'
+    create_customer: 'Create Customer'
+    delete: 'Delete Customer'
+    confirm_delete_customer: 'Are you sure to delete this Customer?'
+  edit:
+    title: 'Edit customer'
+    name: 'Name'
+    last_name: 'Last Name'
+    email: 'Email'
+    phone: 'Phone'
+    address: 'Address'
+    zip_code: 'Zip Code'
+    state: 'State'
+    city: 'City'
+    country: 'Country'
+  new:
+    add_address: 'Add Address'
+
+
 order_source:
   1: 'Web'
   2: 'Phone'
@@ -229,3 +263,6 @@ order_source:
 product_statuses:
   0: "Inactive"
   1: "Active"
+
+create: "Create"
+update: "Update"
