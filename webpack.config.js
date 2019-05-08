@@ -25,6 +25,7 @@ Encore
   .addEntry('order/new', './assets/js/Orders/new.js')
   .addEntry('customer', './assets/js/Customer/Index.js')
   .addEntry('customer/edit', './assets/js/Customer/Edit.js')
+  .addEntry('customer/new', './assets/js/Customer/New.js')
 
 /*
      * FEATURE CONFIG

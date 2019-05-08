@@ -42,10 +42,11 @@ class CustomerController extends AbstractController
      * @IsGranted("ROLE_MANAGE_CUSTOMERS")
      */
     public function new(
-        CountryRepository $countryRepo
+        CountryRepository $countryRepo,
+        CustomerService $customerService
     ): Response {
-        return $this->render('customer/edit.html.twig', [
-            'customer' => [],
+        return $this->render('customer/new.html.twig', [
+            'customer' => $customerService->getCustomerAsArray(new Customer()),
             'locations' => $countryRepo->findAllAsArray(),
         ]);
 

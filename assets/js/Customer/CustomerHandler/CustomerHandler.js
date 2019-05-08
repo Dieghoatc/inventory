@@ -231,7 +231,7 @@ class CustomerHandler extends Component {
               required="required"
               className="form-control"
               placeholder={Translator.trans('customer.edit.name')}
-              value={customer.firstName}
+              value={customer.firstName || ''}
               onChange={(e) => {
                 customer.firstName = e.target.value;
                 this.setState({ customer });
@@ -247,7 +247,7 @@ class CustomerHandler extends Component {
               required="required"
               className="form-control"
               placeholder={Translator.trans('customer.edit.last_name')}
-              value={customer.lastName}
+              value={customer.lastName || ''}
               onChange={(e) => {
                 customer.lastName = e.target.value;
                 this.setState({ customer });
@@ -265,7 +265,7 @@ class CustomerHandler extends Component {
               required="required"
               className="form-control"
               placeholder={Translator.trans('customer.edit.email')}
-              value={customer.email}
+              value={customer.email || ''}
               onChange={(e) => {
                 customer.email = e.target.value;
                 this.setState({ customer });
@@ -281,7 +281,7 @@ class CustomerHandler extends Component {
               required="required"
               className="form-control"
               placeholder={Translator.trans('customer.edit.phone')}
-              value={customer.phone}
+              value={customer.phone || ''}
               onChange={(e) => {
                 customer.phone = e.target.value;
                 this.setState({ customer });
@@ -291,6 +291,15 @@ class CustomerHandler extends Component {
         </div>
         <div>
           {addresses}
+          {addresses.length === 0
+            && (
+              <button type="button" className="btn btn-success" onClick={this.addNewAddressHandler}>
+                { Translator.trans('customer.new.add_address') }
+                { ' ' }
+                <i className="fas fa-plus" />
+              </button>
+            )
+          }
         </div>
         <br />
         <div className="form-row">

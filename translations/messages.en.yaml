@@ -252,6 +252,8 @@ customer:
     state: 'State'
     city: 'City'
     country: 'Country'
+  new:
+    add_address: 'Add Address'
 
 
 order_source:

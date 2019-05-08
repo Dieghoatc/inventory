@@ -11,7 +11,7 @@ const New = (props) => {
   );
 }
 
-export default CustomerHandler;
+export default New;
 
 New.propTypes = {
   customer: PropTypes.shape({}).isRequired,
