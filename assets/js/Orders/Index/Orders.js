@@ -154,6 +154,7 @@ class Orders extends Component {
             ? String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase()) : true
         );
       },
+      width: 200,
     }, {
       Cell: (row) => {
         switch (row.original.source) {
@@ -168,6 +169,7 @@ class Orders extends Component {
       Header: Translator.trans('order.index.source'),
       accessor: 'source',
       filterable: false,
+      width: 100,
     }, {
       Cell: row => (
         <select
@@ -219,9 +221,14 @@ class Orders extends Component {
         </select>
       ),
     }, {
-      Cell: row => (moment(row.original.createdAt.date).format('DD MMM YYYY')),
+      Cell: row => (
+        <div className="text-center">
+          {moment(row.original.createdAt.date).format('DD MMM YYYY')}
+        </div>
+      ),
       Header: Translator.trans('order.index.date'),
       filterable: false,
+      width: 150,
     }, {
       Cell: row => (
         <div>
@@ -233,11 +240,15 @@ class Orders extends Component {
             <i className="fas fa-pencil-alt" />
           </a>
           { ' ' }
-          <a href={Routing.generate('order_pdf', { order: row.original.id })} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
+          <a href={Routing.generate('order_getting_ready', { order: row.original.id })} className="btn btn-sm btn-success" rel="noopener noreferrer" title={Translator.trans('order.index.getting_ready')}>
+            <i className="fas fa-truck-loading" />
+          </a>
+          { ' ' }
+          <a href={Routing.generate('order_pdf', { order: row.original.id })} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer" title={Translator.trans('order.index.view_pdf')}>
             <i className="fas fa-file-pdf" />
           </a>
           { ' ' }
-          <a href={Routing.generate('order_xls', { order: row.original.id })} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer">
+          <a href={Routing.generate('order_xls', { order: row.original.id })} className="btn btn-sm btn-success" target="_blank" rel="noopener noreferrer" title={Translator.trans('order.index.download_excel')}>
             <i className="fas fa-file-excel" />
           </a>
           { ' ' }

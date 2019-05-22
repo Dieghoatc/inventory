@@ -8,6 +8,8 @@ use App\Entity\OrderProduct;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Entity\Warehouse;
+use App\Repository\OrderRepository;
+use App\Repository\ProductRepository;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use InvalidArgumentException;
@@ -24,19 +26,27 @@ class OrderService
     private $warehouseRepo;
     /** @var CustomerService */
     private $customerService;
+    /** @var OrderRepository */
+    private $orderRepo;
+    /** @var ProductRepository */
+    private $productRepo;
     /** @var ProductService */
     private $productService;
 
     public function __construct(
         ObjectManager $objectManager,
         WarehouseRepository $warehouseRepo,
+        ProductRepository $productRepository,
         CustomerService $customerService,
-        ProductService $productService
+        ProductService $productService,
+        OrderRepository $orderRepo
     ) {
         $this->objectManager = $objectManager;
+        $this->productRepo = $productRepository;
         $this->warehouseRepo = $warehouseRepo;
         $this->customerService = $customerService;
         $this->productService = $productService;
+        $this->orderRepo = $orderRepo;
     }
 
     private function setCustomerData(Order $order, array $orderData): void
@@ -58,6 +68,30 @@ class OrderService
         $this->objectManager->persist($order);
     }
 
+    private function createOrderProductFromArrayInput(
+        Order $order,
+        array $partialOrderData
+    ): void {
+        foreach ($partialOrderData as $partialProduct) {
+            $product = $this->productRepo->findOneBy(['uuid' => $partialProduct['uuid']]);
+
+            if(!$product instanceof Product) {
+                throw new InvalidArgumentException('The given product was not found');
+            }
+
+            $orderProduct = new OrderProduct();
+            $orderProduct->setOrder($order);
+            $orderProduct->setProduct($product);
+            $orderProduct->setQuantity($partialProduct['quantity']);
+            $order->addOrderProduct($orderProduct);
+
+            $this->objectManager->persist($orderProduct);
+        }
+
+        $this->objectManager->persist($order);
+        $this->objectManager->flush();
+    }
+
     /**
      * @throws InvalidArgumentException
      */
@@ -65,39 +99,11 @@ class OrderService
     {
         /** @var $orderProduct OrderProduct */
         foreach ($order->getProducts() as $orderProduct) {
-            $someFound = array_filter($orderProductsData, static function($productData) use ($orderProduct) {
-                return $productData['uuid'] === $orderProduct->getUuid();
-            });
-
-            if (count($someFound) === 0) {
-                $order->removeOrderProduct($orderProduct);
-            }
+            $this->objectManager->remove($orderProduct);
         }
+        $this->objectManager->flush();
 
-        $uniqueProductsUuid = [];
-        foreach ($orderProductsData as $productData) {
-            if (in_array($productData['uuid'], $uniqueProductsUuid, true)) {
-                continue;
-            }
-
-            $product = $this->productService->add($productData);
-
-            if(!$product instanceof Product) {
-                throw new InvalidArgumentException('This product does not exist.');
-            }
-
-            if (!$order->isProductInOrder($product)) {
-                $orderProduct = new OrderProduct();
-                $orderProduct->setOrder($order);
-                $orderProduct->setProduct($product);
-                $orderProduct->setQuantity($productData['quantity']);
-                $order->addOrderProduct($orderProduct);
-            } else {
-                $orderProduct->setQuantity($productData['quantity']);
-            }
-            $this->objectManager->persist($orderProduct);
-            $uniqueProductsUuid[] = $productData['uuid'];
-        }
+        $this->createOrderProductFromArrayInput($order, $orderProductsData);
 
         $this->objectManager->persist($order);
         $this->objectManager->flush();
@@ -176,9 +182,6 @@ class OrderService
     {
         $this->setCustomerData($order, $newOrderData);
         $this->syncProducts($order, $newOrderData['products']);
-
-        $this->objectManager->persist($order);
-        $this->objectManager->flush();
         return $this->getOrderAsArray($order);
     }
 
@@ -194,5 +197,30 @@ class OrderService
 
         $this->objectManager->remove($order);
         $this->objectManager->flush();
+    }
+
+    public function deleteOrderById(int $orderId): void
+    {
+        $order = $this->orderRepo->find($orderId);
+
+        if(!$order instanceof Order) {
+            throw new InvalidArgumentException('The order does not exist on the database.');
+        }
+
+        $this->deleteOrder($order);
+    }
+
+    public function createPartial(Order $order, array $partialOrderData): void
+    {
+        $children = new Order();
+        $children->setParent($order);
+
+        $this->createOrderProductFromArrayInput($children, $partialOrderData);
+
+        $order->setStatus(Order::STATUS_PARTIAL);
+        $this->objectManager->persist($order);
+        $this->objectManager->flush();
+
+        $this->productService->crossOrderAgainstInventory($children, $order->getWarehouse());
     }
 }

@@ -77,6 +77,7 @@ class DetailOrder extends Component {
     const columns = [{
       Header: Translator.trans('product.template.code'),
       accessor: 'product.code',
+      width: 100,
     }, {
       Header: Translator.trans('product.template.description'),
       accessor: 'product.title',
@@ -84,6 +85,7 @@ class DetailOrder extends Component {
       Header: Translator.trans('product.template.quantity'),
       accessor: 'quantity',
       Cell: this.renderEditable,
+      width: 100,
     }];
     let commentsView = [];
     if (comments.length > 0) {

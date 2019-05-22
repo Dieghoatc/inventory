@@ -1,3 +1,7 @@
 .invalid-feedback {
     display: block;
 }
+
+.row-selected {
+    background: #e3e3e3;
+}

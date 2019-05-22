@@ -26,7 +26,7 @@ class View extends Component {
   }
 
   componentDidMount() {
-    axios.get(Routing.generate('warehouse_all')).then(res => res.data).then(
+    axios.get(Routing.generate('warehouse_all', null)).then(res => res.data).then(
       (result) => {
         if (result.length <= 0) {
           throw new Error('The number of warehouses is 0, please add another Warehouse');

@@ -310,7 +310,8 @@ class ProductService
     }
 
     public function crossOrderAgainstInventory(
-        Order $order
+        Order $order,
+        Warehouse $warehouse = null
     ): void {
         $products = [];
 
@@ -326,7 +327,10 @@ class ProductService
               'quantity' => $orderProduct->getQuantity()
             ];
         }
+        if($warehouse === null) {
+           $warehouse = $order->getWarehouse();
+        }
 
-        $this->removeProductsFromInventory($products, $order->getWarehouse());
+        $this->removeProductsFromInventory($products, $warehouse);
     }
 }

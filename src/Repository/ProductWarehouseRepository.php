@@ -2,10 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\Order;
 use App\Entity\ProductWarehouse;
 use App\Entity\Warehouse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @method ProductWarehouse|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,15 +50,37 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         return $products;
     }
 
-    /*
-    public function findOneBySomeField($value): ?ProductWarehouse
+
+    public function getOrderProductsOnInventory(
+        Order $order
+    ): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('pw')
+            ->select('pw, p')
+            ->innerJoin('pw.product', 'p')
+            ->innerJoin('pw.warehouse', 'w')
+            ->where('p.uuid in (:uuids)')
+            ->andWhere('w.id = :warehouse')
+            ->setParameter('uuids', $order->getOrderProductsUuids())
+            ->setParameter('warehouse',  $order->getWarehouse()->getId())
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function getOrderProductsOnInventoryAsArray(Order $order): array
+    {
+        return $this->orderProductArray($this->getOrderProductsOnInventory($order));
+    }
+
+
+    public function orderProductArray(array $productWarehouse): array
+    {
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        return $serializer->normalize($productWarehouse, 'array', ['attributes' => [
+            'id',
+            'status',
+            'quantity',
+            'product' => ['id', 'uuid', 'code', 'title', 'detail'],
+        ]]);
+    }
 }
