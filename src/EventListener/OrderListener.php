@@ -29,7 +29,7 @@ class OrderListener
     {
         $order = $event->getObject();
 
-        if($order instanceof Order) {
+        if($order instanceof Order && $order->getParent() === null) {
             $this->addOrderStatus($order);
         }
     }
@@ -37,7 +37,7 @@ class OrderListener
     public function postUpdate(LifecycleEventArgs $event): void
     {
         $order = $event->getObject();
-        if($order instanceof Order) {
+        if($order instanceof Order && $order->getParent() === null) {
             $this->addOrderStatus($order);
 
             if($order->getStatus() === Order::STATUS_SENT) {

@@ -7,9 +7,11 @@ use App\Entity\Order;
 use App\Entity\OrderProduct;
 use App\Entity\Product;
 use App\Entity\Warehouse;
+use App\Model\RemoveOrderInput;
 use App\Repository\CountryRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\OrderRepository;
+use App\Repository\ProductWarehouseRepository;
 use App\Repository\WarehouseRepository;
 use App\Services\CommentService;
 use App\Services\LogService;
@@ -31,7 +33,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
@@ -42,7 +43,7 @@ class OrderController extends AbstractController
 {
     /**
      * @Route("/", name="index", options={"expose"=true})
-     * @IsGranted("ROLE_UPDATE_ORDERS")
+     * @IsGranted("ROLE_CAN_READ_ORDERS")
      */
     public function index(): Response
     {
@@ -51,7 +52,7 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/new", name="new", options={"expose"=true})
-     * @IsGranted("ROLE_UPDATE_ORDERS")
+     * @IsGranted("ROLE_CAN_CREATE_ORDERS")
      */
     public function new(
         CountryRepository $countryRepo,
@@ -68,28 +69,28 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/create", name="create", methods={"post"})
-     * @IsGranted("ROLE_UPDATE_ORDERS")
+     * @IsGranted("ROLE_CAN_CREATE_ORDERS")
      * @throws ExceptionInterface
      */
     public function create(
         Request $request,
         OrderService $orderService,
         LogService $logService
-    ): Response {
+    ): JsonResponse {
         $orderData = json_decode($request->getContent(), true);
         $order = $orderService->add($orderData, $this->getUser());
-
         $logService->add('Order','Order created', $order);
 
-        $response = new Response();
-        $response->setContent(json_encode(['status' => 'ok', 'route' => $this->generateUrl('order_index')]));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        return new JsonResponse([
+            'status' => true,
+            'route' => $this->generateUrl('order_index'),
+            'order' => $order['id'],
+        ]);
     }
 
     /**
      * @Route("/edit/{order}", name="edit", options={"expose"=true})
-     * @IsGranted("ROLE_UPDATE_ORDERS")
+     * @IsGranted("ROLE_CAN_UPDATE_ORDERS")
      * @throws ExceptionInterface
      */
     public function edit(
@@ -112,7 +113,7 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/update/{order}", methods={"post"}, name="update")
-     * @IsGranted("ROLE_UPDATE_ORDERS")
+     * @IsGranted("ROLE_CAN_UPDATE_ORDERS")
      * @throws ExceptionInterface
      */
     public function update(
@@ -120,16 +121,12 @@ class OrderController extends AbstractController
         OrderService $orderService,
         LogService $logService,
         Order $order
-    ): Response {
+    ): JsonResponse {
         $orderData = json_decode($request->getContent(), true);
         $orderService->update($order, $orderData);
-
         $logService->add('Order','Order updated', $orderData);
 
-        $response = new Response();
-        $response->setContent(json_encode(['status' => 'ok', 'route' => $this->generateUrl('order_index')]));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        return new JsonResponse(['status' => true, 'route' => $this->generateUrl('order_index')]);
     }
 
     /**
@@ -139,12 +136,10 @@ class OrderController extends AbstractController
     public function all(
         OrderRepository $orderRepo,
         Warehouse $warehouse
-    ): Response {
+    ): JsonResponse {
         $products = $orderRepo->findByWarehouse($warehouse);
-        $response = new Response(json_encode($products));
-        $response->headers->set('Content-Type', 'application/json');
 
-        return $response;
+        return new JsonResponse($products);
     }
 
     /**
@@ -243,36 +238,73 @@ class OrderController extends AbstractController
      * @Route("/delete", name="delete", options={"expose"=true}, methods={"DELETE"})
      * @IsGranted("ROLE_CAN_DELETE_ORDERS")
      */
-    public function remove(
+    public function delete(
         Request $request,
         OrderService $orderService,
-        OrderRepository $orderRepo,
         ValidatorInterface $validator,
         LogService $logService
     ): Response {
-        $data = json_decode($request->getContent(), true);
-
-        $constraint = new Assert\All(['constraints' => [
-            'order' => new Assert\NotBlank(), 'token' => new Assert\NotBlank(),
-        ]]);
-
-        if ($validator->validate($data, $constraint)->count() > 0) {
-            throw new LogicException('Malformed request.');
+        $inputModel = RemoveOrderInput::createFormInput(json_decode($request->getContent(), true));
+        if($validator->validate($inputModel)->count() !== 0) {
+            throw new InvalidArgumentException('The request is malformed.');
         }
 
-        if (!$this->isCsrfTokenValid('delete-order', $data['token'])) {
+        if (!$this->isCsrfTokenValid('delete-order', $inputModel->token)) {
             throw new LogicException('Token does not math with the expected one.');
         }
 
-        $order = $orderRepo->find($data['order']);
-        if(!$order instanceof Order) {
-            throw new InvalidArgumentException('Order was not found.');
-        }
-
-        $logService->add('Order',"Order {$order->getCode()} was deleted");
-        $orderService->deleteOrder($order);
+        $logService->add('Order',"Order {$inputModel->order} was deleted");
+        $orderService->deleteOrderById($inputModel->order);
 
         return new JsonResponse(['status' => true]);
+    }
+
+    /**
+     * @Route("/partial/getting-ready/{order}", name="getting_ready", methods={"get"}, options={"expose"=true})
+     */
+    public function gettingReady(
+        Order $order,
+        OrderService $orderService,
+        ProductWarehouseRepository $productWarehouseRepo
+    ): Response {
+
+        return $this->render('order/getting-ready.html.twig', [
+            'order' => $orderService->getOrderAsArray($order),
+            'partials' => $order->getAggregatePartials(),
+            'inventory' => $productWarehouseRepo->getOrderProductsOnInventoryAsArray($order)
+        ]);
+    }
+
+
+    /**
+     * @Route("/partial/{order}", methods={"get"})
+     *
+     */
+    public function getPartials(Order $order): Response
+    {
+        return new JsonResponse([
+            'order' => $order->getId(),
+            'productsAggregate' => $order->getAggregatePartials(),
+            'pendingOrderProductQuantities' => $order->getPendingOrderProductsQuantities(),
+        ]);
+    }
+
+    /**
+     * @Route("/partial/{order}", name="partial", methods={"post"}, options={"expose"=true})
+     */
+    public function partial(
+        Request $request,
+        OrderService $orderService,
+        Order $order
+    ): JsonResponse {
+        $partialOrderData = json_decode($request->getContent(), true);
+        $orderService->createPartial($order, $partialOrderData);
+
+        return new JsonResponse([
+            'order' => $order->getId(),
+            'productsAggregate' => $order->getAggregatePartials(),
+            'pendingOrderProductQuantities' => $order->getPendingOrderProductsQuantities(),
+        ]);
     }
 
     /**

@@ -42,13 +42,13 @@ class Order
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $code;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="request")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $customer;
 
@@ -59,17 +59,17 @@ class Order
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Warehouse", inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $warehouse;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $source;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $status;
 
@@ -109,6 +109,16 @@ class Order
     private $orderStatuses;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Order", cascade={"persist"})
+     */
+    private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="parent")
+     */
+    private $children;
+
+    /**
      * @throws Exception
      */
     public function __construct()
@@ -119,6 +129,7 @@ class Order
         $this->comments = new ArrayCollection();
         $this->orderProduct = new ArrayCollection();
         $this->orderStatuses = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -341,6 +352,9 @@ class Order
         return $this;
     }
 
+    /**
+     * @return Collection|OrderProduct[]
+     */
     public function getProducts(): Collection
     {
         return $this->orderProduct;
@@ -365,5 +379,105 @@ class Order
             }
         }
         return false;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getChildren(): Collection
+    {
+        return $this->children;
+    }
+
+    public function addChild(self $child): self
+    {
+        if (!$this->children->contains($child)) {
+            $this->children[] = $child;
+            $child->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChild(self $child): self
+    {
+        if ($this->children->contains($child)) {
+            $this->children->removeElement($child);
+            // set the owning side to null (unless already changed)
+            if ($child->getParent() === $this) {
+                $child->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAggregatePartials(): array
+    {
+        $products = [];
+
+        foreach ($this->getChildren() as $child) {
+            foreach ($child->getProducts() as $orderProduct) {
+                if(array_key_exists($orderProduct->getUuid(), $products)) {
+                    $products[$orderProduct->getUuid()]['quantity'] = $orderProduct->getQuantity() + $products[$orderProduct->getUuid()]['quantity'];
+                } else {
+                    $products[$orderProduct->getUuid()] = [
+                        'quantity' => $orderProduct->getQuantity(),
+                        'uuid' => $orderProduct->getUuid(),
+                        'product' => [
+                            'code' => $orderProduct->getProduct()->getCode(),
+                        ]
+                    ];
+                }
+            }
+        }
+
+        return array_values($products);
+    }
+
+    public function getPendingOrderProductsQuantities(): array
+    {
+        $aggregatePartials = $this->getAggregatePartials();
+        $missingProductOrderQuantities = [];
+
+        foreach ($this->getProducts() as $orderProduct) {
+            $leftProductQuantity = $orderProduct->getQuantity();
+            if(array_key_exists($orderProduct->getProduct()->getUuid(), $aggregatePartials)) {
+                $leftProductQuantity = $orderProduct->getQuantity() - $aggregatePartials[$orderProduct->getUuid()]['quantity'];
+                if ($leftProductQuantity < 0) {
+                    throw new InvalidArgumentException('The product on the order has missing values lowest than 0');
+                }
+            }
+
+            $missingProductOrderQuantities[] = [
+                'uuid' => $orderProduct->getUuid(),
+                'quantity' => $leftProductQuantity,
+            ];
+        }
+
+        return $missingProductOrderQuantities;
+    }
+
+    public function getOrderProductsUuids(): array
+    {
+        $uuids = [];
+
+        foreach ($this->getProducts() as $orderProduct) {
+            $uuids[] = $orderProduct->getUuid();
+        }
+
+        return $uuids;
     }
 }
