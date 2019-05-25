@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-
 use App\Entity\Product;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -37,7 +36,7 @@ class ProductType extends AbstractType
                 ],
             ])
             ->add('status', ChoiceType::class, [
-                'choices'  => [
+                'choices' => [
                    'product_statuses.1' => 1,
                    'product_statuses.0' => 0,
                 ],

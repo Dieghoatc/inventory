@@ -24,12 +24,11 @@ class OrderListener
         $this->productService = $productService;
     }
 
-
     public function postPersist(LifecycleEventArgs $event): void
     {
         $order = $event->getObject();
 
-        if($order instanceof Order && $order->getParent() === null) {
+        if ($order instanceof Order && null === $order->getParent()) {
             $this->addOrderStatus($order);
         }
     }
@@ -37,13 +36,12 @@ class OrderListener
     public function postUpdate(LifecycleEventArgs $event): void
     {
         $order = $event->getObject();
-        if($order instanceof Order && $order->getParent() === null) {
+        if ($order instanceof Order && null === $order->getParent()) {
             $this->addOrderStatus($order);
 
-            if($order->getStatus() === Order::STATUS_SENT) {
+            if (Order::STATUS_SENT === $order->getStatus()) {
                 $this->orderSent($order);
             }
-
         }
     }
 
@@ -62,5 +60,4 @@ class OrderListener
     {
         $this->productService->crossOrderAgainstInventory($order);
     }
-
 }

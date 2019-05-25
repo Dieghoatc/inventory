@@ -13,6 +13,7 @@ use App\Services\ProductService;
 use Doctrine\Common\Persistence\ObjectManager;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,6 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/product", name="product_")
@@ -72,7 +72,6 @@ class ProductController extends AbstractController
         Request $request,
         Product $product
     ): Response {
-
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -80,13 +79,13 @@ class ProductController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'product.edit.updated_successfully');
+
             return $this->redirectToRoute('product_product_index');
         }
 
         return $this->render('product/edit.html.twig', [
             'form' => $form->createView(),
         ]);
-
     }
 
     /**
@@ -104,6 +103,7 @@ class ProductController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'product.new.updated_successfully');
+
             return $this->redirectToRoute('product_product_index');
         }
 
@@ -153,11 +153,11 @@ class ProductController extends AbstractController
         $products = [];
         if ($all) {
             $products = $productRepo->findAll();
-        } else if ($request->get('data')) {
+        } elseif ($request->get('data')) {
             $uuids = $request->get('data');
             $products = $productRepo->findByUuids($uuids);
         }
-        if (count($products) > 0) {
+        if (\count($products) > 0) {
             $this->attachCell($template, $products);
         }
 
@@ -185,7 +185,6 @@ class ProductController extends AbstractController
             $template->getActiveSheet()->setCellValue("D{$row}", 0);
             $template->getActiveSheet()->setCellValue("E{$row}", 0);
         }
-
     }
 
     /**

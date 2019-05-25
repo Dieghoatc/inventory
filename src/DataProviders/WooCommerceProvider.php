@@ -13,7 +13,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class WooCommerceProvider
 {
-
     /** @var Client */
     private $wooCommerce;
     /** @var OrderService */
@@ -28,11 +27,10 @@ class WooCommerceProvider
         WarehouseRepository $warehouseRepo,
         OrderRepository $orderRepo,
         ParameterBagInterface $params
-    )
-    {
+    ) {
         $wooCommerceConnectionConfig = $params->get('woo_commerce');
 
-        if(!is_array($wooCommerceConnectionConfig)) {
+        if (!\is_array($wooCommerceConnectionConfig)) {
             throw new \InvalidArgumentException('Woo commerce configuration was not found.');
         }
 
@@ -56,13 +54,14 @@ class WooCommerceProvider
 
     protected function getCustomer(int $id): ?array
     {
-        if ($id !== 0) {
-            if(!$this->wooCommerce instanceof Client) {
+        if (0 !== $id) {
+            if (!$this->wooCommerce instanceof Client) {
                 throw new \InvalidArgumentException('WooCommerce Client not found.');
             }
 
             return $this->wooCommerce->get("customers/{$id}");
         }
+
         return null;
     }
 
@@ -75,6 +74,7 @@ class WooCommerceProvider
                 'quantity' => $product->quantity,
             ];
         }
+
         return $result;
     }
 
@@ -95,9 +95,9 @@ class WooCommerceProvider
                             'state' => [
                                 'name' => $order->billing->state,
                                 'country' => [
-                                    'name' => $order->billing->country
-                                ]
-                            ]
+                                    'name' => $order->billing->country,
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -129,10 +129,9 @@ class WooCommerceProvider
             $orderTransformed = $this->transformOrder($order);
             $orderTransformed['warehouse'] = [
                 'name' => $warehouse->getName(),
-                'id' => $warehouse->getId()
+                'id' => $warehouse->getId(),
             ];
             $this->orderService->add($orderTransformed, $user);
         }
     }
-
 }

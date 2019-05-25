@@ -11,9 +11,7 @@ use App\Repository\OrderProductRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductWarehouseRepository;
 use App\Repository\WarehouseRepository;
-use function count;
 use Doctrine\Common\Persistence\ObjectManager;
-use function in_array;
 use InvalidArgumentException;
 use LogicException;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -69,10 +67,10 @@ class ProductService
     protected function getQueryFilter(array $rowData): array
     {
         $queryFilter = null;
-        if (array_key_exists('uuid', $rowData)) {
+        if (\array_key_exists('uuid', $rowData)) {
             $queryFilter = ['uuid' => $rowData['uuid']];
         }
-        if (array_key_exists('code', $rowData)) {
+        if (\array_key_exists('code', $rowData)) {
             $queryFilter = ['code' => $rowData['code']];
         }
 
@@ -107,7 +105,7 @@ class ProductService
         $productsAdded = [];
         foreach ($items as $key => $item) {
             if (0 === $key || '' === $item[self::PRODUCT_CODE] || null === $item[self::PRODUCT_CODE]
-                || in_array($item[self::PRODUCT_CODE], $productsAdded, true)) {
+                || \in_array($item[self::PRODUCT_CODE], $productsAdded, true)) {
                 continue;
             }
 
@@ -138,7 +136,7 @@ class ProductService
 
             $product->addProductWarehouse($productWarehouse);
             $errors = $this->validator->validate($product);
-            if (0 !== count($errors)) {
+            if (0 !== \count($errors)) {
                 $validations[] = $validations;
             } else {
                 $productsAdded[] = $item[self::PRODUCT_CODE];
@@ -276,11 +274,11 @@ class ProductService
 
     public function add(array $productData, Warehouse $warehouse = null): Product
     {
-        if (!array_key_exists('uuid', $productData) && !array_key_exists('code', $productData)) {
+        if (!\array_key_exists('uuid', $productData) && !\array_key_exists('code', $productData)) {
             throw new InvalidArgumentException('Either UUID or code was not provided');
         }
 
-        if (array_key_exists('uuid', $productData)) {
+        if (\array_key_exists('uuid', $productData)) {
             $product = $this->productRepo->findOneBy(['uuid' => $productData['uuid']]);
         } else {
             $product = $this->productRepo->findOneBy(['code' => $productData['code']]);
@@ -316,19 +314,18 @@ class ProductService
         $products = [];
 
         foreach ($order->getOrderProducts() as $orderProduct) {
-
             if (!$orderProduct->getProduct() instanceof Product) {
                 throw new LogicException('This product was not found');
             }
 
-            /** @var $orderProduct OrderProduct */
+            /* @var $orderProduct OrderProduct */
             $products[] = [
               'uuid' => $orderProduct->getProduct()->getUuid(),
-              'quantity' => $orderProduct->getQuantity()
+              'quantity' => $orderProduct->getQuantity(),
             ];
         }
-        if($warehouse === null) {
-           $warehouse = $order->getWarehouse();
+        if (null === $warehouse) {
+            $warehouse = $order->getWarehouse();
         }
 
         $this->removeProductsFromInventory($products, $warehouse);

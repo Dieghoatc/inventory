@@ -210,6 +210,17 @@ class OrderService
         $this->deleteOrder($order);
     }
 
+    public function hasInventoryTheOrderRequiredProducts(Order $order): bool
+    {
+        $completed = true;
+        $orderProducts = $order->getProducts();
+        $warehouse = $order->getWarehouse();
+
+        foreach ($orderProducts as $orderProduct) {
+            $product = $this->productRepo->
+        }
+    }
+
     public function createPartial(Order $order, array $partialOrderData): void
     {
         $children = new Order();

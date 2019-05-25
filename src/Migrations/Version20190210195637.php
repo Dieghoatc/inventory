@@ -24,7 +24,6 @@ final class Version20190210195637 extends AbstractMigration
         $this->container = $container;
     }
 
-
     public function getDescription(): string
     {
         return '';
@@ -33,17 +32,16 @@ final class Version20190210195637 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE country ADD code VARCHAR(10) DEFAULT NULL');
         $this->addSql('ALTER TABLE state ADD code VARCHAR(10) DEFAULT NULL');
     }
 
-
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE country DROP code');
         $this->addSql('ALTER TABLE state DROP code');

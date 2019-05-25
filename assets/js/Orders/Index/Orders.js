@@ -49,7 +49,6 @@ class Orders extends Component {
       loading: true,
       orders: [],
       orderDetailId: null,
-      confirmSent: false,
       orderStates: [
         { name: Translator.trans('order_statuses.1'), id: 1 },
         { name: Translator.trans('order_statuses.2'), id: 2 },
@@ -118,7 +117,7 @@ class Orders extends Component {
   render() {
     const {
       selectAll, orders, warehouses, loading, orderDetailId, orderStates, orderToDelete,
-      syncOrders, canAdd, canDelete, canSync, confirmSent,
+      syncOrders, canAdd, canDelete, canSync,
     } = this.state;
     const { token } = this.props;
     const { toggleSelection, toggleAll, isSelected } = this;
@@ -182,9 +181,7 @@ class Orders extends Component {
             };
 
             if (Number(status) === ORDER_STATE_SENT) {
-              this.setState({
-                confirmSent: () => (changeOrderState(order, status, closeConfirmSentModal)),
-              });
+              window.location.href = Routing.generate('order_getting_ready', { order: row.original.id });
             } else {
               changeOrderState(order, status, closeConfirmSentModal);
             }
@@ -285,17 +282,6 @@ class Orders extends Component {
             <h4>{Translator.trans('order.index.confirm_delete_order')}</h4>
           </ConfirmModal>
           )
-        }
-        { confirmSent
-        && (
-          <ConfirmModal
-            visible={confirmSent !== false}
-            onOk={confirmSent}
-            onCancel={() => this.setState({ confirmSent: false })}
-          >
-            <h4>{Translator.trans('order.index.confirm_change_state_to_sent')}</h4>
-          </ConfirmModal>
-        )
         }
         <div className="row">
           <div className="col-md-6">

@@ -78,6 +78,7 @@ class OrderProduct
         if (!$this->product instanceof product) {
             throw new InvalidParameterException('Product required is missing');
         }
+
         return $this->product->getUuid();
     }
 }

@@ -15,8 +15,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/customer", name="customer_")
@@ -33,7 +33,7 @@ class CustomerController extends AbstractController
         $customers = $customerService->getCustomersAsArray();
 
         return $this->render('customer/index.html.twig', [
-            'customers' => $customers
+            'customers' => $customers,
         ]);
     }
 
@@ -49,7 +49,6 @@ class CustomerController extends AbstractController
             'customer' => $customerService->getCustomerAsArray(new Customer()),
             'locations' => $countryRepo->findAllAsArray(),
         ]);
-
     }
 
     /**
@@ -62,8 +61,8 @@ class CustomerController extends AbstractController
     ): Response {
         $customerData = json_decode($request->getContent(), true);
         $customerService->addOrUpdate($customerData);
-        return new JsonResponse(['redirect' => $this->generateUrl('customer_index')]);
 
+        return new JsonResponse(['redirect' => $this->generateUrl('customer_index')]);
     }
 
     /**
@@ -93,8 +92,8 @@ class CustomerController extends AbstractController
     ): Response {
         $customerData = json_decode($request->getContent(), true);
         $customerService->addOrUpdate($customerData);
-        return new JsonResponse(['redirect' => $this->generateUrl('customer_index')]);
 
+        return new JsonResponse(['redirect' => $this->generateUrl('customer_index')]);
     }
 
     /**
@@ -123,11 +122,11 @@ class CustomerController extends AbstractController
         }
 
         $customer = $customerRepo->find($data['customer']);
-        if(!$customer instanceof Customer) {
+        if (!$customer instanceof Customer) {
             throw new InvalidArgumentException('The Customer was not found.');
         }
 
-        $logService->add('Customer',"Customer {$customer->getEmail()} was deleted");
+        $logService->add('Customer', "Customer {$customer->getEmail()} was deleted");
         $customerService->delete($customer);
 
         return new JsonResponse(['status' => true]);

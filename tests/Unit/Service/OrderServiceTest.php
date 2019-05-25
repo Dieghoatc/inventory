@@ -103,7 +103,6 @@ class OrderServiceTest extends WebTestCase
         $manager->persist($order);
         $manager->flush();
 
-
         $this->assertCount(2, $order->getOrderStatuses());
     }
 
@@ -138,8 +137,8 @@ class OrderServiceTest extends WebTestCase
         $productAOnWarehouse = $this->getProductWarehouse($productA, $warehouse);
         $productBOnWarehouse = $this->getProductWarehouse($productB, $warehouse);
 
-        $this->assertEquals(75, $productAOnWarehouse->getQuantity());
-        $this->assertEquals(25, $productBOnWarehouse->getQuantity());
+        $this->assertSame(75, $productAOnWarehouse->getQuantity());
+        $this->assertSame(25, $productBOnWarehouse->getQuantity());
     }
 
     public function testCreateOrderThenUpdateIt(): void
@@ -154,7 +153,6 @@ class OrderServiceTest extends WebTestCase
         $productA = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-A');
         $productB = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-B');
         $productC = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-C');
-
 
         $orderData = [
             'code' => $caseOrderCode,
@@ -202,12 +200,47 @@ class OrderServiceTest extends WebTestCase
         ];
 
         $orderService->update($orderAsEntity, $order);
-        $orderUpdate = $this->getOrderByCode($caseOrderCode);
+        $orderUpdated = $this->getOrderByCode($caseOrderCode);
 
-        $this->assertCount(3, $orderUpdate->getProducts());
-        $this->assertTrue($orderUpdate->isProductInOrder($productA));
-        $this->assertTrue($orderUpdate->isProductInOrder($productB));
-        $this->assertTrue($orderUpdate->isProductInOrder($productD));
-        $this->assertFalse($orderUpdate->isProductInOrder($productC));
+        $this->assertCount(3, $orderUpdated->getProducts());
+        $this->assertTrue($orderUpdated->isProductInOrder($productA));
+        $this->assertTrue($orderUpdated->isProductInOrder($productB));
+        $this->assertTrue($orderUpdated->isProductInOrder($productD));
+        $this->assertFalse($orderUpdated->isProductInOrder($productC));
+        $this->assertTrue($orderService->hasInventoryTheOrderRequiredProducts($orderUpdated));
+    }
+
+    public function testHasInventoryEnoughProductsForAnOrder(): void
+    {
+        $warehouse = $this->getWarehouseByName('Colombia');
+        $customer = $this->getCustomerByEmail('jose.perez@example.com');
+        $product = $this->createProduct(
+            $warehouse,
+            'LOW-QUANTITY-PRODUCTS',
+            10
+        );
+
+        $orderData = [
+            'code' => 'LOW-QUANTITY-TEST',
+            'comment' => 'LOW-QUANTITY-TEST',
+            'warehouse' => [
+                'id' => $warehouse->getId(),
+            ],
+            'customer' => [
+                'id' => $customer->getId(),
+            ],
+            'products' => [
+                [
+                    'uuid' => $product->getUuid(),
+                    'quantity' => 15,
+                ],
+            ],
+        ];
+
+        /** @var $orderService OrderService */
+        $orderService = $this->client->getContainer()->get(OrderService::class);
+        $order = $this->createOrder($orderData);
+
+        $this->assertFalse($orderService->hasInventoryTheOrderRequiredProducts($order));
     }
 }

@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderControllerTest extends UserWebTestCase
 {
-
     /** @var Client */
     public $client;
 
@@ -51,11 +50,11 @@ class OrderControllerTest extends UserWebTestCase
         $crawler = $this->client->request('GET', '/admin/order/');
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals('', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-delete'));
-        $this->assertEquals('', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-sync'));
-        $this->assertEquals('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-add'));
+        $this->assertSame('', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-delete'));
+        $this->assertSame('', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-sync'));
+        $this->assertSame('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-add'));
 
-        $this->assertEquals(1, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
+        $this->assertSame(1, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
     }
 
     public function testCorrectRolesForAdminForOnIndex(): void
@@ -65,11 +64,11 @@ class OrderControllerTest extends UserWebTestCase
         $crawler = $this->client->request('GET', '/admin/order/');
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-delete'));
-        $this->assertEquals('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-sync'));
-        $this->assertEquals('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-add'));
+        $this->assertSame('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-delete'));
+        $this->assertSame('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-sync'));
+        $this->assertSame('1', $crawler->filter('#index-orders')->getNode(0)->getAttribute('data-can-add'));
 
-        $this->assertEquals(5, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
+        $this->assertSame(5, $crawler->filter('.sidebar.navbar-nav > .nav-item')->count());
     }
 
     public function testAddEditAndRemoveAnOrder(): void
@@ -104,7 +103,7 @@ class OrderControllerTest extends UserWebTestCase
         $serverData = json_decode($this->client->getResponse()->getContent(), true);
 
         //Open the edit order page to get the data.
-        $crawler = $this->client->request('GET', '/admin/order/edit/' . $serverData['order']);
+        $crawler = $this->client->request('GET', '/admin/order/edit/'.$serverData['order']);
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $orderOnView = json_decode($crawler->filter('#react-component')->getNode(0)->getAttribute('data-order'), true);
 
@@ -123,13 +122,12 @@ class OrderControllerTest extends UserWebTestCase
         ];
 
         // Updating the created order with new products
-        $this->client->request('POST', '/admin/order/update/' . $serverData['order'], [], [], [
+        $this->client->request('POST', '/admin/order/update/'.$serverData['order'], [], [], [
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
         ], json_encode($originalOrder));
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-
-        $crawler = $this->client->request('GET', '/admin/order/edit/' . $serverData['order']);
+        $crawler = $this->client->request('GET', '/admin/order/edit/'.$serverData['order']);
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $orderOnView = json_decode($crawler->filter('#react-component')->getNode(0)->getAttribute('data-order'), true);
 
@@ -152,12 +150,9 @@ class OrderControllerTest extends UserWebTestCase
         ], json_encode(['order' => $serverData['order'], 'token' => $token]));
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/admin/order/edit/' . $serverData['order']);
+        $this->client->request('GET', '/admin/order/edit/'.$serverData['order']);
         $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
-
-
-
 
     public function testPartialOrder(): void
     {
@@ -199,11 +194,11 @@ class OrderControllerTest extends UserWebTestCase
             [
                 'uuid' => $productB->getUuid(),
                 'quantity' => 10,
-            ]
+            ],
         ];
 
         $serverData = json_decode($this->client->getResponse()->getContent(), true);
-        $this->client->request('POST', '/admin/order/partial/' . $serverData['order'], [], [], [
+        $this->client->request('POST', '/admin/order/partial/'.$serverData['order'], [], [], [
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
         ], json_encode($partialOrder));
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -212,9 +207,9 @@ class OrderControllerTest extends UserWebTestCase
         // Testing that sent data match with original - partial
         foreach ($serverData['pendingOrderProductQuantities'] as $pendingOrderProductQuantity) {
             foreach ($originalOrder['products'] as $originalOrderProduct) {
-                if($originalOrderProduct['uuid'] === $pendingOrderProductQuantity['uuid']) {
+                if ($originalOrderProduct['uuid'] === $pendingOrderProductQuantity['uuid']) {
                     $partialOrderProductKey = array_search($pendingOrderProductQuantity['uuid'], array_column($partialOrder, 'uuid'), false);
-                    if($partialOrderProductKey !== false) {
+                    if (false !== $partialOrderProductKey) {
                         $leftProductQuantity = $originalOrderProduct['quantity'] - $partialOrder[$partialOrderProductKey]['quantity'];
                         $this->assertSame($leftProductQuantity, $pendingOrderProductQuantity['quantity']);
                     }
@@ -222,8 +217,7 @@ class OrderControllerTest extends UserWebTestCase
             }
         }
 
-        $this->client->request('GET', '/admin/order/partial/' .  $serverData['order']);
+        $this->client->request('GET', '/admin/order/partial/'.$serverData['order']);
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
-
 }

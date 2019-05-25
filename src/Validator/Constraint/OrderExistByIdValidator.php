@@ -22,7 +22,7 @@ class OrderExistByIdValidator extends ConstraintValidator
     {
         $order = $this->orderRepo->find($value);
 
-        if(!$order instanceof Order) {
+        if (!$order instanceof Order) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }

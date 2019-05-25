@@ -283,6 +283,7 @@ class Order
         if (!$this->getCreatedAt() instanceof DateTime) {
             throw new InvalidArgumentException('Datetime on order is mandatory.');
         }
+
         return $this->getCreatedAt()->format('Y-m-d H:i:s');
     }
 
@@ -341,7 +342,6 @@ class Order
         return $this;
     }
 
-
     public function addOrderProduct(OrderProduct $orderProduct): self
     {
         if (!$this->orderProduct->contains($orderProduct)) {
@@ -374,10 +374,11 @@ class Order
     {
         /** @var $productInOrder OrderProduct */
         foreach ($this->orderProduct as $productInOrder) {
-            if($product->getUuid() === $productInOrder->getUuid()) {
+            if ($product->getUuid() === $productInOrder->getUuid()) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -430,7 +431,7 @@ class Order
 
         foreach ($this->getChildren() as $child) {
             foreach ($child->getProducts() as $orderProduct) {
-                if(array_key_exists($orderProduct->getUuid(), $products)) {
+                if (\array_key_exists($orderProduct->getUuid(), $products)) {
                     $products[$orderProduct->getUuid()]['quantity'] = $orderProduct->getQuantity() + $products[$orderProduct->getUuid()]['quantity'];
                 } else {
                     $products[$orderProduct->getUuid()] = [
@@ -438,7 +439,7 @@ class Order
                         'uuid' => $orderProduct->getUuid(),
                         'product' => [
                             'code' => $orderProduct->getProduct()->getCode(),
-                        ]
+                        ],
                     ];
                 }
             }
@@ -454,7 +455,7 @@ class Order
 
         foreach ($this->getProducts() as $orderProduct) {
             $leftProductQuantity = $orderProduct->getQuantity();
-            if(array_key_exists($orderProduct->getProduct()->getUuid(), $aggregatePartials)) {
+            if (\array_key_exists($orderProduct->getProduct()->getUuid(), $aggregatePartials)) {
                 $leftProductQuantity = $orderProduct->getQuantity() - $aggregatePartials[$orderProduct->getUuid()]['quantity'];
                 if ($leftProductQuantity < 0) {
                     throw new InvalidArgumentException('The product on the order has missing values lowest than 0');

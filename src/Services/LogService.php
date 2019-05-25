@@ -21,7 +21,7 @@ class LogService
     public function add(string $entity, string $event, array $detail = []): void
     {
         $detailAsString = '';
-        if (count($detail) > 0) {
+        if (\count($detail) > 0) {
             $detailAsString = json_encode($detail);
         }
 

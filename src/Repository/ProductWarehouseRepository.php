@@ -50,11 +50,9 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         return $products;
     }
 
-
     public function getOrderProductsOnInventory(
         Order $order
-    ): array
-    {
+    ): array {
         return $this->createQueryBuilder('pw')
             ->select('pw, p')
             ->innerJoin('pw.product', 'p')
@@ -62,7 +60,7 @@ class ProductWarehouseRepository extends ServiceEntityRepository
             ->where('p.uuid in (:uuids)')
             ->andWhere('w.id = :warehouse')
             ->setParameter('uuids', $order->getOrderProductsUuids())
-            ->setParameter('warehouse',  $order->getWarehouse()->getId())
+            ->setParameter('warehouse', $order->getWarehouse()->getId())
             ->getQuery()
             ->getResult();
     }
@@ -72,10 +70,10 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         return $this->orderProductArray($this->getOrderProductsOnInventory($order));
     }
 
-
     public function orderProductArray(array $productWarehouse): array
     {
         $serializer = new Serializer([new ObjectNormalizer()]);
+
         return $serializer->normalize($productWarehouse, 'array', ['attributes' => [
             'id',
             'status',

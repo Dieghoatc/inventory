@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CustomerControllerTest extends UserWebTestCase
 {
-
     /** @var Client */
     public $client;
 
@@ -34,7 +33,7 @@ class CustomerControllerTest extends UserWebTestCase
     public function getUrlsForRoleUpdate(): ?\Generator
     {
         yield ['GET', '/admin/customer/'];
-        yield ['GET', '/admin/customer/edit/' . self::DEFAULT_CUSTOMER];
+        yield ['GET', '/admin/customer/edit/'.self::DEFAULT_CUSTOMER];
     }
 
     private function createAddress(array $addressData = []): array
@@ -44,8 +43,8 @@ class CustomerControllerTest extends UserWebTestCase
             'address' => 'ADDRESS NAME ST 999 AV',
             'city' => [
                 //Taken from fixtures
-                'id' => 1
-            ]
+                'id' => 1,
+            ],
         ], $addressData);
     }
 
@@ -60,16 +59,16 @@ class CustomerControllerTest extends UserWebTestCase
         $customerAsArray['firstName'] = 'TESTING';
         $customerAsArray['lastName'] = 'TESTING';
         $customerAsArray['email'] = 'TESTING@TESTING.COM';
-        $this->client->request('post',  '/admin/customer/update', [], [], [], json_encode($customerAsArray));
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->client->request('post', '/admin/customer/update', [], [], [], json_encode($customerAsArray));
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $editedCustomer = $this->getCustomerById(self::DEFAULT_CUSTOMER);
-        $this->assertEquals('TESTING', $editedCustomer->getFirstName());
-        $this->assertEquals('TESTING', $editedCustomer->getLastName());
-        $this->assertEquals('TESTING@TESTING.COM', $editedCustomer->getEmail());
+        $this->assertSame('TESTING', $editedCustomer->getFirstName());
+        $this->assertSame('TESTING', $editedCustomer->getLastName());
+        $this->assertSame('TESTING@TESTING.COM', $editedCustomer->getEmail());
 
-        $this->client->request('post',  '/admin/customer/update', [], [], [], json_encode($customerAsArray));
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->client->request('post', '/admin/customer/update', [], [], [], json_encode($customerAsArray));
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAddEditAndRemoveCustomerAddresses(): void
@@ -81,11 +80,11 @@ class CustomerControllerTest extends UserWebTestCase
         $customer = $this->getCustomerById(self::DEFAULT_CUSTOMER);
         $customerAsArray = $customerService->getCustomerAsArray($customer);
         $customerAsArray['addresses'][] = $this->createAddress();
-        $this->client->request('post',  '/admin/customer/update', [], [], [], json_encode($customerAsArray));
+        $this->client->request('post', '/admin/customer/update', [], [], [], json_encode($customerAsArray));
         $customer = $this->getCustomerById(self::DEFAULT_CUSTOMER);
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(2, $customer->getAddresses()->count());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(2, $customer->getAddresses()->count());
 
         //Editing Routine
         $customerAsArray = $customerService->getCustomerAsArray($customer);
@@ -94,22 +93,22 @@ class CustomerControllerTest extends UserWebTestCase
             'address' => 'EDITED ADDRESS 9999 ST',
         ];
         $customerAsArray['addresses'][1] = array_replace($customerAsArray['addresses'][1], $editedCustomerAddress);
-        $this->client->request('post',  '/admin/customer/update', [], [], [], json_encode($customerAsArray));
+        $this->client->request('post', '/admin/customer/update', [], [], [], json_encode($customerAsArray));
         $customer = $this->getCustomerById(self::DEFAULT_CUSTOMER);
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         /** @var $editedAddress CustomerAddress */
         $editedAddress = $customer->getAddresses()->last();
-        $this->assertEquals(2, $customer->getAddresses()->count());
-        $this->assertEquals(88888, $editedAddress->getZipCode());
-        $this->assertEquals('EDITED ADDRESS 9999 ST', $editedAddress->getAddress());
+        $this->assertSame(2, $customer->getAddresses()->count());
+        $this->assertSame(88888, $editedAddress->getZipCode());
+        $this->assertSame('EDITED ADDRESS 9999 ST', $editedAddress->getAddress());
 
         //Deleting Added Address
         $customerAsArray = $customerService->getCustomerAsArray($customer);
         unset($customerAsArray['addresses'][1]);
-        $this->client->request('post',  '/admin/customer/update', [], [], [], json_encode($customerAsArray));
+        $this->client->request('post', '/admin/customer/update', [], [], [], json_encode($customerAsArray));
         $customer = $this->getCustomerById(self::DEFAULT_CUSTOMER);
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $customer->getAddresses()->count());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(1, $customer->getAddresses()->count());
     }
 
     public function testAddAndDeleteCustomer(): void
@@ -119,26 +118,24 @@ class CustomerControllerTest extends UserWebTestCase
         $newCustomer = $this->createCustomerStructure([
             'firstName' => 'NEW_CUSTOMER',
             'lastName' => 'NEW_CUSTOMER',
-            'email' => 'new-customer@new-customer.com'
+            'email' => 'new-customer@new-customer.com',
         ]);
-        $this->client->request('post',  '/admin/customer/create', [], [], [
+        $this->client->request('post', '/admin/customer/create', [], [], [
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
         ], json_encode($newCustomer));
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $customer = $this->getCustomerByEmail('new-customer@new-customer.com');
-        $this->assertEquals('NEW_CUSTOMER', $customer->getFirstName());
-        $this->assertEquals('NEW_CUSTOMER', $customer->getLastName());
-        $this->assertEquals('new-customer@new-customer.com', $customer->getEmail());
+        $this->assertSame('NEW_CUSTOMER', $customer->getFirstName());
+        $this->assertSame('NEW_CUSTOMER', $customer->getLastName());
+        $this->assertSame('new-customer@new-customer.com', $customer->getEmail());
 
-
-        $crawler = $this->client->request('get',  '/admin/customer/');
+        $crawler = $this->client->request('get', '/admin/customer/');
         $token = $crawler->filter('#index-customer')->getNode(0)->getAttribute('data-token');
 
-        $this->client->request('delete',  '/admin/customer/delete', [], [], [
+        $this->client->request('delete', '/admin/customer/delete', [], [], [
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
         ], json_encode(['customer' => $customer->getId(), 'token' => $token]));
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
-
 }
