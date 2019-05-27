@@ -198,6 +198,7 @@ class CustomerService
 
             $customerAddress->setAddress($addressData['address']);
             $customerAddress->setZipCode($addressData['zipCode']);
+            $customerAddress->setAddressType($addressData['addressType']);
             $customerAddress->setCity($city);
             $customer->addAddress($customerAddress);
             $customerAddress->setCustomer($customer);
