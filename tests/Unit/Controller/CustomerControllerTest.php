@@ -99,7 +99,7 @@ class CustomerControllerTest extends UserWebTestCase
         /** @var $editedAddress CustomerAddress */
         $editedAddress = $customer->getAddresses()->last();
         $this->assertSame(2, $customer->getAddresses()->count());
-        $this->assertSame(88888, $editedAddress->getZipCode());
+        $this->assertSame('88888', $editedAddress->getZipCode());
         $this->assertSame('EDITED ADDRESS 9999 ST', $editedAddress->getAddress());
 
         //Deleting Added Address

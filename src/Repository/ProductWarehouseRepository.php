@@ -26,12 +26,9 @@ class ProductWarehouseRepository extends ServiceEntityRepository
     public function findByWarehouse(Warehouse $warehouse, int $status): array
     {
         $products = $this->createQueryBuilder('pw')
-            ->select('pw')
-            ->addSelect('w')
-            ->addSelect('p')
+            ->select('pw,w,p')
             ->innerJoin('pw.product', 'p')
-            ->innerJoin('pw.warehouse', 'w')
-            ->where('pw.warehouse = :warehouse')
+            ->innerJoin('pw.warehouse', 'w', 'WITH', 'pw.warehouse = :warehouse')
             ->andWhere('pw.status = :status')
             ->setParameter('status', $status)
             ->setParameter('warehouse', $warehouse)
@@ -50,6 +47,10 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         return $products;
     }
 
+    /**
+     * @param Order $order
+     * @return array|ProductWarehouse[]
+     */
     public function getOrderProductsOnInventory(
         Order $order
     ): array {

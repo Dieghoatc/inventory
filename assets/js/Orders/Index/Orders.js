@@ -117,13 +117,12 @@ class Orders extends Component {
   render() {
     const {
       selectAll, orders, warehouses, loading, orderDetailId, orderStates, orderToDelete,
-      syncOrders, canAdd, canDelete, canSync,
+      syncOrders, canAdd, canDelete, canSync, confirmSent,
     } = this.state;
     const { token } = this.props;
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
       Header: '',
-      accessor: 'code',
       filterable: false,
       width: 65,
       Cell: row => (
@@ -133,6 +132,7 @@ class Orders extends Component {
         </button>
       ),
     }, {
+      accessor: 'customer',
       Header: Translator.trans('order.index.customer'),
       Cell: row => `${row.original.customer.firstName} ${row.original.customer.lastName} [${row.original.customer.email}]`,
       filterMethod: (filter, row) => {
@@ -148,10 +148,10 @@ class Orders extends Component {
       accessor: 'code',
       filterMethod: (filter, row) => {
         const id = filter.pivotId || filter.id;
-        return (
-          row[id] !== undefined
-            ? String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase()) : true
-        );
+        if (row[id] !== undefined) {
+          return row[id].toString().toLowerCase().startsWith(filter.value.toLowerCase());
+        }
+        return true;
       },
       width: 200,
     }, {
@@ -176,14 +176,11 @@ class Orders extends Component {
           onChange={(e) => {
             const status = e.target.value;
             const order = e.target.attributes.getNamedItem('data-order-id').value;
-            const closeConfirmSentModal = () => {
-              this.setState({ confirmSent: false });
-            };
 
             if (Number(status) === ORDER_STATE_SENT) {
               window.location.href = Routing.generate('order_getting_ready', { order: row.original.id });
             } else {
-              changeOrderState(order, status, closeConfirmSentModal);
+              changeOrderState(order, status, () => window.location.reload());
             }
           }}
           value={row.original.status}
@@ -282,6 +279,17 @@ class Orders extends Component {
             <h4>{Translator.trans('order.index.confirm_delete_order')}</h4>
           </ConfirmModal>
           )
+        }
+        { confirmSent
+        && (
+          <ConfirmModal
+            visible={confirmSent !== false}
+            onOk={confirmSent}
+            onCancel={() => this.setState({ confirmSent: false })}
+          >
+            <h4>{Translator.trans('order.index.confirm_change_state_to_sent')}</h4>
+          </ConfirmModal>
+        )
         }
         <div className="row">
           <div className="col-md-6">

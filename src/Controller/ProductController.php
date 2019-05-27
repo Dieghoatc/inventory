@@ -103,7 +103,6 @@ class ProductController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'product.new.updated_successfully');
-
             return $this->redirectToRoute('product_product_index');
         }
 
@@ -163,7 +162,7 @@ class ProductController extends AbstractController
 
         $writer = new Xls($template);
         $response = new StreamedResponse(
-            function () use ($writer) {
+            static function () use ($writer) {
                 $writer->save('php://output');
             }
         );
@@ -196,10 +195,7 @@ class ProductController extends AbstractController
         int $status
     ): Response {
         $products = $productWarehouseRepo->findByWarehouse($warehouse, $status);
-        $response = new Response(json_encode($products));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse($products);
     }
 
     /**
@@ -224,7 +220,7 @@ class ProductController extends AbstractController
             $products
         );
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
     /**
@@ -255,7 +251,7 @@ class ProductController extends AbstractController
             $products
         );
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
     /**
@@ -278,7 +274,7 @@ class ProductController extends AbstractController
             $products
         );
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
     /**
@@ -298,6 +294,6 @@ class ProductController extends AbstractController
     ): Response {
         $productService->approveProducts($warehouse, $productService);
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 }

@@ -13,15 +13,11 @@ class OrderListener
 {
     /** @var EntityManagerInterface */
     private $manager;
-    /** @var OrderService */
-    private $productService;
 
     public function __construct(
-        EntityManagerInterface $manager,
-        ProductService $productService
+        EntityManagerInterface $manager
     ) {
         $this->manager = $manager;
-        $this->productService = $productService;
     }
 
     public function postPersist(LifecycleEventArgs $event): void
@@ -38,10 +34,6 @@ class OrderListener
         $order = $event->getObject();
         if ($order instanceof Order && null === $order->getParent()) {
             $this->addOrderStatus($order);
-
-            if (Order::STATUS_SENT === $order->getStatus()) {
-                $this->orderSent($order);
-            }
         }
     }
 
@@ -54,10 +46,5 @@ class OrderListener
 
         $this->manager->persist($orderStatus);
         $this->manager->flush();
-    }
-
-    protected function orderSent(Order $order): void
-    {
-        $this->productService->crossOrderAgainstInventory($order);
     }
 }

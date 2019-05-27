@@ -284,12 +284,17 @@ class DetailOrder extends Component {
           </div>
         </div>
         <div className="modal-footer">
+          <a href={Routing.generate('order_pdf_remaining', { order: order.id })} className="btn btn-info" target="_blank" rel="noopener noreferrer">
+            <i className="fas fa-file-pdf" />
+            { ' ' }
+            {Translator.trans('order.index.download_remaining_order_products')}
+          </a>
           <a href={Routing.generate('order_pdf', { order: order.id })} className="btn btn-success" target="_blank" rel="noopener noreferrer">
             <i className="fas fa-file-pdf" />
             { ' ' }
             {Translator.trans('order.index.download_order')}
           </a>
-          <button type="button" className="btn btn-primary" onClick={() => closeModal()}>
+          <button type="button" className="btn btn-danger" onClick={() => closeModal()}>
             {Translator.trans('close')}
           </button>
         </div>

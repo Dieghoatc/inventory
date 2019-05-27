@@ -12,9 +12,13 @@ use App\Entity\Warehouse;
 use App\Services\CustomerService;
 use App\Services\OrderService;
 use App\Services\ProductService;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
+    /** @var Client */
+    public $client;
+
     public function createProduct(
         Warehouse $warehouse = null,
         string $code = 'CODE-TEST-01',
@@ -35,12 +39,18 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         ];
         $productService->storeProducts($products, $warehouse);
 
-        /** @var $product Product */
-        $product = $this->client->getContainer()->get('doctrine')
+        /** @var Product */
+        return $this->client->getContainer()->get('doctrine')
             ->getRepository(Product::class)
             ->findOneBy(['code' => $code]);
+    }
 
-        return $product;
+    public function findProductByCode(string $code): Product
+    {
+        return $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['code' => $code]);
     }
 
     public function getCustomerByEmail(string $email): ?Customer

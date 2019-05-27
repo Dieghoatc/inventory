@@ -207,6 +207,29 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/pdf/remaining/{order}", name="pdf_remaining", options={"expose"=true})
+     * @IsGranted("ROLE_CAN_READ_ORDERS")
+     */
+    public function remainingProductsPdf(
+        Order $order
+    ): Response {
+        $orderAsPdf = new Dompdf();
+        $html = $this->renderView('order/remaining-pdf.html.twig', [
+            'order' => $order,
+        ]);
+        $orderAsPdf->loadHtml($html);
+        $orderAsPdf->setPaper('letter', 'portrait');
+        $orderAsPdf->render();
+
+        $response = new Response();
+        $response->setContent($orderAsPdf->output());
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        return $response;
+    }
+
+    /**
      * @Route("/edit/status/{order}/{status}", name="change_status", methods={"post"}, options={"expose"=true})
      * @IsGranted("ROLE_UPDATE_ORDERS")
      */

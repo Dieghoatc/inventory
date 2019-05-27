@@ -12,7 +12,7 @@ class PartialHandler extends Component {
 
     this.state = {
       currentText: '',
-      partials,
+      partials: [],
       originalPartials: _.cloneDeep(partials),
       sending: false,
       order,
@@ -68,6 +68,34 @@ class PartialHandler extends Component {
       partials,
       currentText: '',
     });
+  }
+
+  getProductQuantityToDisplay(product) {
+    const diff = product.quantity - (
+      this.getPartialQuantity(product.uuid) + this.getCurrentOrderProductQuantity(product.uuid)
+    );
+
+    if (diff <= 0) {
+      return '~';
+    }
+
+    return diff;
+  }
+
+  getBackgroundCell(product) {
+    if (this.getProductQuantityToDisplay(product) === '~') {
+      return 'row-selected-completed';
+    }
+
+    if (product.quantity === (
+      product.quantity - (
+        this.getPartialQuantity(product.uuid) + this.getCurrentOrderProductQuantity(product.uuid)
+      )
+    )) {
+      return 'row-selected-all-pending';
+    }
+
+    return 'row-selected-some-added';
   }
 
   getProductQuantityOnInventory(productCode) {
@@ -150,11 +178,14 @@ class PartialHandler extends Component {
       .findIndex(partialProduct => (partialProduct.product.code === productCode));
 
     if (doesExistPartialIndex > -1) {
-      partials[doesExistPartialIndex].quantity = this.getCurrentOrderProductQuantity(
+      const newQuantity = this.getCurrentOrderProductQuantity(
         partials[doesExistPartialIndex].uuid,
-      ) - 1;
+      );
 
-      this.setState({ partials });
+      partials[doesExistPartialIndex].quantity = (newQuantity - 1);
+
+      const removedZeroPartials = partials.filter(partial => partial.quantity !== 0);
+      this.setState({ partials: removedZeroPartials });
     }
   }
 
@@ -218,7 +249,7 @@ class PartialHandler extends Component {
                   {order.products.map((product, productKey) => (
                     <tr
                       key={`${product.product.uuid}-${product.product.code}`}
-                      className={this.getCurrentOrderProductQuantity(product.uuid) > 0 ? 'row-selected' : ''}
+                      className={this.getBackgroundCell(product)}
                     >
                       <th scope="row">{productKey + 1}</th>
                       <td width="15%">
@@ -239,15 +270,7 @@ class PartialHandler extends Component {
                       <td width="15%" className="text-center">
                         {product.quantity}
                         { ' / ' }
-                        {
-                          product.quantity
-                          - (this.getCurrentOrderProductQuantity(product.uuid)
-                            + this.getPartialQuantity(product.uuid)) > 0
-                            ? product.quantity
-                            - (this.getCurrentOrderProductQuantity(product.uuid)
-                            + this.getPartialQuantity(product.uuid))
-                            : '~'
-                        }
+                        {this.getProductQuantityToDisplay(product)}
                       </td>
                       <td className="text-center">
                         {this.getPartialQuantity(product.uuid)}
@@ -280,6 +303,7 @@ class PartialHandler extends Component {
                           data-toggle="tooltip"
                           data-placement="top"
                           title={Translator.trans('order.getting_ready.add_products')}
+                          disabled={this.getProductQuantityToDisplay(product) === '~'}
                         >
                           <i className="fas fa-plus-circle" />
                         </button>
@@ -309,7 +333,7 @@ class PartialHandler extends Component {
                     className="btn btn-success btn-block"
                     type="button"
                     disabled={
-                      sending || order.status === 3 || order.status === 5 || order.status === 6
+                      sending || order.status === 5 || order.status === 6
                     }
                     onClick={() => (this.sendRequest())}
                   >

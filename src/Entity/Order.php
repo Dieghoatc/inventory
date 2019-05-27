@@ -429,23 +429,29 @@ class Order
     {
         $products = [];
 
-        foreach ($this->getChildren() as $child) {
+        $children = $this->getChildren();
+        if (in_array($this->getStatus(), [self::STATUS_DELIVERED, self::STATUS_SENT], false)) {
+            $children = [$this];
+        }
+
+        foreach ($children as $child) {
             foreach ($child->getProducts() as $orderProduct) {
-                if (\array_key_exists($orderProduct->getUuid(), $products)) {
-                    $products[$orderProduct->getUuid()]['quantity'] = $orderProduct->getQuantity() + $products[$orderProduct->getUuid()]['quantity'];
-                } else {
-                    $products[$orderProduct->getUuid()] = [
+                $productKey = array_search($orderProduct->getUuid(), array_column($products, 'uuid'), true);
+                if($productKey === false) {
+                    $products[] = [
                         'quantity' => $orderProduct->getQuantity(),
                         'uuid' => $orderProduct->getUuid(),
                         'product' => [
                             'code' => $orderProduct->getProduct()->getCode(),
                         ],
                     ];
+                } else {
+                    $products[$productKey]['quantity'] = $orderProduct->getQuantity() + $products[$productKey]['quantity'];
                 }
             }
         }
 
-        return array_values($products);
+        return $products;
     }
 
     public function getPendingOrderProductsQuantities(): array
@@ -454,11 +460,13 @@ class Order
         $missingProductOrderQuantities = [];
 
         foreach ($this->getProducts() as $orderProduct) {
+            $productKey = array_search($orderProduct->getUuid(), array_column($aggregatePartials, 'uuid'), true);
+
             $leftProductQuantity = $orderProduct->getQuantity();
-            if (\array_key_exists($orderProduct->getProduct()->getUuid(), $aggregatePartials)) {
-                $leftProductQuantity = $orderProduct->getQuantity() - $aggregatePartials[$orderProduct->getUuid()]['quantity'];
+            if($productKey !== false) {
+                $leftProductQuantity = $orderProduct->getQuantity() - $aggregatePartials[$productKey]['quantity'];
                 if ($leftProductQuantity < 0) {
-                    throw new InvalidArgumentException('The product on the order has missing values lowest than 0');
+                    throw new InvalidArgumentException('The pending quantity for this product is below that 0.');
                 }
             }
 
