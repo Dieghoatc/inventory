@@ -4,11 +4,13 @@ namespace App\Tests\Unit\Utils;
 
 use App\Entity\User;
 use App\Tests\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserWebTestCase extends WebTestCase
 {
+    /** @var Client */
     public $client;
 
     public function setUp()

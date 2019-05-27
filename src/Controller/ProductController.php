@@ -13,6 +13,7 @@ use App\Services\ProductService;
 use Doctrine\Common\Persistence\ObjectManager;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,6 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/product", name="product_")
@@ -72,7 +72,6 @@ class ProductController extends AbstractController
         Request $request,
         Product $product
     ): Response {
-
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -80,13 +79,13 @@ class ProductController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'product.edit.updated_successfully');
+
             return $this->redirectToRoute('product_product_index');
         }
 
         return $this->render('product/edit.html.twig', [
             'form' => $form->createView(),
         ]);
-
     }
 
     /**
@@ -153,17 +152,17 @@ class ProductController extends AbstractController
         $products = [];
         if ($all) {
             $products = $productRepo->findAll();
-        } else if ($request->get('data')) {
+        } elseif ($request->get('data')) {
             $uuids = $request->get('data');
             $products = $productRepo->findByUuids($uuids);
         }
-        if (count($products) > 0) {
+        if (\count($products) > 0) {
             $this->attachCell($template, $products);
         }
 
         $writer = new Xls($template);
         $response = new StreamedResponse(
-            function () use ($writer) {
+            static function () use ($writer) {
                 $writer->save('php://output');
             }
         );
@@ -185,7 +184,6 @@ class ProductController extends AbstractController
             $template->getActiveSheet()->setCellValue("D{$row}", 0);
             $template->getActiveSheet()->setCellValue("E{$row}", 0);
         }
-
     }
 
     /**
@@ -197,10 +195,7 @@ class ProductController extends AbstractController
         int $status
     ): Response {
         $products = $productWarehouseRepo->findByWarehouse($warehouse, $status);
-        $response = new Response(json_encode($products));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse($products);
     }
 
     /**
@@ -225,7 +220,7 @@ class ProductController extends AbstractController
             $products
         );
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
     /**
@@ -256,7 +251,7 @@ class ProductController extends AbstractController
             $products
         );
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
     /**
@@ -279,7 +274,7 @@ class ProductController extends AbstractController
             $products
         );
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 
     /**
@@ -299,6 +294,6 @@ class ProductController extends AbstractController
     ): Response {
         $productService->approveProducts($warehouse, $productService);
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse(['status' => true]);
     }
 }

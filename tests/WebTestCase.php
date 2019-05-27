@@ -12,10 +12,12 @@ use App\Entity\Warehouse;
 use App\Services\CustomerService;
 use App\Services\OrderService;
 use App\Services\ProductService;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
+    /** @var Client */
+    public $client;
 
     public function createProduct(
         Warehouse $warehouse = null,
@@ -37,12 +39,18 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         ];
         $productService->storeProducts($products, $warehouse);
 
-        /** @var $product Product */
-        $product = $this->client->getContainer()->get('doctrine')
+        /** @var Product */
+        return $this->client->getContainer()->get('doctrine')
             ->getRepository(Product::class)
             ->findOneBy(['code' => $code]);
+    }
 
-        return $product;
+    public function findProductByCode(string $code): Product
+    {
+        return $this->client->getContainer()
+            ->get('doctrine')
+            ->getRepository(Product::class)
+            ->findOneBy(['code' => $code]);
     }
 
     public function getCustomerByEmail(string $email): ?Customer
@@ -81,7 +89,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             ->getRepository(ProductWarehouse::class)->findOneBy(
                 [
                     'product' => $product,
-                    'warehouse' => $warehouse
+                    'warehouse' => $warehouse,
                 ]
             );
     }
@@ -99,12 +107,12 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
                 [
                     'city' => [
                         'name' => $city->getName(),
-                        'id' => $city->getId()
+                        'id' => $city->getId(),
                     ],
                     'address' => 'TEST ADDRESS',
                     'zipCode' => '99999',
-                ]
-            ]
+                ],
+            ],
         ], $customerData);
     }
 
@@ -112,6 +120,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
     {
         /** @var $customerService CustomerService */
         $customerService = $this->client->getContainer()->get(CustomerService::class);
+
         return $customerService->addOrUpdate($this->createCustomerStructure($customerData));
     }
 
@@ -144,7 +153,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
                 'firstName' => 'Jose',
                 'lastName' => 'Perez',
                 'phone' => '+57 3002825566',
-                'addresses' => []
+                'addresses' => [],
             ],
             'products' => [
                 [
@@ -176,6 +185,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $user = $this->getUserByEmail('sbarbosa115@gmail.com');
         $mergedOrderData = $this->createOrderStructure($orderData);
         $orderCreated = $orderService->add($mergedOrderData, $user);
+
         return $this->getOrderById($orderCreated['id']);
     }
 
@@ -184,6 +194,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $orderService = $this->client->getContainer()->get(OrderService::class);
         $user = $this->getUserByEmail('sbarbosa115@gmail.com');
         $mergedOrderData = $this->createOrderStructure($orderData);
+
         return $orderService->add($mergedOrderData, $user);
     }
 
@@ -196,8 +207,8 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
     public function getLastAddedOrder(): Order
     {
         $orders = $this->getAllOrders();
-        /** @var $lastOrder Order */
-        return $orders[count($orders) - 1];
+        /* @var $lastOrder Order */
+        return $orders[\count($orders) - 1];
     }
 
     public function getCustomerById(int $customerId): Customer

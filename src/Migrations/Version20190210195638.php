@@ -28,7 +28,6 @@ final class Version20190210195638 extends AbstractMigration implements Container
         $this->container = $container;
     }
 
-
     public function getDescription(): string
     {
         return '';
@@ -37,14 +36,14 @@ final class Version20190210195638 extends AbstractMigration implements Container
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         /** @var EntityManager */
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
         /** @var $defaultUsaCountry Country */
         $defaultUsaCountry = $entityManager->getRepository(Country::class)->findOneBy(['name' => 'USA']);
 
-        if(!$defaultUsaCountry instanceof Country) {
+        if (!$defaultUsaCountry instanceof Country) {
             $defaultUsaCountry = new Country();
         }
 
@@ -54,7 +53,7 @@ final class Version20190210195638 extends AbstractMigration implements Container
 
         /** @var $florida State */
         $florida = $entityManager->getRepository(State::class)->findOneBy(['name' => 'Florida']);
-        if(!$florida instanceof State) {
+        if (!$florida instanceof State) {
             $florida = new State();
             $florida->setName('Florida');
             $florida->setCountry($defaultUsaCountry);
@@ -113,9 +112,7 @@ final class Version20190210195638 extends AbstractMigration implements Container
         $this->addSql("INSERT INTO state (`code`, `country_id`, `name`) VALUES ('WV', '{$defaultUsaCountry->getId()}', 'West Virginia')");
         $this->addSql("INSERT INTO state (`code`, `country_id`, `name`) VALUES ('WI', '{$defaultUsaCountry->getId()}', 'Wisconsin')");
         $this->addSql("INSERT INTO state (`code`, `country_id`, `name`) VALUES ('WY', '{$defaultUsaCountry->getId()}', 'Wyoming')");
-
     }
-
 
     public function down(Schema $schema): void
     {

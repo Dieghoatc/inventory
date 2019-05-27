@@ -42,14 +42,8 @@ class OrderServiceTest extends WebTestCase
                 'id' => $customer->getId(),
             ],
             'products' => [
-                [
-                    'uuid' => $productA->getUuid(),
-                    'quantity' => 10,
-                ],
-                [
-                    'uuid' => $productB->getUuid(),
-                    'quantity' => 20,
-                ],
+                ['uuid' => $productA->getUuid(), 'quantity' => 10],
+                ['uuid' => $productB->getUuid(), 'quantity' => 20],
             ],
             'comments' => [
                 [
@@ -103,43 +97,7 @@ class OrderServiceTest extends WebTestCase
         $manager->persist($order);
         $manager->flush();
 
-
         $this->assertCount(2, $order->getOrderStatuses());
-    }
-
-    public function testOrderMarkAsCompletedSuccess(): void
-    {
-        $initialQuantity = 100;
-        $warehouse = $this->getWarehouseByName('Colombia');
-        $productA = $this->createProduct($warehouse, 'TEST-COMPLETE-ORDER-A', $initialQuantity);
-        $productB = $this->createProduct($warehouse, 'TEST-COMPLETE-ORDER-B', $initialQuantity);
-
-        $orderData = [
-            'code' => 'UNIT-TEST-COMPLETE-001514',
-            'products' => [
-                [
-                    'uuid' => $productA->getUuid(),
-                    'quantity' => 25,
-                ],
-                [
-                    'uuid' => $productB->getUuid(),
-                    'quantity' => 75,
-                ],
-            ],
-        ];
-        $order = $this->createOrder($orderData);
-
-        //Status that trigger the warehouse discount
-        $order->setStatus(Order::STATUS_SENT);
-        $manager = $this->client->getContainer()->get('doctrine')->getManager();
-        $manager->persist($order);
-        $manager->flush();
-
-        $productAOnWarehouse = $this->getProductWarehouse($productA, $warehouse);
-        $productBOnWarehouse = $this->getProductWarehouse($productB, $warehouse);
-
-        $this->assertEquals(75, $productAOnWarehouse->getQuantity());
-        $this->assertEquals(25, $productBOnWarehouse->getQuantity());
     }
 
     public function testCreateOrderThenUpdateIt(): void
@@ -155,7 +113,6 @@ class OrderServiceTest extends WebTestCase
         $productB = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-B');
         $productC = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-C');
 
-
         $orderData = [
             'code' => $caseOrderCode,
             'comment' => 'ORDER_COMMENT_WHEN_IT_WAS_CREATED',
@@ -166,18 +123,9 @@ class OrderServiceTest extends WebTestCase
                 'id' => $customer->getId(),
             ],
             'products' => [
-                [
-                    'uuid' => $productA->getUuid(),
-                    'quantity' => 10,
-                ],
-                [
-                    'uuid' => $productB->getUuid(),
-                    'quantity' => 20,
-                ],
-                [
-                    'uuid' => $productC->getUuid(),
-                    'quantity' => 30,
-                ],
+                ['uuid' => $productA->getUuid(), 'quantity' => 10],
+                ['uuid' => $productB->getUuid(), 'quantity' => 20],
+                ['uuid' => $productC->getUuid(), 'quantity' => 30],
             ],
             'comments' => [
                 [
@@ -192,22 +140,86 @@ class OrderServiceTest extends WebTestCase
         $orderAsEntity = $this->createOrder($orderData);
         $order = $orderService->getOrderAsArray($orderAsEntity);
         $this->assertArrayHasKey('products', $order);
-        $productD = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-D');
+        $productD = $this->createProduct($warehouse, 'ADD-NEW-EDIT-KF-D', 40);
 
         $order['products'][0]['quantity'] = 11;
         unset($order['products'][2]);
-        $order['products'][] = [
-            'uuid' => $productD->getUuid(),
-            'quantity' => 40,
-        ];
+        $order['products'][] = ['uuid' => $productD->getUuid(),'quantity' => 40];
 
         $orderService->update($orderAsEntity, $order);
-        $orderUpdate = $this->getOrderByCode($caseOrderCode);
+        $orderUpdated = $this->getOrderByCode($caseOrderCode);
 
-        $this->assertCount(3, $orderUpdate->getProducts());
-        $this->assertTrue($orderUpdate->isProductInOrder($productA));
-        $this->assertTrue($orderUpdate->isProductInOrder($productB));
-        $this->assertTrue($orderUpdate->isProductInOrder($productD));
-        $this->assertFalse($orderUpdate->isProductInOrder($productC));
+        $this->assertCount(3, $orderUpdated->getProducts());
+        $this->assertTrue($orderUpdated->isProductInOrder($productA));
+        $this->assertTrue($orderUpdated->isProductInOrder($productB));
+        $this->assertTrue($orderUpdated->isProductInOrder($productD));
+        $this->assertFalse($orderUpdated->isProductInOrder($productC));
+        $this->assertTrue($orderService->hasInventoryTheOrderRequiredProducts($orderUpdated));
+    }
+
+    public function testHasInventoryEnoughProductsForAnOrder(): void
+    {
+        $warehouse = $this->getWarehouseByName('Colombia');
+        $customer = $this->getCustomerByEmail('jose.perez@example.com');
+        $product = $this->createProduct($warehouse,'LOW-QUANTITY-PRODUCTS',10);
+
+        $orderData = [
+            'code' => 'LOW-QUANTITY-TEST',
+            'comment' => 'LOW-QUANTITY-TEST',
+            'warehouse' => [
+                'id' => $warehouse->getId(),
+            ],
+            'customer' => [
+                'id' => $customer->getId(),
+            ],
+            'products' => [
+                ['uuid' => $product->getUuid(),'quantity' => 15],
+            ],
+        ];
+
+        /** @var $orderService OrderService */
+        $orderService = $this->client->getContainer()->get(OrderService::class);
+        $order = $this->createOrder($orderData);
+
+        $this->assertFalse($orderService->hasInventoryTheOrderRequiredProducts($order));
+    }
+
+    public function testHasInventorySameProductsThanOrder(): void
+    {
+        $warehouse = $this->getWarehouseByName('Colombia');
+        $customer = $this->getCustomerByEmail('jose.perez@example.com');
+        $productA = $this->createProduct($warehouse, 'LOW-QUANTITY-PRODUCTS-A',10);
+        $productB = $this->createProduct($warehouse, 'LOW-QUANTITY-PRODUCTS-B',20);
+
+        $orderData = [
+            'code' => 'LOW-QUANTITY-TEST',
+            'comment' => 'LOW-QUANTITY-TEST',
+            'warehouse' => [
+                'id' => $warehouse->getId(),
+            ],
+            'customer' => [
+                'id' => $customer->getId(),
+            ],
+            'products' => [
+                ['uuid' => $productA->getUuid(), 'quantity' => 10],
+                ['uuid' => $productB->getUuid(), 'quantity' => 20],
+            ],
+        ];
+
+        /** @var $orderService OrderService */
+        $orderService = $this->client->getContainer()->get(OrderService::class);
+        $order = $this->createOrder($orderData);
+
+        $partialRequest = [
+            ['uuid' => $productA->getUuid(), 'quantity' => 10],
+            ['uuid' => $productB->getUuid(), 'quantity' => 20]
+        ];
+
+        $this->assertTrue($orderService->hasPartialOrderSameAmountOfProductsThatOriginal($order, $partialRequest));
+        $partialRequest = [
+            ['uuid' => $productB->getUuid(),'quantity' => 20]
+        ];
+        $this->assertFalse($orderService->hasPartialOrderSameAmountOfProductsThatOriginal($order, $partialRequest));
+
     }
 }

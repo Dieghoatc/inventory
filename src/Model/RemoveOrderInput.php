@@ -2,8 +2,8 @@
 
 namespace App\Model;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\Constraint as CustomAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class RemoveOrderInput
 {
@@ -30,5 +30,4 @@ class RemoveOrderInput
 
         return $new;
     }
-
 }

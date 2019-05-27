@@ -23,7 +23,7 @@ class CityRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('c');
 
-        if ($id !== null) {
+        if (null !== $id) {
             $query->where('c.id = :id')->setParameter('id', $id);
         } else {
             $query->where('c.name = :name')->setParameter('name', $name);

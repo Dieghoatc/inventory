@@ -49,7 +49,6 @@ class Orders extends Component {
       loading: true,
       orders: [],
       orderDetailId: null,
-      confirmSent: false,
       orderStates: [
         { name: Translator.trans('order_statuses.1'), id: 1 },
         { name: Translator.trans('order_statuses.2'), id: 2 },
@@ -124,7 +123,6 @@ class Orders extends Component {
     const { toggleSelection, toggleAll, isSelected } = this;
     const columns = [{
       Header: '',
-      accessor: 'code',
       filterable: false,
       width: 65,
       Cell: row => (
@@ -134,6 +132,7 @@ class Orders extends Component {
         </button>
       ),
     }, {
+      accessor: 'customer',
       Header: Translator.trans('order.index.customer'),
       Cell: row => `${row.original.customer.firstName} ${row.original.customer.lastName} [${row.original.customer.email}]`,
       filterMethod: (filter, row) => {
@@ -149,10 +148,10 @@ class Orders extends Component {
       accessor: 'code',
       filterMethod: (filter, row) => {
         const id = filter.pivotId || filter.id;
-        return (
-          row[id] !== undefined
-            ? String(row[id].toLowerCase()).startsWith(filter.value.toLowerCase()) : true
-        );
+        if (row[id] !== undefined) {
+          return row[id].toString().toLowerCase().startsWith(filter.value.toLowerCase());
+        }
+        return true;
       },
       width: 200,
     }, {
@@ -177,16 +176,11 @@ class Orders extends Component {
           onChange={(e) => {
             const status = e.target.value;
             const order = e.target.attributes.getNamedItem('data-order-id').value;
-            const closeConfirmSentModal = () => {
-              this.setState({ confirmSent: false });
-            };
 
             if (Number(status) === ORDER_STATE_SENT) {
-              this.setState({
-                confirmSent: () => (changeOrderState(order, status, closeConfirmSentModal)),
-              });
+              window.location.href = Routing.generate('order_getting_ready', { order: row.original.id });
             } else {
-              changeOrderState(order, status, closeConfirmSentModal);
+              changeOrderState(order, status, () => window.location.reload());
             }
           }}
           value={row.original.status}

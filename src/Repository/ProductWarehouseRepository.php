@@ -26,12 +26,9 @@ class ProductWarehouseRepository extends ServiceEntityRepository
     public function findByWarehouse(Warehouse $warehouse, int $status): array
     {
         $products = $this->createQueryBuilder('pw')
-            ->select('pw')
-            ->addSelect('w')
-            ->addSelect('p')
+            ->select('pw,w,p')
             ->innerJoin('pw.product', 'p')
-            ->innerJoin('pw.warehouse', 'w')
-            ->where('pw.warehouse = :warehouse')
+            ->innerJoin('pw.warehouse', 'w', 'WITH', 'pw.warehouse = :warehouse')
             ->andWhere('pw.status = :status')
             ->setParameter('status', $status)
             ->setParameter('warehouse', $warehouse)
@@ -50,11 +47,13 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         return $products;
     }
 
-
+    /**
+     * @param Order $order
+     * @return array|ProductWarehouse[]
+     */
     public function getOrderProductsOnInventory(
         Order $order
-    ): array
-    {
+    ): array {
         return $this->createQueryBuilder('pw')
             ->select('pw, p')
             ->innerJoin('pw.product', 'p')
@@ -62,7 +61,7 @@ class ProductWarehouseRepository extends ServiceEntityRepository
             ->where('p.uuid in (:uuids)')
             ->andWhere('w.id = :warehouse')
             ->setParameter('uuids', $order->getOrderProductsUuids())
-            ->setParameter('warehouse',  $order->getWarehouse()->getId())
+            ->setParameter('warehouse', $order->getWarehouse()->getId())
             ->getQuery()
             ->getResult();
     }
@@ -72,10 +71,10 @@ class ProductWarehouseRepository extends ServiceEntityRepository
         return $this->orderProductArray($this->getOrderProductsOnInventory($order));
     }
 
-
     public function orderProductArray(array $productWarehouse): array
     {
         $serializer = new Serializer([new ObjectNormalizer()]);
+
         return $serializer->normalize($productWarehouse, 'array', ['attributes' => [
             'id',
             'status',

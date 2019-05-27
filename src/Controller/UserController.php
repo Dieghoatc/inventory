@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
-use FOS\UserBundle\Model\UserManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,8 +46,7 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $user->setPassword($passwordEncoder->encodePassword($user,$form->get('password')->getData()));
+            $user->setPassword($passwordEncoder->encodePassword($user, $form->get('password')->getData()));
             $manager->persist($user);
             $manager->flush();
 
@@ -75,8 +73,7 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $user->setPassword($passwordEncoder->encodePassword($user,$form->get('password')->getData()));
+            $user->setPassword($passwordEncoder->encodePassword($user, $form->get('password')->getData()));
             $manager->persist($user);
             $manager->flush();
 

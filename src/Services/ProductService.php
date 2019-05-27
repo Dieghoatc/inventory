@@ -11,9 +11,7 @@ use App\Repository\OrderProductRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductWarehouseRepository;
 use App\Repository\WarehouseRepository;
-use function count;
 use Doctrine\Common\Persistence\ObjectManager;
-use function in_array;
 use InvalidArgumentException;
 use LogicException;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -69,10 +67,10 @@ class ProductService
     protected function getQueryFilter(array $rowData): array
     {
         $queryFilter = null;
-        if (array_key_exists('uuid', $rowData)) {
+        if (\array_key_exists('uuid', $rowData)) {
             $queryFilter = ['uuid' => $rowData['uuid']];
         }
-        if (array_key_exists('code', $rowData)) {
+        if (\array_key_exists('code', $rowData)) {
             $queryFilter = ['code' => $rowData['code']];
         }
 
@@ -107,7 +105,7 @@ class ProductService
         $productsAdded = [];
         foreach ($items as $key => $item) {
             if (0 === $key || '' === $item[self::PRODUCT_CODE] || null === $item[self::PRODUCT_CODE]
-                || in_array($item[self::PRODUCT_CODE], $productsAdded, true)) {
+                || \in_array($item[self::PRODUCT_CODE], $productsAdded, true)) {
                 continue;
             }
 
@@ -116,6 +114,8 @@ class ProductService
             if (!$product instanceof Product) {
                 $product = new Product();
             }
+
+            $product->setStatus(Product::STATUS_ACTIVE);
             $product->setCode($item[self::PRODUCT_CODE]);
             $product->setTitle($item[self::PRODUCT_TITLE]);
             $product->setPrice((float) $item[self::PRODUCT_PRICE]);
@@ -138,7 +138,7 @@ class ProductService
 
             $product->addProductWarehouse($productWarehouse);
             $errors = $this->validator->validate($product);
-            if (0 !== count($errors)) {
+            if (0 !== \count($errors)) {
                 $validations[] = $validations;
             } else {
                 $productsAdded[] = $item[self::PRODUCT_CODE];
@@ -149,10 +149,10 @@ class ProductService
         $this->manager->flush();
     }
 
-    public function moveProducts(array $items, Warehouse $warehouseSource, Warehouse $warehouseDestination): void
+    public function moveProducts(array $productsToMove, Warehouse $warehouseSource, Warehouse $warehouseDestination): void
     {
-        foreach ($items as $item) {
-            $queryFilter = $this->getQueryFilter($item);
+        foreach ($productsToMove as $productToMove) {
+            $queryFilter = $this->getQueryFilter($productToMove);
             $product = $this->productRepo->findOneBy($queryFilter);
 
             if (!$product) {
@@ -171,17 +171,17 @@ class ProductService
                 throw new LogicException('Error trying to get the product warehouse.');
             }
 
-            $productSource->subQuantity($item['quantity']);
+            $productSource->subQuantity($productToMove['quantity']);
             $productDestination = $this->productWarehouseRepo->findOneBy([
                 'warehouse' => $warehouseDestination, 'product' => $product, 'status' => 0,
             ]);
 
             if ($productDestination instanceof ProductWarehouse) {
-                $productDestination->addQuantity($item['quantity']);
+                $productDestination->addQuantity($productToMove['quantity']);
             } else {
                 $productDestination = new ProductWarehouse();
                 $productDestination->setWarehouse($warehouseDestination);
-                $productDestination->addQuantity($item['quantity']);
+                $productDestination->addQuantity($productToMove['quantity']);
                 $productDestination->setProduct($product);
                 $productDestination->setStatus(ProductWarehouse::STATUS_PENDING_TO_CONFIRM);
             }
@@ -192,10 +192,10 @@ class ProductService
         $this->manager->flush();
     }
 
-    public function addProductsToInventory(array $items, Warehouse $warehouse): void
+    public function addProductsToInventory(array $newProducts, Warehouse $warehouse): void
     {
-        foreach ($items as $item) {
-            $queryFilter = $this->getQueryFilter($item);
+        foreach ($newProducts as $newProduct) {
+            $queryFilter = $this->getQueryFilter($newProduct);
             $product = $this->productRepo->findOneBy($queryFilter);
 
             if (!$product instanceof Product) {
@@ -212,7 +212,7 @@ class ProductService
                 $productDestination->setStatus(ProductWarehouse::STATUS_CONFIRMED);
             }
 
-            $productDestination->addQuantity($item['quantity']);
+            $productDestination->addQuantity($newProduct['quantity']);
             $this->manager->persist($productDestination);
         }
         $this->manager->flush();
@@ -251,36 +251,24 @@ class ProductService
     {
         $productsPendingToApprove = $this->productWarehouseRepo->findBy([
             'warehouse' => $warehouse,
-            'status' => 0,
+            'status' => ProductWarehouse::STATUS_PENDING_TO_CONFIRM,
         ]);
 
-        $products = [];
-        foreach ($productsPendingToApprove as $product) {
-            if (!$product instanceof Product) {
-                throw new LogicException('Product not found.');
-            }
-
-            $productChild = $product->getProduct();
-
-            if (!$productChild instanceof Product) {
-                throw new LogicException('Product not found.');
-            }
-
-            $products[] = ['code' => $productChild->getCode(), 'quantity' => $product->getQuantity()];
-            $this->manager->remove($product);
+        foreach ($productsPendingToApprove as $productWarehouse) {
+            $productWarehouse->setStatus(ProductWarehouse::STATUS_CONFIRMED);
+            $this->manager->persist($productWarehouse);
         }
 
         $this->manager->flush();
-        $this->addProductsToInventory($products, $warehouse);
     }
 
     public function add(array $productData, Warehouse $warehouse = null): Product
     {
-        if (!array_key_exists('uuid', $productData) && !array_key_exists('code', $productData)) {
+        if (!\array_key_exists('uuid', $productData) && !\array_key_exists('code', $productData)) {
             throw new InvalidArgumentException('Either UUID or code was not provided');
         }
 
-        if (array_key_exists('uuid', $productData)) {
+        if (\array_key_exists('uuid', $productData)) {
             $product = $this->productRepo->findOneBy(['uuid' => $productData['uuid']]);
         } else {
             $product = $this->productRepo->findOneBy(['code' => $productData['code']]);
@@ -316,19 +304,18 @@ class ProductService
         $products = [];
 
         foreach ($order->getOrderProducts() as $orderProduct) {
-
             if (!$orderProduct->getProduct() instanceof Product) {
                 throw new LogicException('This product was not found');
             }
 
-            /** @var $orderProduct OrderProduct */
+            /* @var $orderProduct OrderProduct */
             $products[] = [
               'uuid' => $orderProduct->getProduct()->getUuid(),
-              'quantity' => $orderProduct->getQuantity()
+              'quantity' => $orderProduct->getQuantity(),
             ];
         }
-        if($warehouse === null) {
-           $warehouse = $order->getWarehouse();
+        if (null === $warehouse) {
+            $warehouse = $order->getWarehouse();
         }
 
         $this->removeProductsFromInventory($products, $warehouse);

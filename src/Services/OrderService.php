@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\Order;
 use App\Entity\OrderProduct;
 use App\Entity\Product;
+use App\Entity\ProductWarehouse;
 use App\Entity\User;
 use App\Entity\Warehouse;
 use App\Repository\OrderRepository;
@@ -210,17 +211,65 @@ class OrderService
         $this->deleteOrder($order);
     }
 
+    public function hasInventoryTheOrderRequiredProducts(Order $order): bool
+    {
+        $orderProducts = $order->getProducts();
+        $inventoryProducts = $this->objectManager->getRepository(ProductWarehouse::class)
+            ->getOrderProductsOnInventory($order);
+
+        foreach ($orderProducts as $orderProduct) {
+            foreach ($inventoryProducts as $inventoryProduct) {
+                if (
+                    $orderProduct->getProduct() === $inventoryProduct->getProduct()
+                    && $orderProduct->getQuantity() > $inventoryProduct->getQuantity()
+                ) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public function hasPartialOrderSameAmountOfProductsThatOriginal(
+        Order $order,
+        array $partialOrder
+    ): bool {
+        $orderProducts = $order->getProducts();
+
+        foreach ($orderProducts as $orderProduct) {
+            $orderProductKey = array_search($orderProduct->getUuid(), array_column($partialOrder, 'uuid'), true);
+
+            if ($orderProductKey !== false && (int) $partialOrder[$orderProductKey]['quantity'] !== $orderProduct->getQuantity()) {
+                return false;
+            }
+
+            if ($orderProductKey === false) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
     public function createPartial(Order $order, array $partialOrderData): void
     {
-        $children = new Order();
-        $children->setParent($order);
+        if(
+            $this->hasInventoryTheOrderRequiredProducts($order)
+            && $this->hasPartialOrderSameAmountOfProductsThatOriginal($order, $partialOrderData)
+        ) {
+            $order->setStatus(Order::STATUS_SENT);
+            $this->productService->crossOrderAgainstInventory($order);
+            $this->objectManager->persist($order);
+        } else {
+            $children = new Order();
+            $children->setParent($order);
+            $this->createOrderProductFromArrayInput($children, $partialOrderData);
+            $order->setStatus(Order::STATUS_PARTIAL);
+            $this->productService->crossOrderAgainstInventory($children, $order->getWarehouse());
+            $this->objectManager->persist($children);
+        }
 
-        $this->createOrderProductFromArrayInput($children, $partialOrderData);
-
-        $order->setStatus(Order::STATUS_PARTIAL);
-        $this->objectManager->persist($order);
         $this->objectManager->flush();
-
-        $this->productService->crossOrderAgainstInventory($children, $order->getWarehouse());
     }
 }

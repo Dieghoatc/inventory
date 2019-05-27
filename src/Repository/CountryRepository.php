@@ -33,10 +33,10 @@ class CountryRepository extends ServiceEntityRepository
     public function findOneByIdOrName(int $id = null, string $name = null): ?Country
     {
         $query = $this->createQueryBuilder('c');
-        if ($id !== null) {
+        if (null !== $id) {
             $query->where('c.id = :id')
                 ->setParameter('id', $id);
-        } else if ($name !== null) {
+        } elseif (null !== $name) {
             $query
                 ->where('c.name = :name')
                 ->orWhere('c.code = :code')

@@ -51,7 +51,7 @@ class CustomerService
 
     public function addOrUpdate(array $customerData): Customer
     {
-        if (array_key_exists('id', $customerData)) {
+        if (\array_key_exists('id', $customerData)) {
             $customer = $this->customerRepo->find($customerData['id']);
             if (!$customer instanceof Customer) {
                 throw new LogicException('Customer not found');
@@ -69,6 +69,7 @@ class CustomerService
     ): Customer {
         $customer = new Customer();
         $this->setCustomerData($customerData, $customer);
+
         return $customer;
     }
 
@@ -77,6 +78,7 @@ class CustomerService
         Customer $customer
     ): Customer {
         $this->setCustomerData($customerData, $customer);
+
         return $customer;
     }
 
@@ -102,7 +104,7 @@ class CustomerService
 
     public function findOrCreateCity(array $cityData): City
     {
-        if (!array_key_exists('id', $cityData) && !array_key_exists('name', $cityData)) {
+        if (!\array_key_exists('id', $cityData) && !\array_key_exists('name', $cityData)) {
             throw new InvalidArgumentException('Missing city ID?');
         }
 
@@ -125,7 +127,7 @@ class CustomerService
 
     public function findOrCreateState(array $stateData): State
     {
-        if (!array_key_exists('id', $stateData) && !array_key_exists('name', $stateData) ) {
+        if (!\array_key_exists('id', $stateData) && !\array_key_exists('name', $stateData)) {
             throw new InvalidArgumentException('Missing state ID?');
         }
 
@@ -144,13 +146,12 @@ class CustomerService
             $this->objectManager->flush();
         }
 
-
         return $state;
     }
 
     public function findOrCreateCountry(array $countryData): Country
     {
-        if (!array_key_exists('id', $countryData) && !array_key_exists('name', $countryData)) {
+        if (!\array_key_exists('id', $countryData) && !\array_key_exists('name', $countryData)) {
             throw new InvalidArgumentException('Missing country ID?');
         }
 
@@ -172,11 +173,11 @@ class CustomerService
     public function syncAddresses(Customer $customer, array $addresses): void
     {
         foreach ($customer->getAddresses() as $address) {
-            $someFound = array_filter($addresses, static function($addressItem) use ($address) {
-                return array_key_exists('id', $addressItem) && (int) $addressItem['id'] === $address->getId();
+            $someFound = array_filter($addresses, static function ($addressItem) use ($address) {
+                return \array_key_exists('id', $addressItem) && (int) $addressItem['id'] === $address->getId();
             });
 
-            if (count($someFound) === 0) {
+            if (0 === \count($someFound)) {
                 $customer->removeAddress($address);
             }
         }
@@ -186,7 +187,7 @@ class CustomerService
         foreach ($addresses as $addressData) {
             $customerAddress = new CustomerAddress();
 
-            if (array_key_exists('id', $addressData)) {
+            if (\array_key_exists('id', $addressData)) {
                 $customerAddress = $this->customerAddressRepo->find($addressData['id']);
             }
 
@@ -224,10 +225,10 @@ class CustomerService
                 'id', 'zipCode', 'address', 'city' => [
                     'id', 'name', 'state' => [
                         'id', 'name', 'code', 'country' => [
-                            'id', 'name'
-                        ]
-                    ]
-                ]
+                            'id', 'name',
+                        ],
+                    ],
+                ],
             ],
         ];
     }
@@ -246,10 +247,11 @@ class CustomerService
     private function serializeCustomer(Customer $customer = null, array $customers = null): array
     {
         $entityOrCollection = $customer;
-        if ($customers !== null) {
+        if (null !== $customers) {
             $entityOrCollection = $customers;
         }
         $serializer = new Serializer([new ObjectNormalizer()]);
+
         return $serializer->normalize($entityOrCollection, 'array', ['attributes' => $this->getCustomerArrayTemplate()]);
     }
 
@@ -267,11 +269,10 @@ class CustomerService
     {
         $customer = $this->customerRepo->find($customerId);
 
-        if(!$customer instanceof Customer) {
+        if (!$customer instanceof Customer) {
             throw new InvalidArgumentException('Invalid exception');
         }
 
         return $customer;
     }
-
 }
