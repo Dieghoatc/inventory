@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Service;
 
 use App\Entity\City;
 use App\Entity\Customer;
+use App\Entity\CustomerAddress;
 use App\Services\CustomerService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -33,6 +34,7 @@ class CustomerServiceTest extends WebTestCase
             'phone' => '305 4887945',
             'addresses' => [
                 [
+                    'addressType' => CustomerAddress::ADDRESS_BILLING,
                     'address' => '9999 Test Street Drive Test',
                     'zipCode' => '99999',
                     'city' => [

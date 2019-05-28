@@ -9,7 +9,7 @@
         </div>
         <div class="card-body">
             <div
-                id="react-component"
+                id="order-handler"
                 data-locations="{{ locations | json_encode }}"
                 data-warehouses="{{ warehouses | json_encode }}"
                 data-customers="{{ customers | json_encode }}"
@@ -22,5 +22,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('build/order/new.js') }}"></script>
+    <script src="{{ asset('build/order/order-handler.js') }}"></script>
 {% endblock %}

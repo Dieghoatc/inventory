@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use App\Entity\City;
 use App\Entity\Customer;
+use App\Entity\CustomerAddress;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\ProductWarehouse;
@@ -105,6 +106,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             'email' => 'test@example.com',
             'addresses' => [
                 [
+                    'addressType' => CustomerAddress::ADDRESS_BILLING,
                     'city' => [
                         'name' => $city->getName(),
                         'id' => $city->getId(),

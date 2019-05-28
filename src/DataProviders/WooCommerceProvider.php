@@ -130,7 +130,7 @@ class WooCommerceProvider
     public function syncOrders(User $user): void
     {
         $orders = $this->getOrders();
-        echo json_encode($orders);
+
         $warehouse = $this->warehouseRepo->findOneBy(['name' => 'Colombia']);
 
         if (!$warehouse instanceof Warehouse) {
@@ -139,7 +139,7 @@ class WooCommerceProvider
 
         foreach ($orders as $order) {
             $orderExist = $this->orderRepo->findOneBy(['code' => $order->id]);
-            if ($orderExist instanceof Order) {
+            if ($orderExist instanceof Order && $orderExist->getProducts()->count() > 0) {
                 continue;
             }
 
@@ -148,6 +148,7 @@ class WooCommerceProvider
                 'name' => $warehouse->getName(),
                 'id' => $warehouse->getId(),
             ];
+
             $this->orderService->add($orderTransformed, $user);
         }
     }

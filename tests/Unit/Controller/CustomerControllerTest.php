@@ -39,6 +39,7 @@ class CustomerControllerTest extends UserWebTestCase
     private function createAddress(array $addressData = []): array
     {
         return array_merge_recursive([
+            'addressType' => CustomerAddress::ADDRESS_BILLING,
             'zipCode' => 99999,
             'address' => 'ADDRESS NAME ST 999 AV',
             'city' => [

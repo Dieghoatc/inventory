@@ -200,6 +200,8 @@ order:
   edit:
     title: "Editing Order"
   pdf:
+    shipping_address: "Shipping Address"
+    billing_address: "Billing Address"
     order_number: "Order Number"
     email: "Email"
     city: "City"

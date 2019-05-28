@@ -198,7 +198,7 @@ class CustomerService
 
             $customerAddress->setAddress($addressData['address']);
             $customerAddress->setZipCode($addressData['zipCode']);
-            $customerAddress->setAddressType($addressData['addressType']);
+            $customerAddress->setAddressType($addressData['addressType'] ?? null);
             $customerAddress->setCity($city);
             $customer->addAddress($customerAddress);
             $customerAddress->setCustomer($customer);
@@ -223,7 +223,7 @@ class CustomerService
             'email',
             'phone',
             'addresses' => [
-                'id', 'zipCode', 'address', 'city' => [
+                'id', 'zipCode', 'address', 'addressType', 'city' => [
                     'id', 'name', 'state' => [
                         'id', 'name', 'code', 'country' => [
                             'id', 'name',
