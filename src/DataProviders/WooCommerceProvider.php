@@ -2,6 +2,7 @@
 
 namespace App\DataProviders;
 
+use App\Entity\CustomerAddress;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Entity\Warehouse;
@@ -88,6 +89,7 @@ class WooCommerceProvider
                 'phone' => $order->billing->phone,
                 'addresses' => [
                     [
+                        'addressType' => CustomerAddress::ADDRESS_BILLING,
                         'address' => $order->billing->address_1,
                         'zipCode' => $order->billing->postcode,
                         'city' => [
@@ -96,6 +98,20 @@ class WooCommerceProvider
                                 'name' => $order->billing->state,
                                 'country' => [
                                     'name' => $order->billing->country,
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'addressType' => CustomerAddress::ADDRESS_SHIPPING,
+                        'address' => $order->shipping->address_1,
+                        'zipCode' => $order->shipping->postcode,
+                        'city' => [
+                            'name' => $order->shipping->city,
+                            'state' => [
+                                'name' => $order->shipping->state,
+                                'country' => [
+                                    'name' => $order->shipping->country,
                                 ],
                             ],
                         ],
@@ -114,6 +130,7 @@ class WooCommerceProvider
     public function syncOrders(User $user): void
     {
         $orders = $this->getOrders();
+
         $warehouse = $this->warehouseRepo->findOneBy(['name' => 'Colombia']);
 
         if (!$warehouse instanceof Warehouse) {
@@ -122,7 +139,7 @@ class WooCommerceProvider
 
         foreach ($orders as $order) {
             $orderExist = $this->orderRepo->findOneBy(['code' => $order->id]);
-            if ($orderExist instanceof Order) {
+            if ($orderExist instanceof Order && $orderExist->getProducts()->count() > 0) {
                 continue;
             }
 
@@ -131,6 +148,7 @@ class WooCommerceProvider
                 'name' => $warehouse->getName(),
                 'id' => $warehouse->getId(),
             ];
+
             $this->orderService->add($orderTransformed, $user);
         }
     }

@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Entity\Warehouse;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
+use App\Repository\Utils\ProductUtils;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use InvalidArgumentException;
@@ -74,7 +75,7 @@ class OrderService
         array $partialOrderData
     ): void {
         foreach ($partialOrderData as $partialProduct) {
-            $product = $this->productRepo->findOneBy(['uuid' => $partialProduct['uuid']]);
+            $product = $this->productRepo->findOneBy(ProductUtils::builtQueryByUuidOrCode($partialProduct));
 
             if(!$product instanceof Product) {
                 throw new InvalidArgumentException('The given product was not found');

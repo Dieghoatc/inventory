@@ -211,6 +211,6 @@ class OrderControllerTest extends UserWebTestCase
         $this->client->request('POST', '/admin/order/partial/'.$serverData['order'], [], [], [
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
         ], json_encode($partialOrder));
-        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
     }
 }

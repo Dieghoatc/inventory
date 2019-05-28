@@ -10,6 +10,7 @@ use App\Entity\Warehouse;
 use App\Repository\OrderProductRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductWarehouseRepository;
+use App\Repository\Utils\ProductUtils;
 use App\Repository\WarehouseRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use InvalidArgumentException;
@@ -62,23 +63,6 @@ class ProductService
         $this->manager = $manager;
         $this->validator = $validator;
         $this->logService = $logService;
-    }
-
-    protected function getQueryFilter(array $rowData): array
-    {
-        $queryFilter = null;
-        if (\array_key_exists('uuid', $rowData)) {
-            $queryFilter = ['uuid' => $rowData['uuid']];
-        }
-        if (\array_key_exists('code', $rowData)) {
-            $queryFilter = ['code' => $rowData['code']];
-        }
-
-        if (null === $queryFilter) {
-            throw new InvalidArgumentException('No one query filter, Code or Uuid was defined.');
-        }
-
-        return $queryFilter;
     }
 
     /**
@@ -152,8 +136,7 @@ class ProductService
     public function moveProducts(array $productsToMove, Warehouse $warehouseSource, Warehouse $warehouseDestination): void
     {
         foreach ($productsToMove as $productToMove) {
-            $queryFilter = $this->getQueryFilter($productToMove);
-            $product = $this->productRepo->findOneBy($queryFilter);
+            $product = $this->productRepo->findOneBy(ProductUtils::builtQueryByUuidOrCode($productToMove));
 
             if (!$product) {
                 throw new InvalidArgumentException('Product was not found');
@@ -195,8 +178,7 @@ class ProductService
     public function addProductsToInventory(array $newProducts, Warehouse $warehouse): void
     {
         foreach ($newProducts as $newProduct) {
-            $queryFilter = $this->getQueryFilter($newProduct);
-            $product = $this->productRepo->findOneBy($queryFilter);
+            $product = $this->productRepo->findOneBy(ProductUtils::builtQueryByUuidOrCode($newProduct));
 
             if (!$product instanceof Product) {
                 continue;
@@ -221,8 +203,7 @@ class ProductService
     public function removeProductsFromInventory(array $productsData, Warehouse $warehouse): void
     {
         foreach ($productsData as $productData) {
-            $queryFilter = $this->getQueryFilter($productData);
-            $product = $this->productRepo->findOneBy($queryFilter);
+            $product = $this->productRepo->findOneBy(ProductUtils::builtQueryByUuidOrCode($productData));
 
             if (!$product instanceof Product) {
                 continue;

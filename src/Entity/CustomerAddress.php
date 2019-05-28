@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CustomerAddress
 {
+    public const ADDRESS_BILLING = 1;
+    public const ADDRESS_SHIPPING = 2;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -35,6 +38,12 @@ class CustomerAddress
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="addresses")
      */
     private $customer;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $addressType;
+
 
     public function getId(): ?int
     {
@@ -85,6 +94,18 @@ class CustomerAddress
     public function setCustomer(?Customer $customer): self
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getAddressType(): ?int
+    {
+        return $this->addressType;
+    }
+
+    public function setAddressType(?int $addressType): self
+    {
+        $this->addressType = $addressType;
 
         return $this;
     }

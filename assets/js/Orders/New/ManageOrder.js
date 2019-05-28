@@ -86,9 +86,6 @@ class ManageOrder extends Component {
         { name: Translator.trans('order_statuses.1'), id: 1 },
         { name: Translator.trans('order_statuses.2'), id: 2 },
         { name: Translator.trans('order_statuses.3'), id: 3 },
-        { name: Translator.trans('order_statuses.4'), id: 4 },
-        { name: Translator.trans('order_statuses.5'), id: 5 },
-        { name: Translator.trans('order_statuses.6'), id: 6 },
       ],
       orderSources: [
         { name: Translator.trans('order_source.1'), id: 1 },
@@ -350,87 +347,86 @@ class ManageOrder extends Component {
               }}
             />
           </div>
-          <div className="form-group">
-            <div className="form-row">
-              <div className="col-auto">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={Translator.trans('order.new.first_name')}
-                  value={customer.firstName}
-                  onChange={(e) => {
-                    order.customer.firstName = e.target.value;
-                    this.setOrder(order);
-                  }}
-                />
-              </div>
-              <div className="col-auto">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={Translator.trans('order.new.last_name')}
-                  value={customer.lastName}
-                  onChange={(e) => {
-                    order.customer.lastName = e.target.value;
-                    this.setOrder(order);
-                  }}
-                />
-              </div>
+
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={Translator.trans('order.new.first_name')}
+                value={customer.firstName}
+                onChange={(e) => {
+                  order.customer.firstName = e.target.value;
+                  this.setOrder(order);
+                }}
+              />
+            </div>
+            <div className="form-group col-md-6">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={Translator.trans('order.new.last_name')}
+                value={customer.lastName}
+                onChange={(e) => {
+                  order.customer.lastName = e.target.value;
+                  this.setOrder(order);
+                }}
+              />
             </div>
           </div>
 
-          <div className="form-group">
-            <input
-              type="text"
-              className="form-control"
-              placeholder={Translator.trans('order.new.email')}
-              value={customer.email}
-              onChange={(e) => {
-                order.customer.email = e.target.value;
-                this.setOrder(order);
-              }}
-            />
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={Translator.trans('order.new.email')}
+                value={customer.email}
+                onChange={(e) => {
+                  order.customer.email = e.target.value;
+                  this.setOrder(order);
+                }}
+              />
+            </div>
+
+            <div className="form-group col-md-6">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={Translator.trans('order.new.phone')}
+                value={customer.phone}
+                onChange={(e) => {
+                  order.customer.phone = e.target.value;
+                  this.setOrder(order);
+                }}
+              />
+            </div>
           </div>
 
-          <div className="form-group">
-            <input
-              type="text"
-              className="form-control"
-              placeholder={Translator.trans('order.new.phone')}
-              value={customer.phone}
-              onChange={(e) => {
-                order.customer.phone = e.target.value;
-                this.setOrder(order);
-              }}
-            />
-          </div>
-
-          <div className="form-group">
-            <div className="form-row">
-              <div className="col-md-auto">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={Translator.trans('order.new.address')}
-                  value={customer.addresses[0].address}
-                  onChange={(e) => {
-                    order.customer.addresses[0].address = e.target.value;
-                    this.setOrder(order);
-                  }}
-                />
-              </div>
-              <div className="col-md-auto">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder={Translator.trans('order.new.zip_code')}
-                  value={customer.addresses[0].zipCode}
-                  onChange={(e) => {
-                    order.customer.addresses[0].zipCode = e.target.value;
-                    this.setOrder(order);
-                  }}
-                />
-              </div>
+          <div className="form-row">
+            <div className="form-group col-md-6">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={Translator.trans('order.new.address')}
+                value={customer.addresses[0].address}
+                onChange={(e) => {
+                  order.customer.addresses[0].address = e.target.value;
+                  this.setOrder(order);
+                }}
+              />
+            </div>
+            <div className="form-group col-md-6">
+              <input
+                type="text"
+                className="form-control"
+                placeholder={Translator.trans('order.new.zip_code')}
+                value={customer.addresses[0].zipCode}
+                onChange={(e) => {
+                  order.customer.addresses[0].zipCode = e.target.value;
+                  this.setOrder(order);
+                }}
+              />
             </div>
           </div>
 
