@@ -33,7 +33,36 @@
                 <span style="font-weight: bold">{{ order.customer.phone }}</span>
                 <br />
 
+                <span>{{ 'order.pdf.order_number'|trans }}: </span>
+                <span style="font-weight: bold">{{ order.code }}</span>
+                <br />
+                <span>{{ 'order.pdf.created_at'|trans }}: </span>
+                <span style="font-weight: bold">{{ order.createdAt|date('F jS y \\a\\t g:ia') }}</span>
+                <br />
+                <span>{{ 'order.pdf.warehouse'|trans }}: </span>
+                <span style="font-weight: bold">{{ order.warehouse.name }}</span>
+                <br />
+                <span>{{ 'order.pdf.paymentMethod'|trans }}: </span>
+                {% if order.paymentMethod == 1 %}
+                    <span style="font-weight: bold">{{ 'paytment_methods.1'|trans }}</span>
+                {% endif %}
+                {% if order.paymentMethod == 2 %}
+                    <span style="font-weight: bold">{{ 'paytment_methods.2'|trans }}</span>
+                {% endif %}
+
+
+            </p>
+        </div>
+        <div style="float: left; display: block; width: 50%">
+            <p>
                 {% for address in order.customer.addresses %}
+                    {% if (address.addressType == 1) %}
+                        <span style="font-weight: bold">{{ 'order.pdf.billing_address'|trans }}: </span>
+                        <br />
+                    {% elseif (address.addressType == 2) %}
+                        <span style="font-weight: bold">{{ 'order.pdf.shipping_address'|trans }}: </span>
+                        <br />
+                    {% endif %}
                     <span>{{ 'order.pdf.address'|trans }}: </span>
                     <span style="font-weight: bold">{{ address.address }}</span>
                     <br />
@@ -52,29 +81,13 @@
                 {% endfor %}
             </p>
         </div>
-        <div style="float: left; display: block; width: 50%">
-            <p>
-                <span>{{ 'order.pdf.order_number'|trans }}: </span>
-                <span style="font-weight: bold">{{ order.code }}</span>
-                <br />
-                <span>{{ 'order.pdf.created_at'|trans }}: </span>
-                <span style="font-weight: bold">{{ order.createdAt|date('F jS y \\a\\t g:ia') }}</span>
-                <br />
-                <span>{{ 'order.pdf.warehouse'|trans }}: </span>
-                <span style="font-weight: bold">{{ order.warehouse.name }}</span>
-                <br />
-                <span>{{ 'order.pdf.paymentMethod'|trans }}: </span>
-                {% if order.paymentMethod == 1 %}
-                    <span style="font-weight: bold">{{ 'paytment_methods.1'|trans }}</span>
-                {% endif %}
-                {% if order.paymentMethod == 2 %}
-                    <span style="font-weight: bold">{{ 'paytment_methods.2'|trans }}</span>
-                {% endif %}
-            </p>
-        </div>
     </div>
     <div>
-        <table cellspacing="0" style="width: 100%; margin-top: 180px">
+        {% set top = 180 %}
+        {% if order.customer.addresses.count > 1 %}
+            {% set top = 250 %}
+        {% endif %}
+        <table cellspacing="0" style="width: 100%; margin-top: {{ top }}px">
             <thead style="background-color: #eeeeee; border: none;">
                 <tr>
                     <th height="25px" style="width: 15%">Code</th>

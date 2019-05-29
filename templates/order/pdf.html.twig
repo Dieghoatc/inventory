@@ -56,10 +56,10 @@
             <p>
                 {% for address in order.customer.addresses %}
                     {% if (address.addressType == 1) %}
-                        <span>{{ 'order.pdf.billing_address'|trans }}: </span>
+                        <span style="font-weight: bold">{{ 'order.pdf.billing_address'|trans }}: </span>
                         <br />
                     {% elseif (address.addressType == 2) %}
-                        <span>{{ 'order.pdf.shipping_address'|trans }}: </span>
+                        <span style="font-weight: bold">{{ 'order.pdf.shipping_address'|trans }}: </span>
                         <br />
                     {% endif %}
                     <span>{{ 'order.pdf.address'|trans }}: </span>
@@ -82,7 +82,11 @@
         </div>
     </div>
     <div>
-        <table cellspacing="0" style="width: 100%; margin-top: 180px">
+        {% set top = 180 %}
+        {% if order.customer.addresses.count > 1 %}
+            {% set top = 250 %}
+        {% endif %}
+        <table cellspacing="0" style="width: 100%; margin-top: {{ top }}px">
             <thead style="background-color: #eeeeee; border: none;">
                 <tr>
                     <th height="25px" style="width: 15%">Code</th>
