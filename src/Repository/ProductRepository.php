@@ -22,8 +22,6 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Warehouse $warehouse
-     *
      * @return Product[]
      */
     public function findAllAsArray(Warehouse $warehouse): array

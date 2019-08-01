@@ -10,9 +10,6 @@ class WarehouseFixtures extends Fixture
 {
     public const WAREHOUSE_BOGOTA = 'warehouse-bogota';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->createWarehouses($manager);

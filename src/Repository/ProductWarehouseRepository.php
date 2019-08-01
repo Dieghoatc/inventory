@@ -48,7 +48,6 @@ class ProductWarehouseRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Order $order
      * @return array|ProductWarehouse[]
      */
     public function getOrderProductsOnInventory(

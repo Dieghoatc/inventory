@@ -17,5 +17,4 @@ class ProductUtils
 
         throw new InvalidArgumentException('No one query filter, Code or Uuid was defined.');
     }
-
 }

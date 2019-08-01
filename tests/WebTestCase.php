@@ -40,7 +40,7 @@ class WebTestCase extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         ];
         $productService->storeProducts($products, $warehouse);
 
-        /** @var Product */
+        /* @var Product */
         return $this->client->getContainer()->get('doctrine')
             ->getRepository(Product::class)
             ->findOneBy(['code' => $code]);

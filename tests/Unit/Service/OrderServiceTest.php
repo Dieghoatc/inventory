@@ -144,7 +144,7 @@ class OrderServiceTest extends WebTestCase
 
         $order['products'][0]['quantity'] = 11;
         unset($order['products'][2]);
-        $order['products'][] = ['uuid' => $productD->getUuid(),'quantity' => 40];
+        $order['products'][] = ['uuid' => $productD->getUuid(), 'quantity' => 40];
 
         $orderService->update($orderAsEntity, $order);
         $orderUpdated = $this->getOrderByCode($caseOrderCode);
@@ -161,7 +161,7 @@ class OrderServiceTest extends WebTestCase
     {
         $warehouse = $this->getWarehouseByName('Colombia');
         $customer = $this->getCustomerByEmail('jose.perez@example.com');
-        $product = $this->createProduct($warehouse,'LOW-QUANTITY-PRODUCTS',10);
+        $product = $this->createProduct($warehouse, 'LOW-QUANTITY-PRODUCTS', 10);
 
         $orderData = [
             'code' => 'LOW-QUANTITY-TEST',
@@ -173,7 +173,7 @@ class OrderServiceTest extends WebTestCase
                 'id' => $customer->getId(),
             ],
             'products' => [
-                ['uuid' => $product->getUuid(),'quantity' => 15],
+                ['uuid' => $product->getUuid(), 'quantity' => 15],
             ],
         ];
 
@@ -188,8 +188,8 @@ class OrderServiceTest extends WebTestCase
     {
         $warehouse = $this->getWarehouseByName('Colombia');
         $customer = $this->getCustomerByEmail('jose.perez@example.com');
-        $productA = $this->createProduct($warehouse, 'LOW-QUANTITY-PRODUCTS-A',10);
-        $productB = $this->createProduct($warehouse, 'LOW-QUANTITY-PRODUCTS-B',20);
+        $productA = $this->createProduct($warehouse, 'LOW-QUANTITY-PRODUCTS-A', 10);
+        $productB = $this->createProduct($warehouse, 'LOW-QUANTITY-PRODUCTS-B', 20);
 
         $orderData = [
             'code' => 'LOW-QUANTITY-TEST',
@@ -212,14 +212,13 @@ class OrderServiceTest extends WebTestCase
 
         $partialRequest = [
             ['uuid' => $productA->getUuid(), 'quantity' => 10],
-            ['uuid' => $productB->getUuid(), 'quantity' => 20]
+            ['uuid' => $productB->getUuid(), 'quantity' => 20],
         ];
 
         $this->assertTrue($orderService->hasPartialOrderSameAmountOfProductsThatOriginal($order, $partialRequest));
         $partialRequest = [
-            ['uuid' => $productB->getUuid(),'quantity' => 20]
+            ['uuid' => $productB->getUuid(), 'quantity' => 20],
         ];
         $this->assertFalse($orderService->hasPartialOrderSameAmountOfProductsThatOriginal($order, $partialRequest));
-
     }
 }

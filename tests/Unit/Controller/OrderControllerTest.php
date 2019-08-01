@@ -184,7 +184,7 @@ class OrderControllerTest extends UserWebTestCase
             $partialOrderProductKey = array_search($pendingOrderProductQuantity['uuid'], array_column($partialOrder, 'uuid'), true);
             $pendingOrderProductKey = array_search($pendingOrderProductQuantity['uuid'], array_column($serverData['pendingOrderProductQuantities'], 'uuid'), true);
 
-            if($partialOrderProductKey !== false) {
+            if (false !== $partialOrderProductKey) {
                 $remainingProductQuantity = $originalOrder['products'][$originalOrderProductKey]['quantity']
                     - $partialOrder[$partialOrderProductKey]['quantity'];
                 $this->assertSame($serverData['productsAggregate'][$pendingOrderProductKey]['quantity'], $remainingProductQuantity);

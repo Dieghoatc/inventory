@@ -14,9 +14,6 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     public const PRODUCT_KF_02 = 'KF-02';
     public const PRODUCT_KF_03 = 'KF-03';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->createProducts($manager);

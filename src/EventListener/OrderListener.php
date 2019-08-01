@@ -4,8 +4,6 @@ namespace App\EventListener;
 
 use App\Entity\Order;
 use App\Entity\OrderStatus;
-use App\Services\OrderService;
-use App\Services\ProductService;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManagerInterface;
 
