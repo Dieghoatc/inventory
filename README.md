@@ -33,7 +33,7 @@ then
     
     yarn build development  
 
-Go to `http://candidatos.talentu.local`
+Go to `http://inventory.talentu.local`
 
 ---
 
