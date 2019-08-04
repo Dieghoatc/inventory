@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Entity\Order;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -10,7 +9,6 @@ use Twig\Environment;
 
 class NotificationService
 {
-
     private $mailer;
 
     private $translator;
@@ -38,7 +36,7 @@ class NotificationService
     private function renderView(Order $order): string
     {
         return $this->twig->render('order/pdf.html.twig', [
-            'order' => $order
+            'order' => $order,
         ]);
     }
 
@@ -50,7 +48,6 @@ class NotificationService
             ->setBody($this->pdfHandler->createPdf(
                 $this->renderView($order)
             ));
-
     }
 
     public function sendOrderByEmail(Order $order): void
@@ -72,5 +69,4 @@ class NotificationService
 
         $this->mailer->send($message);
     }
-
 }
