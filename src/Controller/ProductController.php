@@ -103,6 +103,7 @@ class ProductController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'product.new.updated_successfully');
+
             return $this->redirectToRoute('product_product_index');
         }
 
@@ -195,6 +196,7 @@ class ProductController extends AbstractController
         int $status
     ): Response {
         $products = $productWarehouseRepo->findByWarehouse($warehouse, $status);
+
         return new JsonResponse($products);
     }
 

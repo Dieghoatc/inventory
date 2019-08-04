@@ -12,9 +12,6 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {
     public const CUSTOMER = 'customer';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->createWarehouses($manager);

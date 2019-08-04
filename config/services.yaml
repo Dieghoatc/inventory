@@ -10,6 +10,9 @@ parameters:
       url: '%env(WOO_COMMERCE_URL)%'
       api_key: '%env(WOO_COMMERCE_API_KEY)%'
       api_secret: '%env(WOO_COMMERCE_API_SECRET)%'
+    mailer:
+      from_address: '%env(MAILER_FROM_ADDRESS)%'
+      from_name: '%env(MAILER_FROM_NAME)%'
 
 services:
     # default configuration for services in *this* file

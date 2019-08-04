@@ -430,14 +430,14 @@ class Order
         $products = [];
 
         $children = $this->getChildren();
-        if (in_array($this->getStatus(), [self::STATUS_DELIVERED, self::STATUS_SENT], false)) {
+        if (\in_array($this->getStatus(), [self::STATUS_DELIVERED, self::STATUS_SENT], false)) {
             $children = [$this];
         }
 
         foreach ($children as $child) {
             foreach ($child->getProducts() as $orderProduct) {
                 $productKey = array_search($orderProduct->getUuid(), array_column($products, 'uuid'), true);
-                if($productKey === false) {
+                if (false === $productKey) {
                     $products[] = [
                         'quantity' => $orderProduct->getQuantity(),
                         'uuid' => $orderProduct->getUuid(),
@@ -463,7 +463,7 @@ class Order
             $productKey = array_search($orderProduct->getUuid(), array_column($aggregatePartials, 'uuid'), true);
 
             $leftProductQuantity = $orderProduct->getQuantity();
-            if($productKey !== false) {
+            if (false !== $productKey) {
                 $leftProductQuantity = $orderProduct->getQuantity() - $aggregatePartials[$productKey]['quantity'];
                 if ($leftProductQuantity < 0) {
                     throw new InvalidArgumentException('The pending quantity for this product is below that 0.');

@@ -58,7 +58,6 @@ class ProductControllerTest extends UserWebTestCase
         foreach ($products as $product) {
             dump($product->getCode());
         }
-
     }
 
     public function testMoveProductsBetweenWarehouses(): void
@@ -78,7 +77,7 @@ class ProductControllerTest extends UserWebTestCase
             $productB->getUuid() => [
                 'uuid' => $productB->getUuid(),
                 'quantity' => $quantityToMoveProductB,
-            ]
+            ],
         ];
 
         $this->logIn(['ROLE_MANAGE_INVENTORY']);
@@ -88,7 +87,7 @@ class ProductControllerTest extends UserWebTestCase
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         //Checking products pending to approve on Destination Warehouse.
-        $this->client->request('GET', "/admin/product/all/{$warehouseDestination->getId()}/" . ProductWarehouse::STATUS_PENDING_TO_CONFIRM);
+        $this->client->request('GET', "/admin/product/all/{$warehouseDestination->getId()}/".ProductWarehouse::STATUS_PENDING_TO_CONFIRM);
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $serverResponse = json_decode($this->client->getResponse()->getContent(), true);
 
@@ -96,12 +95,12 @@ class ProductControllerTest extends UserWebTestCase
         //Testing destination product A
         $productAKeyOnServerResponse = array_search($productA->getUuid(), array_column($serverResponse, 'uuid'), true);
         $this->assertNotFalse($productAKeyOnServerResponse);
-        $this->assertEquals($quantityToMoveProductA, $serverResponse[$productAKeyOnServerResponse]['quantity']);
+        $this->assertSame($quantityToMoveProductA, $serverResponse[$productAKeyOnServerResponse]['quantity']);
 
         //Testing destination product B
         $productBKeyOnServerResponse = array_search($productB->getUuid(), array_column($serverResponse, 'uuid'), true);
         $this->assertNotFalse($productBKeyOnServerResponse);
-        $this->assertEquals($quantityToMoveProductB, $serverResponse[$productBKeyOnServerResponse]['quantity']);
+        $this->assertSame($quantityToMoveProductB, $serverResponse[$productBKeyOnServerResponse]['quantity']);
 
         // Approving products
         $this->client->request('POST', "/admin/product/incoming/approve/{$warehouseDestination->getId()}", [], [], [
@@ -118,20 +117,20 @@ class ProductControllerTest extends UserWebTestCase
         //Testing destination product A
         $productAKeyOnServerResponse = array_search($productA->getUuid(), array_column($serverResponse, 'uuid'), true);
         $this->assertNotFalse($productAKeyOnServerResponse);
-        $this->assertEquals($quantityToMoveProductA, $serverResponse[$productAKeyOnServerResponse]['quantity']);
+        $this->assertSame($quantityToMoveProductA, $serverResponse[$productAKeyOnServerResponse]['quantity']);
 
         //Testing destination product B
         $productBKeyOnServerResponse = array_search($productB->getUuid(), array_column($serverResponse, 'uuid'), true);
         $this->assertNotFalse($productBKeyOnServerResponse);
-        $this->assertEquals($quantityToMoveProductB, $serverResponse[$productBKeyOnServerResponse]['quantity']);
+        $this->assertSame($quantityToMoveProductB, $serverResponse[$productBKeyOnServerResponse]['quantity']);
 
         //Checking new quantities on Destination Warehouse
         $this->client->request('GET', "/admin/product/all/{$warehouseSource->getId()}");
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $serverResponse = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertEquals(80, $serverResponse[0]['quantity']);
-        $this->assertEquals(75, $serverResponse[1]['quantity']);
-        $this->assertEquals(100, $serverResponse[2]['quantity']);
+        $this->assertSame(80, $serverResponse[0]['quantity']);
+        $this->assertSame(75, $serverResponse[1]['quantity']);
+        $this->assertSame(100, $serverResponse[2]['quantity']);
     }
 }

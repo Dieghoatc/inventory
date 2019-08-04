@@ -12,9 +12,6 @@ class LocationFixtures extends Fixture
 {
     public const DEFAULT_CITY = 'city';
 
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->createLocation($manager);

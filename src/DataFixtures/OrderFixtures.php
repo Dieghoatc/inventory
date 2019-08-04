@@ -11,9 +11,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class OrderFixtures extends Fixture implements DependentFixtureInterface
 {
-    /**
-     * @param ObjectManager $manager
-     */
     public function load(ObjectManager $manager): void
     {
         $this->createOrder($manager);

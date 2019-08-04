@@ -96,7 +96,7 @@ class OrderControllerTest extends UserWebTestCase
         //Open the edit order page to get the data.
         $crawler = $this->client->request('GET', '/admin/order/edit/'.$serverData['order']);
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $orderOnView = json_decode($crawler->filter('#react-component')->getNode(0)->getAttribute('data-order'), true);
+        $orderOnView = json_decode($crawler->filter('#order-handler')->getNode(0)->getAttribute('data-order'), true);
 
         foreach ($orderOnView['products'] as $product) {
             $productKey = array_search($product['uuid'], array_column($originalOrder['products'], 'uuid'), true);
@@ -120,7 +120,7 @@ class OrderControllerTest extends UserWebTestCase
 
         $crawler = $this->client->request('GET', '/admin/order/edit/'.$serverData['order']);
         $this->assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $orderOnView = json_decode($crawler->filter('#react-component')->getNode(0)->getAttribute('data-order'), true);
+        $orderOnView = json_decode($crawler->filter('#order-handler')->getNode(0)->getAttribute('data-order'), true);
 
         foreach ($orderOnView['products'] as $product) {
             foreach ($originalOrder['products'] as $originalOrderProduct) {
@@ -184,7 +184,7 @@ class OrderControllerTest extends UserWebTestCase
             $partialOrderProductKey = array_search($pendingOrderProductQuantity['uuid'], array_column($partialOrder, 'uuid'), true);
             $pendingOrderProductKey = array_search($pendingOrderProductQuantity['uuid'], array_column($serverData['pendingOrderProductQuantities'], 'uuid'), true);
 
-            if($partialOrderProductKey !== false) {
+            if (false !== $partialOrderProductKey) {
                 $remainingProductQuantity = $originalOrder['products'][$originalOrderProductKey]['quantity']
                     - $partialOrder[$partialOrderProductKey]['quantity'];
                 $this->assertSame($serverData['productsAggregate'][$pendingOrderProductKey]['quantity'], $remainingProductQuantity);

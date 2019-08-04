@@ -77,7 +77,7 @@ class OrderService
         foreach ($partialOrderData as $partialProduct) {
             $product = $this->productRepo->findOneBy(ProductUtils::builtQueryByUuidOrCode($partialProduct));
 
-            if(!$product instanceof Product) {
+            if (!$product instanceof Product) {
                 throw new InvalidArgumentException('The given product was not found');
             }
 
@@ -130,6 +130,7 @@ class OrderService
     public function getOrderAsArray(Order $order): array
     {
         $serializer = new Serializer([new ObjectNormalizer()]);
+
         return $serializer->normalize($order, 'array', ['attributes' => [
             'id',
             'code',
@@ -141,16 +142,16 @@ class OrderService
             'warehouse' => ['id', 'name'],
             'customer' => ['email', 'firstName', 'lastName', 'phone', 'addresses' => [
                 'id', 'address', 'zipCode', 'city' => [
-                    'id','name', 'state' => [
+                    'id', 'name', 'state' => [
                         'id', 'name', 'country' => [
-                            'id', 'name'
+                            'id', 'name',
                         ],
                     ],
                 ],
             ]],
             'comments' => ['id', 'content'],
-            'products' =>['quantity', 'uuid', 'product' => [
-                'title', 'detail', 'code'
+            'products' => ['quantity', 'uuid', 'product' => [
+                'title', 'detail', 'code',
             ]],
         ]]);
     }
@@ -163,17 +164,18 @@ class OrderService
         $order = new Order();
         $this->setCustomerData($order, $orderData);
 
-        if (!array_key_exists('products', $orderData)) {
+        if (!\array_key_exists('products', $orderData)) {
             throw new LogicException('The order must have products.');
         }
 
         $this->syncProducts($order, $orderData['products']);
 
-        if (array_key_exists('comments', $orderData)) {
+        if (\array_key_exists('comments', $orderData)) {
             $this->attachComments($order, $user, $orderData['comments']);
         }
 
         $this->objectManager->flush();
+
         return $this->getOrderAsArray($order);
     }
 
@@ -184,6 +186,7 @@ class OrderService
     {
         $this->setCustomerData($order, $newOrderData);
         $this->syncProducts($order, $newOrderData['products']);
+
         return $this->getOrderAsArray($order);
     }
 
@@ -205,7 +208,7 @@ class OrderService
     {
         $order = $this->orderRepo->find($orderId);
 
-        if(!$order instanceof Order) {
+        if (!$order instanceof Order) {
             throw new InvalidArgumentException('The order does not exist on the database.');
         }
 
@@ -241,21 +244,21 @@ class OrderService
         foreach ($orderProducts as $orderProduct) {
             $orderProductKey = array_search($orderProduct->getUuid(), array_column($partialOrder, 'uuid'), true);
 
-            if ($orderProductKey !== false && (int) $partialOrder[$orderProductKey]['quantity'] !== $orderProduct->getQuantity()) {
+            if (false !== $orderProductKey && (int) $partialOrder[$orderProductKey]['quantity'] !== $orderProduct->getQuantity()) {
                 return false;
             }
 
-            if ($orderProductKey === false) {
+            if (false === $orderProductKey) {
                 return false;
             }
-
         }
+
         return true;
     }
 
     public function createPartial(Order $order, array $partialOrderData): void
     {
-        if(
+        if (
             $this->hasInventoryTheOrderRequiredProducts($order)
             && $this->hasPartialOrderSameAmountOfProductsThatOriginal($order, $partialOrderData)
         ) {
