@@ -20,15 +20,15 @@
         "symfony/expression-language": "*",
         "symfony/flex": "^1.1",
         "symfony/form": "*",
-        "symfony/framework-bundle": "*",
-        "symfony/monolog-bundle": "^3.1",
+        "symfony/framework-bundle": "4.3.*",
+        "symfony/monolog-bundle": "*",
         "symfony/orm-pack": "*",
         "symfony/phpunit-bridge": "*",
         "symfony/process": "*",
         "symfony/security-bundle": "*",
         "symfony/serializer-pack": "*",
-        "symfony/swiftmailer-bundle": "^3.1",
-        "symfony/templating": "4.2.*",
+        "symfony/swiftmailer-bundle": "*",
+        "symfony/templating": "*",
         "symfony/twig-bundle": "*",
         "symfony/validator": "*",
         "symfony/web-link": "*",
@@ -98,7 +98,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.2.*"
+            "require": "4.3.*"
         }
     }
 }

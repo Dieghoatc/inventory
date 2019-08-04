@@ -35,7 +35,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use function is_array;
 
 /**
  * @Route("/order", name="order_")
@@ -177,7 +176,7 @@ class OrderController extends AbstractController
         $user = $this->getUser();
         $content = json_decode($request->getContent(), true);
 
-        if (!is_array($content)) {
+        if (!\is_array($content)) {
             throw new LogicException('Invalid content request format.');
         }
 
@@ -286,6 +285,7 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/partial/getting-ready/{order}", name="getting_ready", methods={"get"}, options={"expose"=true})
+     *
      * @throws ExceptionInterface
      */
     public function gettingReady(
