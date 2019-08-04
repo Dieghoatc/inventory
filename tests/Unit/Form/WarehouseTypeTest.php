@@ -18,10 +18,9 @@ class WarehouseTypeTest extends TypeTestCase
 
         $warehouse = new Warehouse();
         $warehouse->setName('TEST-WAREHOUSE-01');
-
         $form->submit($formData);
 
         $this->assertTrue($form->isSynchronized());
-        $this->assertSame($warehouse, $objectToCompare);
+        $this->assertEquals($warehouse, $objectToCompare);
     }
 }

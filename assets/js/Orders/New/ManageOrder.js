@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import Select from 'react-select';
 
-import CreatableSelect from 'react-select/lib/Creatable';
-
 const isValidNewOption = (inputValue, selectValue, selectOptions) => (
   !(inputValue.trim().length === 0 || selectOptions.find(option => option.name === inputValue))
 );
@@ -432,7 +430,7 @@ class ManageOrder extends Component {
 
           <div className="form-group form-row">
             <div className="col-4">
-              <CreatableSelect
+              <Select
                 isClearable
                 getOptionLabel={option => option.name}
                 getOptionValue={option => option.id}
@@ -457,7 +455,7 @@ class ManageOrder extends Component {
               />
             </div>
             <div className="col-4">
-              <CreatableSelect
+              <Select
                 isClearable
                 getOptionLabel={option => option.name}
                 getOptionValue={option => option.id}
@@ -484,7 +482,7 @@ class ManageOrder extends Component {
               />
             </div>
             <div className="col-4">
-              <CreatableSelect
+              <Select
                 isClearable
                 getOptionLabel={option => option.name}
                 getOptionValue={option => option.id}

@@ -303,3 +303,9 @@ product_statuses:
 
 create: "Create"
 update: "Update"
+
+notifications:
+  emails:
+    order_created:
+      subject: "Order #%d was created"
+      body: "A new order was created and attached to this email."
