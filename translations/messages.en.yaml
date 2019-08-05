@@ -307,5 +307,5 @@ update: "Update"
 notifications:
   emails:
     order_created:
-      subject: "Order #%d was created"
+      subject: "Order #%s was created"
       body: "A new order was created and attached to this email."

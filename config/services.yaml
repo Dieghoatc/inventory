@@ -13,6 +13,7 @@ parameters:
     mailer:
       from_address: '%env(MAILER_FROM_ADDRESS)%'
       from_name: '%env(MAILER_FROM_NAME)%'
+      printer_address: '%env(MAILER_PRINTER_ADDRESS)%'
 
 services:
     # default configuration for services in *this* file

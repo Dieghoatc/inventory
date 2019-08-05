@@ -63,8 +63,9 @@ class NotificationService
             ->setBody($this->translator->trans('notifications.emails.order_created.body'))
             ->attach($this->createPdfAttachment($order));
 
-        if ($mailerParams['from_address'] && $mailerParams['from_name']) {
+        if ($mailerParams['from_address'] && $mailerParams['from_name'] && $mailerParams['printer_address']) {
             $message->setFrom($mailerParams['from_address'], $mailerParams['from_name']);
+            $message->setTo($mailerParams['printer_address']);
         }
 
         $this->mailer->send($message);
