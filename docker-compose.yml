@@ -4,14 +4,14 @@ services:
     build: .
     volumes:
       - .:/var/www/html:delegated
-      - ./Docker/php/xdebug.ini:/etc/php/7.2/cli/conf.d/20-xdebug.ini:delegated
+      - ./Docker/php/xdebug.ini:/etc/php/7.3/cli/conf.d/20-xdebug.ini:delegated
     environment:
       - VIRTUAL_HOST=inventory.local
       - VIRTUAL_PORT=80
       - HTTPS_METHOD=noredirect
     command: >
       sh -c '
-        /etc/init.d/nginx start && /etc/init.d/php7.2-fpm start
+        /etc/init.d/nginx start && /etc/init.d/php7.3-fpm start
         composer install
         sleep 5
         composer deploy-application
